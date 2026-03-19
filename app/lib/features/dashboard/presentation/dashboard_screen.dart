@@ -27,11 +27,9 @@ class DashboardScreen extends ConsumerWidget {
           SliverAppBar(
             floating: true,
             leading: const MenuToggleButton(),
-            title: Text('KOSEN NAV', style: tt.headlineLarge),
+            title: Text('KOSEN NAV', style: AppTheme.logoStyle),
             backgroundColor: AppTheme.bgDeep,
-            actions: const [
-              SizedBox(width: 16),
-            ],
+            actions: const [SizedBox(width: 16)],
           ),
 
           sim.when(
@@ -43,35 +41,50 @@ class DashboardScreen extends ConsumerWidget {
                   _GpaCard(sim: simData)
                       .animate()
                       .fade(duration: 400.ms)
-                      .slideY(begin: 0.3, end: 0, curve: Curves.easeOutCubic, duration: 400.ms),
+                      .slideY(
+                        begin: 0.3,
+                        end: 0,
+                        curve: Curves.easeOutCubic,
+                        duration: 400.ms,
+                      ),
                   const SizedBox(height: 24),
 
                   // ── Promotion Status Badge ──
                   PromotionStatusBadge(
-                    status: simData.status,
-                    failCount: simData.failCount,
-                    isLarge: true,
-                  )
+                        status: simData.status,
+                        failCount: simData.failCount,
+                        isLarge: true,
+                      )
                       .animate()
                       .fade(duration: 400.ms, delay: 100.ms)
-                      .slideY(begin: 0.2, end: 0, curve: Curves.easeOutCubic, duration: 450.ms),
+                      .slideY(
+                        begin: 0.2,
+                        end: 0,
+                        curve: Curves.easeOutCubic,
+                        duration: 450.ms,
+                      ),
                   const SizedBox(height: 32),
 
                   // ── Section header ──────────────────────────────────────────
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('履修科目', style: tt.headlineMedium),
-                      TextButton.icon(
-                        onPressed: () => context.go('/grades'),
-                        icon: const Icon(Icons.arrow_forward, size: 16),
-                        label: const Text('すべて見る'),
-                      ),
-                    ],
-                  )
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('履修科目', style: tt.headlineMedium),
+                          TextButton.icon(
+                            onPressed: () => context.go('/grades'),
+                            icon: const Icon(Icons.arrow_forward, size: 16),
+                            label: const Text('すべて見る'),
+                          ),
+                        ],
+                      )
                       .animate()
                       .fade(duration: 400.ms)
-                      .slideY(begin: 0.3, end: 0, curve: Curves.easeOutCubic, duration: 400.ms),
+                      .slideY(
+                        begin: 0.3,
+                        end: 0,
+                        curve: Curves.easeOutCubic,
+                        duration: 400.ms,
+                      ),
                   const SizedBox(height: 12),
 
                   // ── Subject Summary Cards ────────────────────────────────────
@@ -80,16 +93,16 @@ class DashboardScreen extends ConsumerWidget {
                       final score = GradeCalculator.calcFinalScore(s);
                       final isAtRisk = simData.atRiskSubjectIds.contains(s.id);
                       return Padding(
-                        key: ValueKey('dash_${s.id}'),
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _SubjectSummaryCard(
-                          name: s.name,
-                          units: s.units,
-                          score: score,
-                          isAtRisk: isAtRisk,
-                          onTap: () => context.go('/grades/${s.id}'),
-                        ),
-                      )
+                            key: ValueKey('dash_${s.id}'),
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: _SubjectSummaryCard(
+                              name: s.name,
+                              units: s.units,
+                              score: score,
+                              isAtRisk: isAtRisk,
+                              onTap: () => context.go('/grades/${s.id}'),
+                            ),
+                          )
                           .animate()
                           .fadeIn(duration: 500.ms, curve: Curves.easeOut)
                           .slideY(
@@ -99,7 +112,9 @@ class DashboardScreen extends ConsumerWidget {
                             duration: 500.ms,
                           );
                     }).toList(),
-                    loading: () => [const Center(child: CircularProgressIndicator())],
+                    loading: () => [
+                      const Center(child: CircularProgressIndicator()),
+                    ],
                     error: (err, stack) => [Center(child: Text('Error: $err'))],
                   ),
 
@@ -110,9 +125,8 @@ class DashboardScreen extends ConsumerWidget {
             loading: () => const SliverFillRemaining(
               child: Center(child: CircularProgressIndicator()),
             ),
-            error: (err, stack) => SliverFillRemaining(
-              child: Center(child: Text('Error: $err')),
-            ),
+            error: (err, stack) =>
+                SliverFillRemaining(child: Center(child: Text('Error: $err'))),
           ),
         ],
       ),

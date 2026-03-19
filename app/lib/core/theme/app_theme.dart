@@ -23,9 +23,15 @@ class AppTheme {
   static const Color statusDanger = neonOrange;
   static const Color statusFailing = neonRed;
 
+  static TextStyle get logoStyle => GoogleFonts.orbitron(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 2,
+      );
+
   // ── Text Theme ─────────────────────────────────────────────────────────────
   static TextTheme _buildTextTheme() {
-    final base = GoogleFonts.interTextTheme(ThemeData.dark().textTheme);
+    final base = GoogleFonts.notoSansJpTextTheme(ThemeData.dark().textTheme);
     return base.copyWith(
       displayLarge: GoogleFonts.notoSansJp(
         fontSize: 32,
@@ -39,7 +45,7 @@ class AppTheme {
         color: textPrimary,
         letterSpacing: 1.5,
       ),
-      headlineLarge: GoogleFonts.orbitron(
+      headlineLarge: GoogleFonts.notoSansJp(
         fontSize: 20,
         fontWeight: FontWeight.w700,
         color: textPrimary,
@@ -123,8 +129,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: neonGreen, width: 1.5),
         ),
-        labelStyle: GoogleFonts.inter(color: textSecondary, fontSize: 13),
-        hintStyle: GoogleFonts.inter(color: textSecondary, fontSize: 13),
+        labelStyle: GoogleFonts.notoSansJp(color: textSecondary, fontSize: 13),
+        hintStyle: GoogleFonts.notoSansJp(color: textSecondary, fontSize: 13),
       ),
 
       // Elevated Button
@@ -134,7 +140,7 @@ class AppTheme {
           foregroundColor: bgDeep,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          textStyle: GoogleFonts.inter(
+          textStyle: GoogleFonts.notoSansJp(
             fontWeight: FontWeight.w700,
             letterSpacing: 1,
           ),
@@ -168,6 +174,28 @@ class AppTheme {
         inactiveTrackColor: border,
         overlayColor: Color(0xff00ff8730),
       ),
+    );
+  }
+
+  static InputDecoration inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      filled: true,
+      fillColor: bgSurface,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: border),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: neonGreen, width: 2),
+      ),
+      labelStyle: GoogleFonts.notoSansJp(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     );
   }
 }

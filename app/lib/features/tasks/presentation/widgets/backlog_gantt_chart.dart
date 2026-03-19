@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:intl/intl.dart';
 import '../../domain/task.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../grades/application/grade_controller.dart';
+import '../../../grades/domain/subject_model.dart';
 
-class BacklogGanttChart extends StatefulWidget {
+class BacklogGanttChart extends ConsumerStatefulWidget {
   final List<TaskModel> tasks;
   final bool isPreview;
   const BacklogGanttChart({
@@ -14,10 +17,10 @@ class BacklogGanttChart extends StatefulWidget {
   });
 
   @override
-  State<BacklogGanttChart> createState() => _BacklogGanttChartState();
+  ConsumerState<BacklogGanttChart> createState() => _BacklogGanttChartState();
 }
 
-class _BacklogGanttChartState extends State<BacklogGanttChart> {
+class _BacklogGanttChartState extends ConsumerState<BacklogGanttChart> {
   late LinkedScrollControllerGroup _horizontalControllers;
   late ScrollController _headerController;
   late TransformationController _gridTransformationController;
@@ -265,6 +268,7 @@ class _BacklogGanttChartState extends State<BacklogGanttChart> {
                             task: task,
                             width: width,
                             height: 30,
+                            onTap: () => _showTaskDetailCallout(context, task),
                           ),
                         );
                       }),
@@ -278,17 +282,36 @@ class _BacklogGanttChartState extends State<BacklogGanttChart> {
       },
     );
   }
+
+  void _showTaskDetailCallout(BuildContext context, TaskModel task) {
+    final subjects = ref.read(gradeNotifierProvider).value ?? [];
+    final subject = subjects.cast<SubjectModel?>().firstWhere(
+      (s) => s?.id == task.subjectId,
+      orElse: () => null,
+    );
+    
+    showDialog(
+      context: context,
+      barrierColor: Colors.black26,
+      builder: (context) => _TaskDetailDialog(
+        task: task,
+        subjectName: subject?.name,
+      ),
+    );
+  }
 }
 
 class _GanttTaskBar extends StatelessWidget {
   final TaskModel task;
   final double width;
   final double height;
+  final VoidCallback? onTap;
 
   const _GanttTaskBar({
     required this.task,
     required this.width,
     required this.height,
+    this.onTap,
   });
 
   @override
@@ -297,43 +320,44 @@ class _GanttTaskBar extends StatelessWidget {
     final isDone = task.status == TaskStatus.done;
     final isDoing = task.status == TaskStatus.doing;
     
-    // 背景の帯を透過させないように不透明にする
-    const opacity = 1.0;
-
-    return Container(
-      width: width,
-      height: height,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: color.withAlpha((opacity * 255).toInt()),
-        borderRadius: BorderRadius.circular(height / 2),
-        border: isDoing ? Border.all(color: Colors.white.withAlpha(128), width: 1.5) : null,
-        boxShadow: [
-          BoxShadow(
-            color: color.withAlpha(76),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _getStatusIcon(task.status),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Text(
-              task.title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10,
-                fontWeight: isDoing ? FontWeight.bold : FontWeight.normal,
-                overflow: TextOverflow.ellipsis,
-                decoration: isDone ? TextDecoration.lineThrough : null,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(height / 2),
+      child: Container(
+        width: width,
+        height: height,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          color: color.withAlpha(255),
+          borderRadius: BorderRadius.circular(height / 2),
+          border: isDoing ? Border.all(color: Colors.white.withAlpha(128), width: 1.5) : null,
+          boxShadow: [
+            BoxShadow(
+              color: color.withAlpha(76),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _getStatusIcon(task.status),
+            const SizedBox(width: 4),
+            Expanded(
+              child: Text(
+                task.title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: isDoing ? FontWeight.bold : FontWeight.normal,
+                  overflow: TextOverflow.ellipsis,
+                  decoration: isDone ? TextDecoration.lineThrough : null,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -371,5 +395,159 @@ class _GanttTaskBar extends StatelessWidget {
       case TaskStatus.doing: return Colors.blueAccent;
       case TaskStatus.done: return Colors.greenAccent;
     }
+  }
+}
+
+class _TaskDetailDialog extends StatelessWidget {
+  final TaskModel task;
+  final String? subjectName;
+
+  const _TaskDetailDialog({required this.task, this.subjectName});
+
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context).textTheme;
+    final color = _getTaskColor();
+    
+    return Center(
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          width: 280,
+          margin: const EdgeInsets.symmetric(horizontal: 40),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: AppTheme.bgCard,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: color.withOpacity(0.5), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.2),
+                blurRadius: 20,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                   _getStatusIcon(task.status),
+                   const SizedBox(width: 12),
+                   Expanded(
+                     child: Text(
+                       task.title,
+                       style: tt.titleMedium?.copyWith(
+                         color: AppTheme.textPrimary, 
+                         fontWeight: FontWeight.bold,
+                         letterSpacing: 0.5,
+                       ),
+                     ),
+                   ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              if (subjectName != null && subjectName!.isNotEmpty) ...[
+                _buildInfoRow(Icons.book_rounded, 'SUBJECT', subjectName!),
+                const SizedBox(height: 16),
+              ],
+              _buildInfoRow(
+                Icons.calendar_month_rounded, 
+                'PERIOD', 
+                '${DateFormat('MM/dd').format(task.startDate)} ー ${DateFormat('MM/dd').format(task.deadline)}',
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'CLOSE', 
+                      style: TextStyle(
+                        color: AppTheme.textSecondary, 
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label, 
+          style: const TextStyle(
+            color: AppTheme.textSecondary, 
+            fontSize: 9, 
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Row(
+          children: [
+            Icon(icon, size: 16, color: AppTheme.neonGreen.withOpacity(0.7)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                value, 
+                style: const TextStyle(
+                  color: AppTheme.textPrimary, 
+                  fontSize: 14,
+                  height: 1.2,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Color _getTaskColor() {
+    switch (task.status) {
+      case TaskStatus.todo: return Colors.redAccent;
+      case TaskStatus.doing: return Colors.blueAccent;
+      case TaskStatus.done: return Colors.greenAccent;
+    }
+  }
+
+  Widget _getStatusIcon(TaskStatus status) {
+    IconData iconData;
+    Color iconColor;
+    switch (status) {
+      case TaskStatus.todo:
+        iconData = Icons.access_time_rounded;
+        iconColor = Colors.redAccent;
+        break;
+      case TaskStatus.doing:
+        iconData = Icons.play_arrow_rounded;
+        iconColor = Colors.blueAccent;
+        break;
+      case TaskStatus.done:
+        iconData = Icons.check_rounded;
+        iconColor = Colors.greenAccent;
+        break;
+    }
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: iconColor.withOpacity(0.15),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(iconData, size: 16, color: iconColor),
+    );
   }
 }

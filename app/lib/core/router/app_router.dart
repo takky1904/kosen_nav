@@ -159,10 +159,9 @@ class AppShell extends ConsumerWidget {
                             child: Text(
                               'KOSEN NAV',
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                              style: AppTheme.logoStyle.copyWith(
                                 color: AppTheme.neonGreen,
                                 fontSize: 18,
-                                letterSpacing: 2,
                               ),
                             ),
                           ),

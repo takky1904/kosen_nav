@@ -54,7 +54,7 @@ class GradeNotifier extends AsyncNotifier<List<SubjectModel>> {
   Future<void> updateWeights(String subjectId, double testWeight) async {
     final subjects = state.value ?? [];
     final subject = subjects.firstWhere((s) => s.id == subjectId);
-    final updatedSubject = subject.copyWith(testWeight: testWeight.clamp(0.0, 1.0));
+    final updatedSubject = subject.copyWith(testWeight: (testWeight * 10).roundToDouble() / 10.0);
     await updateSubject(updatedSubject);
   }
 }

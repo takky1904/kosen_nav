@@ -163,16 +163,8 @@ class SubjectDetailScreen extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'テスト: ${(subject.testWeight * 100).toStringAsFixed(0)}%  '
-                                '平常点: ${(subject.regularWeight * 100).toStringAsFixed(0)}%',
-                                style: tt.bodyMedium,
-                              ),
-                              Slider(
-                                value: subject.testWeight,
-                                min: 0.3,
-                                max: 0.9,
-                                divisions: 6,
+                              _WeightSlider(
+                                initialWeight: subject.testWeight,
                                 onChanged: (v) => ref
                                     .read(gradeNotifierProvider.notifier)
                                     .updateWeights(subjectId, v),
@@ -346,7 +338,7 @@ class _TestScoreFieldState extends State<_TestScoreField> {
 
 // ── Score Slider Field ────────────────────────────────────────────────────────
 
-class _ScoreSliderField extends StatelessWidget {
+class _ScoreSliderField extends StatefulWidget {
   final String label;
   final double value;
   final ValueChanged<double> onChanged;
@@ -358,13 +350,34 @@ class _ScoreSliderField extends StatelessWidget {
   });
 
   @override
+  State<_ScoreSliderField> createState() => _ScoreSliderFieldState();
+}
+
+class _ScoreSliderFieldState extends State<_ScoreSliderField> {
+  late double _current;
+
+  @override
+  void initState() {
+    super.initState();
+    _current = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(_ScoreSliderField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _current = widget.value;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         SizedBox(
           width: 48,
           child: Text(
-            value.toStringAsFixed(0),
+            _current.toStringAsFixed(0),
             style: const TextStyle(
               color: AppTheme.neonGreen,
               fontWeight: FontWeight.w800,
@@ -375,14 +388,71 @@ class _ScoreSliderField extends StatelessWidget {
         ),
         Expanded(
           child: Slider(
-            value: value,
+            value: _current,
             min: 0,
             max: 100,
             divisions: 100,
-            onChanged: onChanged,
+            onChanged: (v) => setState(() => _current = v),
+            onChangeEnd: widget.onChanged,
           ),
         ),
         const Text('100', style: TextStyle(color: AppTheme.textSecondary)),
+      ],
+    );
+  }
+}
+
+class _WeightSlider extends StatefulWidget {
+  final double initialWeight;
+  final ValueChanged<double> onChanged;
+
+  const _WeightSlider({
+    required this.initialWeight,
+    required this.onChanged,
+  });
+
+  @override
+  State<_WeightSlider> createState() => _WeightSliderState();
+}
+
+class _WeightSliderState extends State<_WeightSlider> {
+  late double _current;
+
+  @override
+  void initState() {
+    super.initState();
+    _current = widget.initialWeight;
+  }
+
+  @override
+  void didUpdateWidget(_WeightSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialWeight != widget.initialWeight) {
+      if (!mounted) return;
+      setState(() {
+        _current = widget.initialWeight;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'テスト: ${(_current * 100).toStringAsFixed(0)}%  '
+          '平常点: ${((1.0 - _current) * 100).toStringAsFixed(0)}%',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        Slider(
+          value: _current.clamp(0.0, 1.0),
+          min: 0.0,
+          max: 1.0,
+          divisions: 10,
+          onChanged: (v) => setState(() => _current = v),
+          onChangeEnd: widget.onChanged,
+        ),
       ],
     );
   }

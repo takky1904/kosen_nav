@@ -8,9 +8,9 @@ import '../application/task_controller.dart';
 import '../domain/task.dart';
 import 'package:intl/intl.dart';
 
-import '../presentation/widgets/task_ai_mentor.dart';
-import './widgets/backlog_gantt_chart.dart';
-import '../../grades/application/grade_controller.dart';
+import 'widgets/task_ai_mentor.dart';
+import 'widgets/backlog_gantt_chart.dart';
+import 'widgets/edit_task_sheet.dart';
 
 class TasksScreen extends ConsumerWidget {
   const TasksScreen({super.key});
@@ -200,7 +200,7 @@ class TasksScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _AddTaskSheet(task: task),
+      builder: (context) => EditTaskSheet(task: task),
     );
   }
 }
@@ -259,486 +259,7 @@ class _StatusHeader extends StatelessWidget {
   }
 }
 
-class _AddTaskSheet extends ConsumerStatefulWidget {
-  final TaskModel? task;
-  const _AddTaskSheet({this.task});
 
-  @override
-  ConsumerState<_AddTaskSheet> createState() => _AddTaskSheetState();
-}
-
-class _AddTaskSheetState extends ConsumerState<_AddTaskSheet> {
-  final _titleController = TextEditingController();
-  String? _selectedSubjectId;
-  TaskType _selectedType = TaskType.homework;
-  TaskPriority _selectedPriority = TaskPriority.medium;
-  DateTime _selectedStartDate = DateTime.now();
-  DateTime _selectedDeadline = DateTime.now().add(const Duration(days: 1));
-  double _estimatedHours = 1.0;
-  final _durationController = TextEditingController();
-  TaskStatus _selectedStatus = TaskStatus.todo;
-  bool _isSubmitting = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.task != null) {
-      _titleController.text = widget.task!.title;
-      _selectedSubjectId = widget.task!.subjectId;
-      _selectedType = widget.task!.type;
-      _selectedPriority = widget.task!.priority;
-      _selectedStartDate = widget.task!.startDate;
-      _selectedDeadline = widget.task!.deadline;
-      _selectedStatus = widget.task!.status;
-      // Slider の範囲 (0.0-20.0) に収まるようにクランプする
-      _estimatedHours = widget.task!.estimatedHours.clamp(0.0, 20.0);
-    }
-    _durationController.text = _estimatedHours.toStringAsFixed(1);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final subjects = ref.watch(gradeNotifierProvider);
-    final tt = Theme.of(context).textTheme;
-    final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
-
-    return Container(
-      padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + bottomPadding),
-      decoration: const BoxDecoration(
-        color: AppTheme.bgCard,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border(top: BorderSide(color: AppTheme.neonGreen, width: 2)),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.task == null ? 'CREATE NEW TASK' : 'EDIT TASK',
-                  style: tt.headlineSmall?.copyWith(
-                    color: AppTheme.neonGreen,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (widget.task != null)
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline, color: AppTheme.neonRed),
-                    onPressed: _delete,
-                  ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'TITLE',
-                labelStyle: TextStyle(color: AppTheme.textSecondary),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppTheme.border),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppTheme.neonGreen),
-                ),
-              ),
-              style: const TextStyle(color: AppTheme.textPrimary),
-            ),
-            const SizedBox(height: 20),
-            _buildSectionLabel('SUBJECT (OPTIONAL)'),
-            subjects.when(
-              data: (subjectList) => DropdownButtonFormField<String>(
-                value: subjectList.any((s) => s.id == _selectedSubjectId)
-                    ? _selectedSubjectId
-                    : null,
-                dropdownColor: AppTheme.bgCard,
-                items: [
-                  const DropdownMenuItem(
-                    value: null,
-                    child: Text(
-                      'なし',
-                      style: TextStyle(color: AppTheme.textSecondary),
-                    ),
-                  ),
-                  ...subjectList.map(
-                    (s) => DropdownMenuItem(
-                      value: s.id,
-                      child: Text(
-                        s.name,
-                        style: const TextStyle(color: AppTheme.textPrimary),
-                      ),
-                    ),
-                  ),
-                ],
-                onChanged: (val) => setState(() => _selectedSubjectId = val),
-                decoration: const InputDecoration(
-                  enabledBorder: InputBorder.none,
-                ),
-              ),
-              loading: () => const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
-              error: (err, stack) => Text(
-                'Failed to load subjects',
-                style: TextStyle(color: AppTheme.neonRed, fontSize: 10),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionLabel('TYPE'),
-                      DropdownButtonFormField<TaskType>(
-                        initialValue: _selectedType,
-                        dropdownColor: AppTheme.bgCard,
-                        items: TaskType.values
-                            .map(
-                              (t) => DropdownMenuItem(
-                                value: t,
-                                child: Text(
-                                  t.label,
-                                  style: const TextStyle(
-                                    color: AppTheme.textPrimary,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => _selectedType = val!),
-                        decoration: const InputDecoration(
-                          enabledBorder: InputBorder.none,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionLabel('PRIORITY'),
-                      DropdownButtonFormField<TaskPriority>(
-                        initialValue: _selectedPriority,
-                        dropdownColor: AppTheme.bgCard,
-                        items: TaskPriority.values
-                            .map(
-                              (p) => DropdownMenuItem(
-                                value: p,
-                                child: Text(
-                                  p.label,
-                                  style: const TextStyle(
-                                    color: AppTheme.textPrimary,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (val) =>
-                            setState(() => _selectedPriority = val!),
-                        decoration: const InputDecoration(
-                          enabledBorder: InputBorder.none,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionLabel('START DATE'),
-                      InkWell(
-                        onTap: () => _pickDateTime(context, isStart: true),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.calendar_today,
-                                size: 16,
-                                color: AppTheme.neonGreen,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                DateFormat('MM/dd').format(_selectedStartDate),
-                                style: const TextStyle(
-                                  color: AppTheme.textPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionLabel('DEADLINE'),
-                      InkWell(
-                        onTap: () => _pickDateTime(context, isStart: false),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.flag,
-                                size: 16,
-                                color: AppTheme.neonOrange,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                DateFormat(
-                                  'MM/dd HH:mm',
-                                ).format(_selectedDeadline),
-                                style: const TextStyle(
-                                  color: AppTheme.textPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _buildSectionLabel('STATUS'),
-            DropdownButtonFormField<TaskStatus>(
-              initialValue: _selectedStatus,
-              dropdownColor: AppTheme.bgCard,
-              items: TaskStatus.values
-                  .map(
-                    (s) => DropdownMenuItem(
-                      value: s,
-                      child: Text(
-                        s.label,
-                        style: const TextStyle(color: AppTheme.textPrimary),
-                      ),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (val) => setState(() => _selectedStatus = val!),
-              decoration: const InputDecoration(enabledBorder: InputBorder.none),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildSectionLabel(
-                    'ESTIMATED HOURS: ${_estimatedHours.toStringAsFixed(1)}h',
-                  ),
-                ),
-                SizedBox(
-                  width: 60,
-                  height: 30,
-                  child: TextField(
-                    controller: _durationController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppTheme.textPrimary, fontSize: 13),
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.zero,
-                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: AppTheme.border)),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: AppTheme.neonGreen)),
-                    ),
-                    onChanged: (val) {
-                      final h = double.tryParse(val);
-                      if (h != null) {
-                        setState(() => _estimatedHours = h.clamp(0.0, 20.0));
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Slider(
-              value: _estimatedHours.clamp(0.0, 20.0),
-              min: 0.0,
-              max: 20.0,
-              divisions: 40,
-              activeColor: AppTheme.neonGreen,
-              inactiveColor: AppTheme.border,
-              onChanged: (val) {
-                setState(() {
-                  _estimatedHours = val;
-                  _durationController.text = val.toStringAsFixed(1);
-                });
-              },
-            ),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: _isSubmitting ? null : _submit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.neonGreen,
-                  foregroundColor: AppTheme.bgDeep,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: _isSubmitting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppTheme.bgDeep,
-                        ),
-                      )
-                    : Text(
-                        widget.task == null ? 'CREATE TASK' : 'UPDATE TASK',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionLabel(String label) {
-    return Text(
-      label,
-      style: TextStyle(
-        color: AppTheme.textSecondary.withAlpha(150),
-        fontSize: 10,
-        fontWeight: FontWeight.bold,
-        letterSpacing: 1.0,
-      ),
-    );
-  }
-
-  Future<void> _pickDateTime(
-    BuildContext context, {
-    required bool isStart,
-  }) async {
-    final initialDate = isStart ? _selectedStartDate : _selectedDeadline;
-    final date = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(2025),
-      lastDate: DateTime(2030),
-    );
-    if (date != null) {
-      if (isStart) {
-        setState(() {
-          _selectedStartDate = DateTime(date.year, date.month, date.day);
-        });
-      } else {
-        final time = await showTimePicker(
-          context: context,
-          initialTime: TimeOfDay.fromDateTime(_selectedDeadline),
-        );
-        if (time != null) {
-          setState(() {
-            _selectedDeadline = DateTime(
-              date.year,
-              date.month,
-              date.day,
-              time.hour,
-              time.minute,
-            );
-          });
-        }
-      }
-    }
-  }
-
-  Future<void> _submit() async {
-    if (_titleController.text.trim().isEmpty) return;
-    
-    // Ensure startDate is at 00:00:00
-    final normalizedStartDate = DateTime(
-      _selectedStartDate.year,
-      _selectedStartDate.month,
-      _selectedStartDate.day,
-    );
-
-    setState(() => _isSubmitting = true);
-
-    try {
-      if (widget.task == null) {
-        final task = TaskModel.create(
-          title: _titleController.text.trim(),
-          subjectId: _selectedSubjectId,
-          type: _selectedType,
-          priority: _selectedPriority,
-          startDate: normalizedStartDate,
-          deadline: _selectedDeadline,
-          estimatedHours: _estimatedHours,
-        );
-        await ref.read(tasksProvider.notifier).addTask(task);
-      } else {
-        final duration = double.tryParse(_durationController.text) ?? _estimatedHours;
-        final updatedTask = widget.task!.copyWith(
-          title: _titleController.text.trim(),
-          subjectId: _selectedSubjectId,
-          type: _selectedType,
-          priority: _selectedPriority,
-          status: _selectedStatus,
-          startDate: normalizedStartDate,
-          deadline: _selectedDeadline,
-          estimatedHours: duration,
-        );
-        await ref.read(tasksProvider.notifier).updateTask(updatedTask);
-      }
-      if (mounted) Navigator.pop(context);
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isSubmitting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to save task: $e'),
-            backgroundColor: AppTheme.neonRed,
-          ),
-        );
-      }
-    }
-  }
-
-  Future<void> _delete() async {
-    setState(() => _isSubmitting = true);
-    try {
-      await ref.read(tasksProvider.notifier).deleteTask(widget.task!.id);
-      if (mounted) Navigator.pop(context);
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isSubmitting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to delete task: $e'),
-            backgroundColor: AppTheme.neonRed,
-          ),
-        );
-      }
-    }
-  }
-}
 
 class _TaskCard extends ConsumerWidget {
   final TaskModel task;
@@ -755,7 +276,6 @@ class _TaskCard extends ConsumerWidget {
   Widget _buildBody(BuildContext context, WidgetRef ref) {
     final tt = Theme.of(context).textTheme;
     final color = _getPriorityColor(task.priority);
-    final deadlineStr = DateFormat('MM/dd HH:mm').format(task.deadline);
 
     return Dismissible(
       key: Key(task.id),
@@ -795,12 +315,12 @@ class _TaskCard extends ConsumerWidget {
           color: AppTheme.bgCard,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: task.priority == TaskPriority.urgent
+            color: (task.status != TaskStatus.done && task.priority == TaskPriority.urgent)
                 ? AppTheme.neonRed
-                : AppTheme.border,
-            width: task.priority == TaskPriority.urgent ? 2 : 1,
+                : AppTheme.border.withAlpha(task.status == TaskStatus.done ? 50 : 255),
+            width: (task.status != TaskStatus.done && task.priority == TaskPriority.urgent) ? 2 : 1,
           ),
-          boxShadow: task.priority == TaskPriority.urgent
+          boxShadow: (task.status != TaskStatus.done && task.priority == TaskPriority.urgent)
               ? [
                   BoxShadow(
                     color: AppTheme.neonRed.withAlpha(40),
@@ -828,8 +348,6 @@ class _TaskCard extends ConsumerWidget {
                     task.type.label,
                     style: TextStyle(
                       color: color,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -870,8 +388,8 @@ class _TaskCard extends ConsumerWidget {
                       .toList(),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                      horizontal: 10,
+                      vertical: 6,
                     ),
                     decoration: BoxDecoration(
                       color: _getStatusColor(task.status).withAlpha(30),
@@ -881,25 +399,28 @@ class _TaskCard extends ConsumerWidget {
                       ),
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           _getStatusIcon(task.status),
-                          size: 12,
+                          size: 14,
                           color: _getStatusColor(task.status),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 6),
                         Text(
-                          task.status == TaskStatus.done 
-                              ? 'DONE' 
-                              : '${DateFormat('MM/dd').format(task.startDate)} - $deadlineStr',
+                          task.status.label.toUpperCase(),
                           style: tt.bodySmall?.copyWith(
-                            color: task.status == TaskStatus.done
-                                ? AppTheme.neonGreen
-                                : (_isOverdue(task.deadline)
-                                      ? AppTheme.neonRed
-                                      : AppTheme.textSecondary),
-                            fontSize: 10,
+                            color: _getStatusColor(task.status),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                            letterSpacing: 0.5,
                           ),
+                        ),
+                        const SizedBox(width: 2),
+                        Icon(
+                          Icons.arrow_drop_down,
+                          size: 18,
+                          color: _getStatusColor(task.status).withAlpha(180),
                         ),
                       ],
                     ),
@@ -907,10 +428,11 @@ class _TaskCard extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               task.title,
               style: tt.titleMedium?.copyWith(
+                height: 1.3,
                 decoration: task.status == TaskStatus.done
                     ? TextDecoration.lineThrough
                     : null,
@@ -919,7 +441,7 @@ class _TaskCard extends ConsumerWidget {
                     : AppTheme.textPrimary,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Row(
               children: [
                 const Icon(
@@ -928,9 +450,25 @@ class _TaskCard extends ConsumerWidget {
                   color: AppTheme.textSecondary,
                 ),
                 const SizedBox(width: 4),
-                Text('${task.estimatedHours}h', style: tt.bodySmall),
+                Text(
+                  '${task.estimatedHours.toStringAsFixed(1)}h',
+                  style: tt.bodySmall?.copyWith(color: AppTheme.textSecondary),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  '${DateFormat('MM/dd').format(task.startDate)} - ${DateFormat('MM/dd').format(task.deadline)}',
+                  style: tt.bodySmall?.copyWith(
+                    color: _isOverdue(task.deadline) && task.status != TaskStatus.done
+                        ? AppTheme.neonRed
+                        : AppTheme.textSecondary,
+                    fontSize: 11,
+                  ),
+                ),
                 const Spacer(),
-                _PriorityBadge(priority: task.priority),
+                _PriorityBadge(
+                  priority: task.priority,
+                  isDone: task.status == TaskStatus.done,
+                ),
               ],
             ),
           ],
@@ -979,11 +517,15 @@ class _TaskCard extends ConsumerWidget {
 
 class _PriorityBadge extends StatelessWidget {
   final TaskPriority priority;
-  const _PriorityBadge({required this.priority});
+  final bool isDone;
+  const _PriorityBadge({required this.priority, this.isDone = false});
 
   @override
   Widget build(BuildContext context) {
-    final color = _getColor();
+    var color = _getColor();
+    if (isDone) {
+      color = AppTheme.textSecondary.withAlpha(150);
+    }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
