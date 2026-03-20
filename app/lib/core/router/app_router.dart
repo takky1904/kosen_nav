@@ -6,7 +6,6 @@ import '../../features/grades/presentation/grades_screen.dart';
 import '../../features/grades/presentation/subject_detail_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import '../../features/tasks/presentation/gantt_chart_screen.dart';
-import '../../features/tasks/presentation/test_connection_screen.dart';
 import '../theme/app_theme.dart';
 import '../../shared/providers/navigation_providers.dart';
 
@@ -54,11 +53,6 @@ final appRouter = GoRouter(
               name: 'gantt',
               builder: (context, state) => const GanttChartScreen(),
             ),
-            GoRoute(
-              path: 'test-connection',
-              name: 'test-connection',
-              builder: (context, state) => const TestConnectionScreen(),
-            ),
           ],
         ),
       ],
@@ -80,8 +74,6 @@ class AppShell extends ConsumerWidget {
     int selectedIndex = 0;
     if (location.startsWith('/grades')) {
       selectedIndex = 1;
-    } else if (location.startsWith('/tasks/test-connection')) {
-      selectedIndex = 3;
     } else if (location.startsWith('/tasks')) {
       selectedIndex = 2;
     }
@@ -151,7 +143,10 @@ class AppShell extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -160,7 +155,7 @@ class AppShell extends ConsumerWidget {
                               'KOSEN NAV',
                               overflow: TextOverflow.ellipsis,
                               style: AppTheme.logoStyle.copyWith(
-                                color: AppTheme.neonGreen,
+                                color: AppTheme.textPrimary,
                                 fontSize: 18,
                               ),
                             ),
@@ -204,15 +199,7 @@ class AppShell extends ConsumerWidget {
                         ref.read(isMenuOpenProvider.notifier).close();
                       },
                     ),
-                    _DrawerItem(
-                      icon: Icons.network_check_rounded,
-                      label: '接続テスト',
-                      isSelected: selectedIndex == 3,
-                      onTap: () {
-                        context.go('/tasks/test-connection');
-                        ref.read(isMenuOpenProvider.notifier).close();
-                      },
-                    ),
+                    // 接続テスト画面は削除されました
                   ],
                 ),
               ),

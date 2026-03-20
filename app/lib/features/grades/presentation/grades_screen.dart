@@ -132,9 +132,7 @@ class GradesScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                score != null
-                                    ? score.toStringAsFixed(1)
-                                    : '--',
+                                score != null ? score.toStringAsFixed(1) : '--',
                                 style: TextStyle(
                                   color: _scoreColor(score),
                                   fontSize: 22,

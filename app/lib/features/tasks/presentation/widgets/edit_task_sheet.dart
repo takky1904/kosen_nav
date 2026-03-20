@@ -588,29 +588,64 @@ class _EditTaskSheetState extends ConsumerState<EditTaskSheet> {
     BuildContext context, {
     required bool isStart,
   }) async {
-    final initialDate = isStart ? _selectedStartDate : _selectedDeadline;
-    final date = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(2025),
-      lastDate: DateTime(2030),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.dark(
-            primary: AppTheme.neonGreen,
-            onPrimary: AppTheme.bgDeep,
-            surface: AppTheme.bgCard,
+    if (isStart) {
+      // When picking start date, prevent choosing a date after the current deadline
+      final lastAllowed = DateTime(
+        _selectedDeadline.year,
+        _selectedDeadline.month,
+        _selectedDeadline.day,
+      );
+      final initialDate = _selectedStartDate.isAfter(lastAllowed)
+          ? lastAllowed
+          : _selectedStartDate;
+      final date = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime(2025),
+        lastDate: lastAllowed,
+        builder: (context, child) => Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: AppTheme.neonGreen,
+              onPrimary: AppTheme.bgDeep,
+              surface: AppTheme.bgCard,
+            ),
           ),
+          child: child!,
         ),
-        child: child!,
-      ),
-    );
-    if (date != null) {
-      if (isStart) {
+      );
+      if (date != null) {
         setState(
           () => _selectedStartDate = DateTime(date.year, date.month, date.day),
         );
-      } else {
+      }
+    } else {
+      // When picking deadline, prevent choosing a date before the current start date
+      final firstAllowed = DateTime(
+        _selectedStartDate.year,
+        _selectedStartDate.month,
+        _selectedStartDate.day,
+      );
+      final initialDate = _selectedDeadline.isBefore(firstAllowed)
+          ? firstAllowed
+          : _selectedDeadline;
+      final date = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: firstAllowed,
+        lastDate: DateTime(2030),
+        builder: (context, child) => Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: AppTheme.neonGreen,
+              onPrimary: AppTheme.bgDeep,
+              surface: AppTheme.bgCard,
+            ),
+          ),
+          child: child!,
+        ),
+      );
+      if (date != null) {
         final time = await showTimePicker(
           context: context,
           initialTime: TimeOfDay.fromDateTime(_selectedDeadline),
@@ -637,6 +672,17 @@ class _EditTaskSheetState extends ConsumerState<EditTaskSheet> {
       _selectedStartDate.month,
       _selectedStartDate.day,
     );
+    // Validate start <= deadline
+    if (normalizedStartDate.isAfter(_selectedDeadline)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Start date must be on or before the deadline'),
+          backgroundColor: AppTheme.neonRed,
+        ),
+      );
+      return;
+    }
+
     setState(() => _isSubmitting = true);
     try {
       if (widget.task == null) {

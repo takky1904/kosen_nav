@@ -96,7 +96,7 @@ class AppTheme {
         titleTextStyle: GoogleFonts.notoSansJp(
           fontSize: 18,
           fontWeight: FontWeight.w700,
-          color: neonGreen,
+          color: textPrimary,
           letterSpacing: 2,
         ),
         iconTheme: const IconThemeData(color: textPrimary),
