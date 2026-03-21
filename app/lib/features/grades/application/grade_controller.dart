@@ -8,7 +8,12 @@ class GradeNotifier extends AsyncNotifier<List<SubjectModel>> {
 
   @override
   Future<List<SubjectModel>> build() async {
-    return _apiClient.fetchSubjects();
+    try {
+      return await _apiClient.fetchSubjects();
+    } catch (_) {
+      // 初期表示を止めないため、取得失敗時は空配列で描画する。
+      return <SubjectModel>[];
+    }
   }
 
   // ── CRUD ──────────────────────────────────────────
@@ -37,7 +42,11 @@ class GradeNotifier extends AsyncNotifier<List<SubjectModel>> {
 
   // ── Score Updates ──────────────────────────────────
 
-  Future<void> updateTestScore(String subjectId, int index, double? score) async {
+  Future<void> updateTestScore(
+    String subjectId,
+    int index,
+    double? score,
+  ) async {
     final subjects = state.value ?? [];
     final subject = subjects.firstWhere((s) => s.id == subjectId);
     final updatedSubject = subject.withTestScore(index, score);
@@ -54,7 +63,9 @@ class GradeNotifier extends AsyncNotifier<List<SubjectModel>> {
   Future<void> updateWeights(String subjectId, double testWeight) async {
     final subjects = state.value ?? [];
     final subject = subjects.firstWhere((s) => s.id == subjectId);
-    final updatedSubject = subject.copyWith(testWeight: (testWeight * 10).roundToDouble() / 10.0);
+    final updatedSubject = subject.copyWith(
+      testWeight: (testWeight * 10).roundToDouble() / 10.0,
+    );
     await updateSubject(updatedSubject);
   }
 }

@@ -7,7 +7,12 @@ class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
 
   @override
   Future<List<TaskModel>> build() async {
-    return _apiClient.fetchTasks();
+    try {
+      return await _apiClient.fetchTasks();
+    } catch (_) {
+      // 初期表示を止めないため、取得失敗時は空配列で描画する。
+      return <TaskModel>[];
+    }
   }
 
   Future<void> addTask(TaskModel task) async {
@@ -46,4 +51,6 @@ class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
   }
 }
 
-final tasksProvider = AsyncNotifierProvider<TaskNotifier, List<TaskModel>>(TaskNotifier.new);
+final tasksProvider = AsyncNotifierProvider<TaskNotifier, List<TaskModel>>(
+  TaskNotifier.new,
+);

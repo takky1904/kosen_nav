@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../domain/subject_model.dart';
@@ -8,7 +10,7 @@ class SubjectApiClient {
   static String get _baseUrl {
     if (kIsWeb) return 'http://localhost:8080';
     // 【重要】Android実機の場合は、PCのIPアドレスに書き換えが必要
-    return 'http://192.168.1.5:8080'; 
+    return 'http://192.168.1.5:8080';
   }
 
   SubjectApiClient({Dio? dio})
@@ -24,13 +26,17 @@ class SubjectApiClient {
 
   Future<List<SubjectModel>> fetchSubjects() async {
     try {
-      final response = await _dio.get('/subjects');
+      final response = await _dio
+          .get('/subjects')
+          .timeout(const Duration(seconds: 8));
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
         return data.map((json) => SubjectModel.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load subjects: ${response.statusCode}');
       }
+    } on TimeoutException {
+      throw Exception('Network timeout while loading subjects.');
     } on DioException catch (e) {
       throw Exception('Network error: ${e.message}');
     } catch (e) {
@@ -40,10 +46,7 @@ class SubjectApiClient {
 
   Future<SubjectModel> createSubject(SubjectModel subject) async {
     try {
-      final response = await _dio.post(
-        '/subjects',
-        data: subject.toJson(),
-      );
+      final response = await _dio.post('/subjects', data: subject.toJson());
       if (response.statusCode == 201 || response.statusCode == 200) {
         return SubjectModel.fromJson(response.data);
       } else {

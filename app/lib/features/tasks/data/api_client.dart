@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../domain/task.dart';
@@ -27,7 +29,9 @@ class TaskApiClient {
   /// サーバーの /tasks からタスク一覧を取得する
   Future<List<TaskModel>> fetchTasks() async {
     try {
-      final response = await _dio.get('/tasks');
+      final response = await _dio
+          .get('/tasks')
+          .timeout(const Duration(seconds: 8));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
@@ -35,6 +39,8 @@ class TaskApiClient {
       } else {
         throw Exception('Failed to load tasks: ${response.statusCode}');
       }
+    } on TimeoutException {
+      throw Exception('Network timeout while loading tasks.');
     } on DioException catch (e) {
       // Androidシミュレーターから localhost に繋ぐ場合の注意点:
       // http://localhost:8080 ではなく http://10.0.2.2:8080 を使用してください。
@@ -48,10 +54,7 @@ class TaskApiClient {
   /// サーバーに新しいタスクを保存する
   Future<TaskModel> createTask(TaskModel task) async {
     try {
-      final response = await _dio.post(
-        '/tasks',
-        data: task.toJson(),
-      );
+      final response = await _dio.post('/tasks', data: task.toJson());
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         return TaskModel.fromJson(response.data);
@@ -68,10 +71,7 @@ class TaskApiClient {
   /// サーバー上のタスクを更新する
   Future<TaskModel> updateTask(TaskModel task) async {
     try {
-      final response = await _dio.put(
-        '/tasks/${task.id}',
-        data: task.toJson(),
-      );
+      final response = await _dio.put('/tasks/${task.id}', data: task.toJson());
 
       if (response.statusCode == 200) {
         return TaskModel.fromJson(response.data);
