@@ -48,6 +48,7 @@ dependencies:
   syncfusion_flutter_charts: ^32.2.9
   linked_scroll_controller: ^0.2.0
   dio: ^5.7.0
+  aad_oauth: ^1.0.0
 
 dev_dependencies:
   flutter_test:

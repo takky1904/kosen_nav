@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/task.dart';
+import '../domain/teams_assignment.dart';
 import '../data/api_client.dart';
 
 class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
@@ -48,6 +49,33 @@ class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
       ref.invalidateSelf();
       return future;
     });
+  }
+
+  Future<void> mergeTeamsAssignments(List<TeamsAssignment> assignments) async {
+    final current = state.value ?? <TaskModel>[];
+    final merged = List<TaskModel>.from(current);
+
+    for (final assignment in assignments) {
+      final exists = merged.any((task) => task.id == assignment.id);
+      if (exists) continue;
+
+      merged.add(
+        TaskModel(
+          id: assignment.id,
+          title: assignment.title,
+          subjectId: null,
+          type: TaskType.homework,
+          priority: TaskPriority.medium,
+          status: TaskStatus.todo,
+          startDate: DateTime.now(),
+          deadline:
+              assignment.dueDate ?? DateTime.now().add(const Duration(days: 7)),
+          estimatedHours: 1.0,
+        ),
+      );
+    }
+
+    state = AsyncValue.data(merged);
   }
 }
 

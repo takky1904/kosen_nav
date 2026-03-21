@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'app_navigator_key.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/grades/presentation/grades_screen.dart';
 import '../../features/grades/presentation/subject_detail_screen.dart';
@@ -10,6 +11,7 @@ import '../theme/app_theme.dart';
 import '../../shared/providers/navigation_providers.dart';
 
 final appRouter = GoRouter(
+  navigatorKey: appNavigatorKey,
   initialLocation: '/',
   errorBuilder: (context, state) => Scaffold(
     body: Center(

@@ -5,7 +5,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets.dart';
 import '../application/task_controller.dart';
+import '../data/teams_auth_service.dart';
 import '../domain/task.dart';
+import '../domain/teams_assignment.dart';
 import 'package:intl/intl.dart';
 
 import 'widgets/task_ai_mentor.dart';
@@ -23,185 +25,246 @@ class TasksScreen extends ConsumerWidget {
     return tasksAsync.when(
       loading: () => const Scaffold(
         backgroundColor: AppTheme.bgDeep,
-        body: Center(child: CircularProgressIndicator(color: AppTheme.neonGreen)),
+        body: Center(
+          child: CircularProgressIndicator(color: AppTheme.neonGreen),
+        ),
       ),
       error: (err, stack) => Scaffold(
         backgroundColor: AppTheme.bgDeep,
-        body: Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
+        body: Center(
+          child: Text('Error: $err', style: const TextStyle(color: Colors.red)),
+        ),
       ),
       data: (tasks) {
-        final todoTasks = tasks.where((t) => t.status == TaskStatus.todo).toList();
-        final doingTasks = tasks.where((t) => t.status == TaskStatus.doing).toList();
-        final doneTasks = tasks.where((t) => t.status == TaskStatus.done).toList();
+        final todoTasks = tasks
+            .where((t) => t.status == TaskStatus.todo)
+            .toList();
+        final doingTasks = tasks
+            .where((t) => t.status == TaskStatus.doing)
+            .toList();
+        final doneTasks = tasks
+            .where((t) => t.status == TaskStatus.done)
+            .toList();
 
         return Scaffold(
           backgroundColor: AppTheme.bgDeep,
           body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            leading: const MenuToggleButton(),
-            title: Text('タスク', style: tt.headlineLarge),
-            backgroundColor: AppTheme.bgDeep,
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.bar_chart_rounded,
-                  color: AppTheme.neonGreen,
-                ),
-                onPressed: () => context.push('/tasks/gantt'),
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'ガントチャート',
-                        style: tt.labelLarge?.copyWith(
-                          color: AppTheme.textSecondary,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => context.push('/tasks/gantt'),
-                        child: const Text(
-                          '詳細を見る',
-                          style: TextStyle(
-                            color: AppTheme.neonGreen,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    ],
+            slivers: [
+              SliverAppBar(
+                floating: true,
+                leading: const MenuToggleButton(),
+                title: Text('タスク', style: tt.headlineLarge),
+                backgroundColor: AppTheme.bgDeep,
+                actions: [
+                  TextButton.icon(
+                    onPressed: () => _syncWithTeams(context, ref),
+                    icon: const Icon(
+                      Icons.sync,
+                      size: 16,
+                      color: AppTheme.neonBlue,
+                    ),
+                    label: const Text(
+                      'Teamsと同期',
+                      style: TextStyle(color: AppTheme.neonBlue, fontSize: 12),
+                    ),
                   ),
-                  GestureDetector(
-                    onTap: () => context.push('/tasks/gantt'),
-                    child: Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: AppTheme.bgCard,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppTheme.border.withOpacity(0.5),
-                        ),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Stack(
+                  IconButton(
+                    icon: const Icon(
+                      Icons.bar_chart_rounded,
+                      color: AppTheme.neonGreen,
+                    ),
+                    onPressed: () => context.push('/tasks/gantt'),
+                  ),
+                ],
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IgnorePointer(
-                            child: BacklogGanttChart(
-                              key: const ValueKey('gantt_preview'),
-                              tasks: tasks,
-                              isPreview: true,
+                          Text(
+                            'ガントチャート',
+                            style: tt.labelLarge?.copyWith(
+                              color: AppTheme.textSecondary,
+                              letterSpacing: 1.2,
                             ),
                           ),
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    AppTheme.bgCard.withOpacity(0),
-                                    AppTheme.bgCard,
-                                  ],
-                                ),
+                          TextButton(
+                            onPressed: () => context.push('/tasks/gantt'),
+                            child: const Text(
+                              '詳細を見る',
+                              style: TextStyle(
+                                color: AppTheme.neonGreen,
+                                fontSize: 10,
                               ),
                             ),
                           ),
                         ],
                       ),
+                      GestureDetector(
+                        onTap: () => context.push('/tasks/gantt'),
+                        child: Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            color: AppTheme.bgCard,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: AppTheme.border.withOpacity(0.5),
+                            ),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: Stack(
+                            children: [
+                              IgnorePointer(
+                                child: BacklogGanttChart(
+                                  key: const ValueKey('gantt_preview'),
+                                  tasks: tasks,
+                                  isPreview: true,
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        AppTheme.bgCard.withOpacity(0),
+                                        AppTheme.bgCard,
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                sliver: SliverToBoxAdapter(child: TaskAiMentor(tasks: tasks)),
+              ),
+
+              if (doingTasks.isNotEmpty) ...[
+                const SliverToBoxAdapter(
+                  child: _StatusHeader(status: TaskStatus.doing),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => _TaskCard(
+                        task: doingTasks[index],
+                      ).animate().fadeIn().slideX(),
+                      childCount: doingTasks.length,
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
+              ],
+
+              if (todoTasks.isNotEmpty) ...[
+                const SliverToBoxAdapter(
+                  child: _StatusHeader(status: TaskStatus.todo),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => _TaskCard(
+                        task: todoTasks[index],
+                      ).animate().fadeIn().slideX(),
+                      childCount: todoTasks.length,
+                    ),
+                  ),
+                ),
+              ],
+
+              if (doneTasks.isNotEmpty) ...[
+                const SliverToBoxAdapter(
+                  child: _StatusHeader(status: TaskStatus.done),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => _TaskCard(
+                        task: doneTasks[index],
+                      ).animate().fadeIn().slideX(),
+                      childCount: doneTasks.length,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            sliver: SliverToBoxAdapter(child: TaskAiMentor(tasks: tasks)),
-          ),
-
-          if (doingTasks.isNotEmpty) ...[
-            const SliverToBoxAdapter(
-              child: _StatusHeader(status: TaskStatus.doing),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _TaskCard(
-                    task: doingTasks[index],
-                  ).animate().fadeIn().slideX(),
-                  childCount: doingTasks.length,
-                ),
-              ),
-            ),
-          ],
-
-          if (todoTasks.isNotEmpty) ...[
-            const SliverToBoxAdapter(
-              child: _StatusHeader(status: TaskStatus.todo),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _TaskCard(
-                    task: todoTasks[index],
-                  ).animate().fadeIn().slideX(),
-                  childCount: todoTasks.length,
-                ),
-              ),
-            ),
-          ],
-
-          if (doneTasks.isNotEmpty) ...[
-            const SliverToBoxAdapter(
-              child: _StatusHeader(status: TaskStatus.done),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _TaskCard(
-                    task: doneTasks[index],
-                  ).animate().fadeIn().slideX(),
-                  childCount: doneTasks.length,
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddTaskDialog(context, ref),
-        backgroundColor: AppTheme.neonGreen,
-        child: const Icon(Icons.add, color: AppTheme.bgDeep),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => _showAddTaskDialog(context, ref),
+            backgroundColor: AppTheme.neonGreen,
+            child: const Icon(Icons.add, color: AppTheme.bgDeep),
           ),
         );
       },
     );
   }
 
-  void _showAddTaskDialog(BuildContext context, WidgetRef ref, {TaskModel? task}) {
+  void _showAddTaskDialog(
+    BuildContext context,
+    WidgetRef ref, {
+    TaskModel? task,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => EditTaskSheet(task: task),
     );
+  }
+
+  Future<void> _syncWithTeams(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+
+    try {
+      final authService = TeamsAuthService();
+      final token = await authService.signInAndGetAccessToken();
+      if (token.isEmpty) {
+        throw Exception('アクセストークンが空です。');
+      }
+
+      // 取得処理は次段階。既存タスクを壊さない安全なマージ経路のみ先に用意する。
+      await ref
+          .read(tasksProvider.notifier)
+          .mergeTeamsAssignments(const <TeamsAssignment>[]);
+
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Teamsログインに成功しました。')),
+      );
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text('Teams同期の開始に失敗しました: $e')));
+    }
   }
 }
 
@@ -259,8 +322,6 @@ class _StatusHeader extends StatelessWidget {
   }
 }
 
-
-
 class _TaskCard extends ConsumerWidget {
   final TaskModel task;
   const _TaskCard({required this.task});
@@ -268,7 +329,8 @@ class _TaskCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () => const TasksScreen()._showAddTaskDialog(context, ref, task: task),
+      onTap: () =>
+          const TasksScreen()._showAddTaskDialog(context, ref, task: task),
       child: _buildBody(context, ref),
     );
   }
@@ -315,12 +377,22 @@ class _TaskCard extends ConsumerWidget {
           color: AppTheme.bgCard,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: (task.status != TaskStatus.done && task.priority == TaskPriority.urgent)
+            color:
+                (task.status != TaskStatus.done &&
+                    task.priority == TaskPriority.urgent)
                 ? AppTheme.neonRed
-                : AppTheme.border.withAlpha(task.status == TaskStatus.done ? 50 : 255),
-            width: (task.status != TaskStatus.done && task.priority == TaskPriority.urgent) ? 2 : 1,
+                : AppTheme.border.withAlpha(
+                    task.status == TaskStatus.done ? 50 : 255,
+                  ),
+            width:
+                (task.status != TaskStatus.done &&
+                    task.priority == TaskPriority.urgent)
+                ? 2
+                : 1,
           ),
-          boxShadow: (task.status != TaskStatus.done && task.priority == TaskPriority.urgent)
+          boxShadow:
+              (task.status != TaskStatus.done &&
+                  task.priority == TaskPriority.urgent)
               ? [
                   BoxShadow(
                     color: AppTheme.neonRed.withAlpha(40),
@@ -344,12 +416,7 @@ class _TaskCard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(4),
                     border: Border.all(color: color.withAlpha(100)),
                   ),
-                  child: Text(
-                    task.type.label,
-                    style: TextStyle(
-                      color: color,
-                    ),
-                  ),
+                  child: Text(task.type.label, style: TextStyle(color: color)),
                 ),
                 const Spacer(),
                 PopupMenuButton<TaskStatus>(
@@ -458,7 +525,9 @@ class _TaskCard extends ConsumerWidget {
                 Text(
                   '${DateFormat('MM/dd').format(task.startDate)} - ${DateFormat('MM/dd').format(task.deadline)}',
                   style: tt.bodySmall?.copyWith(
-                    color: _isOverdue(task.deadline) && task.status != TaskStatus.done
+                    color:
+                        _isOverdue(task.deadline) &&
+                            task.status != TaskStatus.done
                         ? AppTheme.neonRed
                         : AppTheme.textSecondary,
                     fontSize: 11,
