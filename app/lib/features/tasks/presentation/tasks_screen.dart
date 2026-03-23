@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +22,7 @@ class TasksScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tasksAsync = ref.watch(tasksProvider);
+    final profilePhotoBytes = ref.watch(teamsProfilePhotoProvider);
     final tt = Theme.of(context).textTheme;
 
     return tasksAsync.when(
@@ -74,6 +77,23 @@ class TasksScreen extends ConsumerWidget {
                       color: AppTheme.neonGreen,
                     ),
                     onPressed: () => context.push('/tasks/gantt'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundColor: AppTheme.bgCard,
+                      backgroundImage: profilePhotoBytes != null
+                          ? MemoryImage(profilePhotoBytes)
+                          : null,
+                      child: profilePhotoBytes == null
+                          ? const Icon(
+                              Icons.person,
+                              size: 18,
+                              color: AppTheme.textSecondary,
+                            )
+                          : null,
+                    ),
                   ),
                 ],
               ),
@@ -254,15 +274,25 @@ class TasksScreen extends ConsumerWidget {
         throw Exception('アクセストークンが空です。');
       }
 
+      final Uint8List? photo = await authService.fetchProfilePhotoBytes(token);
+      ref.read(teamsProfilePhotoProvider.notifier).setPhoto(photo);
+
       // 取得処理は次段階。既存タスクを壊さない安全なマージ経路のみ先に用意する。
       await ref
           .read(tasksProvider.notifier)
           .mergeTeamsAssignments(const <TeamsAssignment>[]);
 
       messenger.showSnackBar(
-        const SnackBar(content: Text('Teamsログインに成功しました。')),
+        SnackBar(
+          content: Text(
+            photo == null
+                ? 'Teamsログインに成功しました（プロフィール画像は未設定です）。'
+                : 'Teamsログインに成功しました。',
+          ),
+        ),
       );
     } catch (e) {
+      ref.read(teamsProfilePhotoProvider.notifier).clear();
       messenger.showSnackBar(SnackBar(content: Text('Teams同期の開始に失敗しました: $e')));
     }
   }

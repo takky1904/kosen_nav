@@ -2,33 +2,86 @@
 
 ```text
 kosen_nav/
-├── app/                      # Flutter Frontend
+├── app/                               # Flutter frontend
 │   ├── lib/
-│   │   ├── core/             # Core configurations (Theme, etc.)
-│   │   ├── features/         # Feature-based modules
+│   │   ├── core/
+│   │   │   ├── config/
+│   │   │   │   └── env.dart
+│   │   │   ├── constants/
+│   │   │   │   ├── api_constants.dart
+│   │   │   │   └── app_constants.dart
+│   │   │   ├── database/              # (empty)
+│   │   │   ├── router/
+│   │   │   │   ├── app_navigator_key.dart
+│   │   │   │   └── app_router.dart
+│   │   │   └── theme/
+│   │   │       ├── app_theme.dart
+│   │   │       └── theme.dart
+│   │   ├── features/
 │   │   │   ├── dashboard/
+│   │   │   │   └── presentation/
+│   │   │   │       └── dashboard_screen.dart
 │   │   │   ├── grades/
+│   │   │   │   ├── application/
+│   │   │   │   │   └── grade_controller.dart
+│   │   │   │   ├── data/
+│   │   │   │   │   └── subject_api_client.dart
+│   │   │   │   ├── domain/
+│   │   │   │   │   ├── grade.dart
+│   │   │   │   │   ├── grade_calculator.dart
+│   │   │   │   │   └── subject_model.dart
+│   │   │   │   └── presentation/
+│   │   │   │       ├── grades_screen.dart
+│   │   │   │       └── subject_detail_screen.dart
 │   │   │   ├── simulation/
-│   │   │   └── tasks/        # Task management feature
+│   │   │   │   └── application/
+│   │   │   │       └── simulation_controller.dart
+│   │   │   └── tasks/
 │   │   │       ├── application/
+│   │   │       │   └── task_controller.dart
 │   │   │       ├── data/
-│   │   │       ├── domain/   # Task model definition
+│   │   │       │   ├── api_client.dart
+│   │   │       │   ├── task_repository.dart
+│   │   │       │   └── teams_auth_service.dart
+│   │   │       ├── domain/
+│   │   │       │   ├── task.dart
+│   │   │       │   └── teams_assignment.dart
 │   │   │       └── presentation/
-│   │   ├── shared/           # Shared widgets and providers
-│   │   ├── utils/            # Utility functions
-│   │   └── main.dart         # App entry point
-│   ├── pubspec.yaml
-│   └── ...
-├── backend/                  # Backend Root
-│   ├── docker-compose.yml    # Infrastructure (PostgreSQL)
-│   └── server/               # Dart Frog Server
+│   │   │           ├── gantt_chart_screen.dart
+│   │   │           ├── tasks_screen.dart
+│   │   │           └── widgets/
+│   │   ├── shared/
+│   │   │   ├── loading_indicator.dart
+│   │   │   ├── menu_toggle_button.dart
+│   │   │   ├── promotion_status_badge.dart
+│   │   │   ├── widgets.dart
+│   │   │   └── providers/
+│   │   │       └── navigation_providers.dart
+│   │   ├── utils/
+│   │   │   └── string_extensions.dart
+│   │   └── main.dart
+│   └── pubspec.yaml
+├── backend/
+│   ├── docker-compose.yml
+│   └── server/                        # Dart Frog backend
 │       ├── db/
-│       │   └── migrations/   # SQL migration files
+│       │   └── migrations/
 │       ├── lib/
-│       │   └── src/          # Server-side logic (Database, etc.)
-│       ├── routes/           # API Endpoints
-│       │   └── tasks/        # /tasks routes
+│       │   └── src/
+│       │       └── database.dart
+│       ├── routes/
+│       │   ├── subjects/
+│       │   │   ├── index.dart
+│       │   │   └── [id].dart
+│       │   └── tasks/
+│       │       ├── index.dart
+│       │       └── [id].dart
+│       ├── test/
+│       │   └── routes/
 │       ├── pubspec.yaml
-│       └── ...
-└── folder.md                 # This file
+│       └── README.md
+├── docs/
+├── build/
+├── temp.txt
+└── folder.md
 ```

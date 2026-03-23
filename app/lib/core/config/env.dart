@@ -7,5 +7,5 @@ class Env {
   static const String msRedirectUri =
       'https://login.live.com/oauth20_desktop.srf';
   static const String msGraphScope =
-      'openid profile offline_access User.Read EduAssignments.ReadBasic EduAssignments.Read';
+      'openid profile offline_access User.Read User.ReadBasic.All EduAssignments.ReadBasic EduAssignments.Read';
 }

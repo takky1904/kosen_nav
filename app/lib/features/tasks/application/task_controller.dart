@@ -1,7 +1,23 @@
+import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/task.dart';
 import '../domain/teams_assignment.dart';
 import '../data/api_client.dart';
+
+class TeamsProfilePhotoNotifier extends Notifier<Uint8List?> {
+  @override
+  Uint8List? build() => null;
+
+  void setPhoto(Uint8List? bytes) => state = bytes;
+
+  void clear() => state = null;
+}
+
+final teamsProfilePhotoProvider =
+    NotifierProvider<TeamsProfilePhotoNotifier, Uint8List?>(
+      TeamsProfilePhotoNotifier.new,
+    );
 
 class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
   final _apiClient = TaskApiClient();
