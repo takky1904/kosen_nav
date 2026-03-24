@@ -49,6 +49,9 @@ dependencies:
   linked_scroll_controller: ^0.2.0
   dio: ^5.7.0
   aad_oauth: ^1.0.0
+  sqflite: ^2.4.1
+  path: ^1.9.1
+  connectivity_plus: ^6.1.5
 
 dev_dependencies:
   flutter_test:

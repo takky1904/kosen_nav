@@ -1,15 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/subject_model.dart';
-import '../data/subject_api_client.dart';
+import '../data/course_repository.dart';
 
 /// 科目リスト全体を管理するNotifier
 class GradeNotifier extends AsyncNotifier<List<SubjectModel>> {
-  final _apiClient = SubjectApiClient();
+  final _repository = CourseRepository();
 
   @override
   Future<List<SubjectModel>> build() async {
+    final stream = _repository.getCoursesStream();
+    StreamSubscription<List<SubjectModel>>? subscription;
+
+    subscription = stream.listen((subjects) {
+      state = AsyncValue.data(subjects);
+    });
+
+    ref.onDispose(() async {
+      await subscription?.cancel();
+    });
+
     try {
-      return await _apiClient.fetchSubjects();
+      return await stream.first;
     } catch (_) {
       // 初期表示を止めないため、取得失敗時は空配列で描画する。
       return <SubjectModel>[];
@@ -19,25 +32,27 @@ class GradeNotifier extends AsyncNotifier<List<SubjectModel>> {
   // ── CRUD ──────────────────────────────────────────
 
   Future<void> addSubject(SubjectModel subject) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      await _apiClient.createSubject(subject);
-      return _apiClient.fetchSubjects();
-    });
+    try {
+      await _repository.createCourse(subject);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
   Future<void> updateSubject(SubjectModel subject) async {
-    state = await AsyncValue.guard(() async {
-      await _apiClient.updateSubject(subject);
-      return _apiClient.fetchSubjects();
-    });
+    try {
+      await _repository.updateCourse(subject);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
   Future<void> removeSubject(String id) async {
-    state = await AsyncValue.guard(() async {
-      await _apiClient.deleteSubject(id);
-      return _apiClient.fetchSubjects();
-    });
+    try {
+      await _repository.deleteCourse(id);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
   // ── Score Updates ──────────────────────────────────

@@ -1,9 +1,10 @@
 import 'dart:typed_data';
+import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/task.dart';
 import '../domain/teams_assignment.dart';
-import '../data/api_client.dart';
+import '../data/task_repository.dart';
 
 class TeamsProfilePhotoNotifier extends Notifier<Uint8List?> {
   @override
@@ -20,12 +21,23 @@ final teamsProfilePhotoProvider =
     );
 
 class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
-  final _apiClient = TaskApiClient();
+  final _repository = TaskRepository();
 
   @override
   Future<List<TaskModel>> build() async {
+    final stream = _repository.getTasksStream();
+    StreamSubscription<List<TaskModel>>? subscription;
+
+    subscription = stream.listen((tasks) {
+      state = AsyncValue.data(tasks);
+    });
+
+    ref.onDispose(() async {
+      await subscription?.cancel();
+    });
+
     try {
-      return await _apiClient.fetchTasks();
+      return await stream.first;
     } catch (_) {
       // 初期表示を止めないため、取得失敗時は空配列で描画する。
       return <TaskModel>[];
@@ -33,27 +45,27 @@ class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
   }
 
   Future<void> addTask(TaskModel task) async {
-    state = await AsyncValue.guard(() async {
-      await _apiClient.createTask(task);
-      ref.invalidateSelf();
-      return future;
-    });
+    try {
+      await _repository.createTask(task);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
   Future<void> updateTask(TaskModel task) async {
-    state = await AsyncValue.guard(() async {
-      await _apiClient.updateTask(task);
-      ref.invalidateSelf();
-      return future;
-    });
+    try {
+      await _repository.updateTask(task);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
   Future<void> deleteTask(String id) async {
-    state = await AsyncValue.guard(() async {
-      await _apiClient.deleteTask(id);
-      ref.invalidateSelf();
-      return future;
-    });
+    try {
+      await _repository.deleteTask(id);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
   Future<void> updateStatus(String id, TaskStatus status) async {
@@ -61,21 +73,19 @@ class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
       final tasks = state.value ?? [];
       final task = tasks.firstWhere((t) => t.id == id);
       final updatedTask = task.copyWith(status: status);
-      await _apiClient.updateTask(updatedTask);
-      ref.invalidateSelf();
-      return future;
+      await _repository.updateTask(updatedTask);
+      return state.value ?? <TaskModel>[];
     });
   }
 
   Future<void> mergeTeamsAssignments(List<TeamsAssignment> assignments) async {
     final current = state.value ?? <TaskModel>[];
-    final merged = List<TaskModel>.from(current);
 
     for (final assignment in assignments) {
-      final exists = merged.any((task) => task.id == assignment.id);
+      final exists = current.any((task) => task.id == assignment.id);
       if (exists) continue;
 
-      merged.add(
+      await _repository.createTask(
         TaskModel(
           id: assignment.id,
           title: assignment.title,
@@ -90,8 +100,6 @@ class TaskNotifier extends AsyncNotifier<List<TaskModel>> {
         ),
       );
     }
-
-    state = AsyncValue.data(merged);
   }
 }
 

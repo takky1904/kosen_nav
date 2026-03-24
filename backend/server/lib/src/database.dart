@@ -27,7 +27,7 @@ class DB {
     // 接続が確立した直後にテーブルと必要カラムを保証する
     try {
       final conn = _connection!;
-      
+
       // テーブルの作成（存在しない場合）
       await conn.execute('''
         CREATE TABLE IF NOT EXISTS tasks (
@@ -44,17 +44,29 @@ class DB {
       ''');
 
       // カラムの追加（既存テーブルへの対応）
-      await conn.execute('ALTER TABLE tasks ADD COLUMN IF NOT EXISTS subject_id TEXT;');
-      await conn.execute('ALTER TABLE tasks ADD COLUMN IF NOT EXISTS type TEXT;');
-      await conn.execute('ALTER TABLE tasks ADD COLUMN IF NOT EXISTS start_date TEXT;');
-      await conn.execute('ALTER TABLE tasks ADD COLUMN IF NOT EXISTS duration DOUBLE PRECISION DEFAULT 1.0;');
+      await conn.execute(
+        'ALTER TABLE tasks ADD COLUMN IF NOT EXISTS subject_id TEXT;',
+      );
+      await conn.execute(
+        'ALTER TABLE tasks ADD COLUMN IF NOT EXISTS type TEXT;',
+      );
+      await conn.execute(
+        'ALTER TABLE tasks ADD COLUMN IF NOT EXISTS start_date TEXT;',
+      );
+      await conn.execute(
+        'ALTER TABLE tasks ADD COLUMN IF NOT EXISTS duration DOUBLE PRECISION DEFAULT 1.0;',
+      );
 
       // duration カラムの型が integer の場合は double precision に変更する
       // (Postgres 15+ では ALTER COLUMN TYPE が柔軟)
       try {
-        await conn.execute('ALTER TABLE tasks ALTER COLUMN duration TYPE DOUBLE PRECISION;');
+        await conn.execute(
+          'ALTER TABLE tasks ALTER COLUMN duration TYPE DOUBLE PRECISION;',
+        );
       } catch (e) {
-        print('Note: Could not alter duration column type (might already be DOUBLE PRECISION): $e');
+        print(
+          'Note: Could not alter duration column type (might already be DOUBLE PRECISION): $e',
+        );
       }
 
       // 旧カラム subject から subject_id への移行
@@ -64,15 +76,21 @@ class DB {
           "SELECT column_name FROM information_schema.columns WHERE table_name='tasks' AND column_name='subject'",
         );
         if (columns.isNotEmpty) {
-          await conn.execute('UPDATE tasks SET subject_id = subject WHERE subject_id IS NULL AND subject IS NOT NULL;');
+          await conn.execute(
+            'UPDATE tasks SET subject_id = subject WHERE subject_id IS NULL AND subject IS NOT NULL;',
+          );
           // メモ: 本番環境では不用意に DROP しないほうが安全だが、今回は移行中なのでそのままでもOK
         }
       } catch (e) {
-        print('Note: Migration from subject to subject_id skipped or failed: $e');
+        print(
+          'Note: Migration from subject to subject_id skipped or failed: $e',
+        );
       }
 
       // status のデフォルト値を英語の enum 名に変更 (古いデータ対策)
-      await conn.execute("ALTER TABLE tasks ALTER COLUMN status SET DEFAULT 'todo';");
+      await conn.execute(
+        "ALTER TABLE tasks ALTER COLUMN status SET DEFAULT 'todo';",
+      );
 
       // subjects テーブルの作成
       await conn.execute('''
@@ -119,7 +137,8 @@ class DB {
       final conn = await connection;
       final result = await conn.execute(
         Sql.named(
-            'INSERT INTO tasks (title, subject_id, type, priority, deadline, status, start_date, duration) VALUES (@title, @subject_id, @type, @priority, @deadline, @status, @start_date, @duration) RETURNING id',),
+          'INSERT INTO tasks (title, subject_id, type, priority, deadline, status, start_date, duration) VALUES (@title, @subject_id, @type, @priority, @deadline, @status, @start_date, @duration) RETURNING id',
+        ),
         parameters: {
           'title': data['title'],
           'subject_id': data['subject_id'], // Pass null if null
@@ -145,7 +164,8 @@ class DB {
       final conn = await connection;
       final result = await conn.execute(
         Sql.named(
-            'UPDATE tasks SET title = @title, subject_id = @subject_id, type = @type, priority = @priority, deadline = @deadline, status = @status, start_date = @start_date, duration = @duration WHERE id = @id RETURNING id',),
+          'UPDATE tasks SET title = @title, subject_id = @subject_id, type = @type, priority = @priority, deadline = @deadline, status = @status, start_date = @start_date, duration = @duration WHERE id = @id RETURNING id',
+        ),
         parameters: {
           'id': id,
           'title': data['title'],

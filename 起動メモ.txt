@@ -1,0 +1,5 @@
+cd backend
+docker-compose up -d
+
+cd server
+dart_frog dev --hostname 0.0.0.0
