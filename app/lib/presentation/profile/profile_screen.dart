@@ -2,54 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../domain/models/user.dart';
 import '../../shared/widgets.dart';
 import 'profile_controller.dart';
 
-class ProfileScreen extends ConsumerStatefulWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  static const List<String> _kosenOptions = <String>[
-    '長野高専',
-    '東京高専',
-    '沼津高専',
-    '鈴鹿高専',
-    '明石高専',
-  ];
-
-  static const List<int> _gradeOptions = <int>[1, 2, 3, 4, 5];
-
-  static const List<String> _courseOptions = <String>[
-    '情報工学科',
-    '機械工学科',
-    '電気電子工学科',
-    '物質工学科',
-    '建築学科',
-  ];
-
-  String? _selectedKosen;
-  int? _selectedGrade;
-  String? _selectedCourse;
-
-  bool _isInitialized = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(userProfileProvider);
     final tt = Theme.of(context).textTheme;
-
-    if (!_isInitialized) {
-      profileAsync.whenData((user) {
-        _selectedKosen = user.kosenName;
-        _selectedGrade = user.grade;
-        _selectedCourse = user.courseId;
-        _isInitialized = true;
-      });
-    }
 
     return Scaffold(
       backgroundColor: AppTheme.bgDeep,
@@ -60,21 +23,194 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
-        data: (_) => SingleChildScrollView(
+        data: (user) => SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('所属情報', style: tt.headlineMedium),
               const SizedBox(height: 8),
-              Text('シラバス取得に使う所属情報を設定します。', style: tt.bodyMedium),
+              Text('シラバス取得に使う所属情報を表示しています。', style: tt.bodyMedium),
+              const SizedBox(height: 20),
+              _ProfileInfoCard(user: user),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const _ProfileEditScreen(),
+                      ),
+                    );
+                    // 編集画面から戻った時に表示内容を最新化する。
+                    ref.invalidate(userProfileProvider);
+                  },
+                  icon: const Icon(Icons.edit),
+                  label: const Text('変更する'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileInfoCard extends StatelessWidget {
+  const _ProfileInfoCard({required this.user});
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    final cardColor = AppTheme.bgCard.withValues(alpha: 0.88);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.border, width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _InfoRow(label: '高専名', value: user.kosenName ?? '未設定'),
+          const SizedBox(height: 12),
+          _InfoRow(
+            label: '学年',
+            value: user.grade == null ? '未設定' : '${user.grade}年',
+          ),
+          const SizedBox(height: 12),
+          _InfoRow(label: 'コース', value: user.courseId ?? '未設定'),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+        ),
+        const SizedBox(height: 4),
+        Text(value, style: Theme.of(context).textTheme.titleMedium),
+      ],
+    );
+  }
+}
+
+class _ProfileEditScreen extends ConsumerStatefulWidget {
+  const _ProfileEditScreen();
+
+  @override
+  ConsumerState<_ProfileEditScreen> createState() => _ProfileEditScreenState();
+}
+
+class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
+  static const List<String> _kosenOptions = <String>[
+    '長野工業高等専門学校',
+    '東京工業高等専門学校',
+    '沼津工業高等専門学校',
+    '鈴鹿工業高等専門学校',
+    '明石工業高等専門学校',
+  ];
+
+  static const List<int> _gradeOptions = <int>[1, 2, 3, 4, 5];
+
+  static const Map<String, String> _legacyKosenAlias = <String, String>{
+    '長野高専': '長野工業高等専門学校',
+    '東京高専': '東京工業高等専門学校',
+    '沼津高専': '沼津工業高等専門学校',
+    '鈴鹿高専': '鈴鹿工業高等専門学校',
+    '明石高専': '明石工業高等専門学校',
+  };
+
+  String? _selectedKosen;
+  int? _selectedGrade;
+  String? _selectedCourse;
+
+  bool _isInitialized = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final profileAsync = ref.watch(userProfileProvider);
+
+    if (!_isInitialized) {
+      profileAsync.whenData((user) {
+        _selectedKosen = _normalizeSavedKosen(user.kosenName);
+        _selectedGrade = user.grade;
+        _selectedCourse = user.courseId;
+        _isInitialized = true;
+      });
+    }
+
+    final departmentsAsync = _selectedKosen == null
+        ? (_isInitialized
+              ? const AsyncValue<List<String>>.data(<String>[])
+              : const AsyncValue<List<String>>.loading())
+        : ref.watch(departmentsProvider(_selectedKosen!));
+    final departmentOptions = departmentsAsync.maybeWhen(
+      data: (value) => value,
+      orElse: () => const <String>[],
+    );
+    final selectedCourseInOptions =
+        _selectedCourse != null && departmentOptions.contains(_selectedCourse);
+    final canSave =
+        _selectedKosen != null &&
+        _selectedGrade != null &&
+        selectedCourseInOptions;
+    final tt = Theme.of(context).textTheme;
+
+    if (_selectedCourse != null &&
+        departmentOptions.isNotEmpty &&
+        !departmentOptions.contains(_selectedCourse)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() {
+          _selectedCourse = null;
+        });
+      });
+    }
+
+    return Scaffold(
+      backgroundColor: AppTheme.bgDeep,
+      appBar: AppBar(title: Text('所属情報の変更', style: tt.headlineLarge)),
+      body: profileAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err')),
+        data: (_) => SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('所属情報を編集します。', style: tt.bodyMedium),
               const SizedBox(height: 20),
               _DropdownField<String>(
                 label: '高専名',
                 hintText: '高専を選択',
                 value: _selectedKosen,
                 items: _kosenOptions,
-                onChanged: (value) => setState(() => _selectedKosen = value),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedKosen = value;
+                    _selectedCourse = null;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               _DropdownField<int>(
@@ -88,18 +224,63 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               const SizedBox(height: 16),
               _DropdownField<String>(
                 label: 'コース',
-                hintText: 'コースを選択',
-                value: _selectedCourse,
-                items: _courseOptions,
+                hintText: _selectedKosen == null ? '先に高専を選択' : 'コースを選択',
+                value: selectedCourseInOptions ? _selectedCourse : null,
+                items: departmentOptions,
                 onChanged: (value) => setState(() => _selectedCourse = value),
               ),
+              if (_selectedKosen != null)
+                departmentsAsync.when(
+                  data: (departments) => departments.isEmpty
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text(
+                            '学科候補が取得できませんでした。時間をおいて再試行してください。',
+                            style: TextStyle(
+                              color: AppTheme.neonYellow,
+                              fontSize: 12,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  loading: () => const Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 12,
+                          height: 12,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          '学科候補を取得中...',
+                          style: TextStyle(
+                            color: AppTheme.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  error: (err, stack) => Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      '学科候補の取得に失敗しました: $err',
+                      style: const TextStyle(
+                        color: AppTheme.neonRed,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
               const SizedBox(height: 28),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: _canSave ? _saveProfile : null,
+                  onPressed: canSave ? _saveProfile : null,
                   icon: const Icon(Icons.save),
-                  label: const Text('保存'),
+                  label: const Text('保存して戻る'),
                 ),
               ),
             ],
@@ -109,18 +290,35 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  bool get _canSave {
-    return _selectedKosen != null &&
-        _selectedGrade != null &&
-        _selectedCourse != null;
+  String? _normalizeSavedKosen(String? value) {
+    if (value == null) return null;
+    if (_kosenOptions.contains(value)) {
+      return value;
+    }
+    return _legacyKosenAlias[value] ?? value;
   }
 
   Future<void> _saveProfile() async {
     final messenger = ScaffoldMessenger.of(context);
 
-    if (!_canSave) {
+    final departments = _selectedKosen == null
+        ? const <String>[]
+        : (ref
+              .read(departmentsProvider(_selectedKosen!))
+              .maybeWhen(
+                data: (value) => value,
+                orElse: () => const <String>[],
+              ));
+
+    final canSave =
+        _selectedKosen != null &&
+        _selectedGrade != null &&
+        _selectedCourse != null &&
+        departments.contains(_selectedCourse);
+
+    if (!canSave) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('高専名・学年・コースをすべて選択してください。')),
+        const SnackBar(content: Text('高専名・学年・コースを正しく選択してください。')),
       );
       return;
     }
@@ -133,8 +331,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           _selectedCourse!,
         );
 
+    ref.invalidate(userProfileProvider);
+
     if (!mounted) return;
 
+    Navigator.of(context).pop();
     messenger.showSnackBar(const SnackBar(content: Text('所属情報を保存しました。')));
   }
 }

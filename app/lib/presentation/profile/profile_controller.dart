@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/local/user_repository.dart';
 import '../../domain/models/user.dart';
+import 'departments_api_client.dart';
 
 class UserProfileNotifier extends AsyncNotifier<User> {
   final UserRepository _repository = UserRepository();
@@ -26,3 +27,15 @@ class UserProfileNotifier extends AsyncNotifier<User> {
 final userProfileProvider = AsyncNotifierProvider<UserProfileNotifier, User>(
   UserProfileNotifier.new,
 );
+
+final departmentsApiClientProvider = Provider<DepartmentsApiClient>(
+  (ref) => DepartmentsApiClient(),
+);
+
+final departmentsProvider = FutureProvider.family<List<String>, String>((
+  ref,
+  kosenName,
+) async {
+  final client = ref.watch(departmentsApiClientProvider);
+  return client.fetchDepartments(kosenName);
+});

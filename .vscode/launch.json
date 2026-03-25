@@ -5,10 +5,35 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "app",
+            "name": "app (local reverse)",
             "cwd": "app",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "deviceId": "adb-49261JEKB04024-sAltlL._adb-tls-connect._tcp",
+            "toolArgs": [
+                "--dart-define=API_BASE_URL=http://127.0.0.1:8080"
+            ],
+            "preLaunchTask": "adb-reverse-8080-pixel8a"
+        },
+        {
+            "name": "app (lan direct)",
+            "cwd": "app",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "adb-49261JEKB04024-sAltlL._adb-tls-connect._tcp",
+            "toolArgs": [
+                "--dart-define=API_BASE_URL=http://192.168.1.5:8080"
+            ]
+        },
+        {
+            "name": "app (cloud)",
+            "cwd": "app",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "adb-49261JEKB04024-sAltlL._adb-tls-connect._tcp",
+            "toolArgs": [
+                "--dart-define=API_BASE_URL=https://api.example.com"
+            ]
         },
         {
             "name": "app (profile mode)",
@@ -28,7 +53,20 @@
             "name": "server",
             "cwd": "backend\\server",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "env": {
+                "PORT": "8080"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "local fullstack (server + app reverse)",
+            "configurations": [
+                "server",
+                "app (local reverse)"
+            ],
+            "stopAll": true
         }
     ]
 }

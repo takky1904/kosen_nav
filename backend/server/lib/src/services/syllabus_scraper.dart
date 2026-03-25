@@ -112,6 +112,22 @@ class SyllabusScraper {
     }
   }
 
+  Future<List<String>> fetchDepartments({required String kosenName}) async {
+    final topUrl = Platform.environment['SYLLABUS_TOP_URL'];
+    final topUri = (topUrl == null || topUrl.trim().isEmpty)
+        ? _defaultTopUri
+        : Uri.parse(topUrl.trim());
+
+    try {
+      final schoolUri = await _resolveSchoolUri(topUri, kosenName);
+      return await _extractDepartmentNames(schoolUri);
+    } catch (e) {
+      throw SyllabusSourceUnavailableException(
+        'Failed to fetch departments: $e',
+      );
+    }
+  }
+
   Future<Uri> _resolveSchoolUri(Uri topUri, String kosenName) async {
     final document = await _fetchDocument(topUri);
     final anchors = document.querySelectorAll('a[href]');
@@ -212,6 +228,42 @@ class SyllabusScraper {
     throw SyllabusSourceUnavailableException(
       'Course subject list link not found for courseId=$courseId',
     );
+  }
+
+  Future<List<String>> _extractDepartmentNames(Uri schoolUri) async {
+    final document = await _fetchDocument(schoolUri);
+    final rows = document.querySelectorAll('.row');
+
+    final names = <String>[];
+    final seen = <String>{};
+
+    for (final row in rows) {
+      final heading = row.querySelector('h4, h3, .list-group-item-heading');
+      if (heading == null) continue;
+
+      final raw = heading.text.trim();
+      if (raw.isEmpty) continue;
+      if (raw == '学科一覧') continue;
+
+      final key = _norm(raw);
+      if (seen.contains(key)) continue;
+
+      final hasSubjectsLink = row
+          .querySelectorAll('a[href]')
+          .any((a) => a.text.trim().contains('本年度の開講科目一覧'));
+      if (!hasSubjectsLink) continue;
+
+      seen.add(key);
+      names.add(raw);
+    }
+
+    if (names.isEmpty) {
+      throw SyllabusSourceUnavailableException(
+        'No departments found for school page: $schoolUri',
+      );
+    }
+
+    return names;
   }
 
   Future<List<_SubjectSeed>> _collectSubjectsByGrade(
