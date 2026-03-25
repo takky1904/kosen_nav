@@ -7,7 +7,7 @@ class LocalDatabase {
   LocalDatabase._();
 
   static const String _dbName = 'kosen_nav.db';
-  static const int _dbVersion = 2;
+  static const int _dbVersion = 3;
 
   static Database? _instance;
 
@@ -63,6 +63,16 @@ class LocalDatabase {
     await db.execute(
       'CREATE INDEX idx_courses_sync_status ON courses(sync_status)',
     );
+
+    await db.execute('''
+      CREATE TABLE users (
+        id TEXT PRIMARY KEY,
+        kosen_name TEXT,
+        grade INTEGER,
+        course_id TEXT,
+        updated_at INTEGER NOT NULL
+      )
+    ''');
   }
 
   static Future<void> _onUpgrade(
@@ -80,6 +90,18 @@ class LocalDatabase {
       await db.execute(
         'CREATE INDEX IF NOT EXISTS idx_courses_sync_status ON courses(sync_status)',
       );
+    }
+
+    if (oldVersion < 3) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+          id TEXT PRIMARY KEY,
+          kosen_name TEXT,
+          grade INTEGER,
+          course_id TEXT,
+          updated_at INTEGER NOT NULL
+        )
+      ''');
     }
   }
 

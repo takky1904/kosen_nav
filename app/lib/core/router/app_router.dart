@@ -7,6 +7,7 @@ import '../../features/grades/presentation/grades_screen.dart';
 import '../../features/grades/presentation/subject_detail_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import '../../features/tasks/presentation/gantt_chart_screen.dart';
+import '../../presentation/profile/profile_screen.dart';
 import '../theme/app_theme.dart';
 import '../../shared/providers/navigation_providers.dart';
 
@@ -57,6 +58,11 @@ final appRouter = GoRouter(
             ),
           ],
         ),
+        GoRoute(
+          path: '/profile',
+          name: 'profile',
+          builder: (context, state) => const ProfileScreen(),
+        ),
       ],
     ),
   ],
@@ -78,6 +84,8 @@ class AppShell extends ConsumerWidget {
       selectedIndex = 1;
     } else if (location.startsWith('/tasks')) {
       selectedIndex = 2;
+    } else if (location.startsWith('/profile')) {
+      selectedIndex = 3;
     }
 
     return Scaffold(
@@ -198,6 +206,15 @@ class AppShell extends ConsumerWidget {
                       isSelected: selectedIndex == 2,
                       onTap: () {
                         context.go('/tasks');
+                        ref.read(isMenuOpenProvider.notifier).close();
+                      },
+                    ),
+                    _DrawerItem(
+                      icon: Icons.person_rounded,
+                      label: 'プロフィール',
+                      isSelected: selectedIndex == 3,
+                      onTap: () {
+                        context.go('/profile');
                         ref.read(isMenuOpenProvider.notifier).close();
                       },
                     ),
