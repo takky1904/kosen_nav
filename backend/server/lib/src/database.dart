@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 
 class DB {
@@ -105,6 +107,18 @@ class DB {
           teacher TEXT,
           color TEXT,
           grade INTEGER
+        );
+      ''');
+
+      await conn.execute('''
+        CREATE TABLE IF NOT EXISTS syllabus_cache (
+          id SERIAL PRIMARY KEY,
+          kosen_name TEXT NOT NULL,
+          grade INTEGER NOT NULL,
+          course_id TEXT NOT NULL,
+          payload_json TEXT NOT NULL,
+          updated_at BIGINT NOT NULL,
+          UNIQUE(kosen_name, grade, course_id)
         );
       ''');
       _isInitialized = true;
@@ -284,6 +298,79 @@ class DB {
       );
     } catch (e, st) {
       print('deleteSubject error: $e');
+      print(st);
+      rethrow;
+    }
+  }
+
+  // ── Syllabus Cache ─────────────────────────────────
+
+  Future<List<Map<String, dynamic>>?> getCachedSyllabus({
+    required String kosenName,
+    required int grade,
+    required String courseId,
+  }) async {
+    try {
+      final conn = await connection;
+      final result = await conn.execute(
+        Sql.named(
+          'SELECT payload_json FROM syllabus_cache '
+          'WHERE kosen_name = @kosen_name AND grade = @grade AND course_id = @course_id '
+          'LIMIT 1',
+        ),
+        parameters: {
+          'kosen_name': kosenName,
+          'grade': grade,
+          'course_id': courseId,
+        },
+      );
+
+      if (result.isEmpty) {
+        return null;
+      }
+
+      final payloadJson =
+          result.first.toColumnMap()['payload_json']?.toString();
+      if (payloadJson == null || payloadJson.isEmpty) {
+        return null;
+      }
+
+      final decoded = jsonDecode(payloadJson) as List<dynamic>;
+      return decoded
+          .map((row) => Map<String, dynamic>.from(row as Map))
+          .toList();
+    } catch (e, st) {
+      print('getCachedSyllabus error: $e');
+      print(st);
+      rethrow;
+    }
+  }
+
+  Future<void> upsertSyllabusCache({
+    required String kosenName,
+    required int grade,
+    required String courseId,
+    required List<Map<String, dynamic>> payload,
+  }) async {
+    try {
+      final conn = await connection;
+      await conn.execute(
+        Sql.named(
+          'INSERT INTO syllabus_cache (kosen_name, grade, course_id, payload_json, updated_at) '
+          'VALUES (@kosen_name, @grade, @course_id, @payload_json, @updated_at) '
+          'ON CONFLICT (kosen_name, grade, course_id) '
+          'DO UPDATE SET payload_json = EXCLUDED.payload_json, updated_at = EXCLUDED.updated_at',
+        ),
+        parameters: {
+          'kosen_name': kosenName,
+          'grade': grade,
+          'course_id': courseId,
+          'payload_json': jsonEncode(payload),
+          'updated_at': DateTime.now().millisecondsSinceEpoch,
+        },
+      );
+    } catch (e, st) {
+      print('upsertSyllabusCache error: $e');
       print(st);
       rethrow;
     }

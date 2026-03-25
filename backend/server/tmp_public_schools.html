@@ -1,0 +1,858 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title><link href="../Content/css/bootstrap.css" rel="stylesheet" type="text/css" /><link href="../Content/font-awesome.min.css" rel="stylesheet" type="text/css" /><link href="../Content/css/Grid.css" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc.css?_=20201215" rel="stylesheet" type="text/css" /><link href="../Content/css/mcc_public_theme.css?_=20150406" rel="stylesheet" type="text/css" />
+    <script src="/Scripts/jquery-2.1.0.min.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-51403293-1', 'mccdemo.cloudapp.net');
+        ga('send', 'pageview');
+        
+    </script>
+    <script>
+
+        function searchThisSite() {
+
+            
+            $("#loadingModal")[0].style.visibility = "visible";
+            
+            $("#btnSearchThisSite")[0].blur();
+
+            var querys = getUrlVars();
+            var paramString = "";
+
+            querys.forEach(function (value, index, array) {
+
+                if (value != "keyword") {
+                    paramString += "&" + value + "=" + querys[value];
+                }
+            });
+
+            var keyword = $('#siteKeyword').val();
+            var encodeKeyword = encodeURIComponent(keyword);
+
+            var pageName =  getPageName();
+            if (pageName != "PublicSearchResult") {
+                paramString += "&before_page=" + pageName;
+            }
+
+            location.href = "/Pages/PublicSearchResult.aspx?keyword=" + encodeKeyword + paramString;
+        }
+
+        $(document).ready(function () {
+
+            
+            var langSelected = $('#langSelected');
+            langSelected.change(function () {
+                
+                var addQuery = '';
+                var hrefs = location.href.split('?');
+                if (hrefs.length > 1) {
+                    addQuery = cleanQuery(hrefs[1], 'lang');
+                }
+                if (addQuery != '') {
+                    addQuery = addQuery + '&';
+                }
+                location.href = hrefs[0] + '?' + addQuery + 'lang=' + $(this).val();
+            });
+
+            
+            $('#siteKeyword').tooltip();
+        });
+
+        function getPageName() {
+            var split = window.location.pathname.split('/');
+            return split[split.length - 1];
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+
+            var split = window.location.href.split('?');
+            if (split.length != 2) {
+                // 要素無し
+                return vars;
+            }
+
+            var hashes = split[1].split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function cleanQuery(query, target) {
+            var arr = [];
+            $.each(query.split('&'), function (i, param) {
+                if (param.split('=')[0] != target) { arr.push(param); }
+            });
+            return arr.join('&');
+        }
+
+    </script>
+
+    
+    
+
+    <!-- for dodai -->
+    
+    <style type="text/css">
+        .link_button {
+            color:#428bca;
+            float:left;
+            margin:5px;
+        }
+        .link_button:hover, .link_button:focus {
+            color:#2a6496 !important;
+            text-decoration: underline !important;
+        }
+
+        .sub_labels {
+            padding-top :2px !important;
+            padding-bottom :2px !important;
+        }
+
+        /* inheritが当たるのを回避 */
+        .sub_labels > a {
+            color: #428bca !important;
+        }
+
+        .school_table {
+            width: 100%;
+        }
+        .school_table td {
+            padding-bottom: 1.5em;
+        }
+
+        .kosen-panel-title {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="wrap">
+        <!-- Loading -->
+        <div class="modal-backdrop in" id="loadingModal" tabindex="-1" style="visibility:hidden;">
+             <div style="top: 1.5%; position: absolute; left: 50%;">
+                 <div id="loadingSearchPanel" class='loading'></div>
+             </div>
+        </div>
+        <div class="navbar navbar-default navbar-fixed-top header_area" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <span class="navbar-brand"><i class="glyphicon glyphicon-home"></i>高専Webシラバス</span>
+                    <div class="navbar-text navbar-text-min-none">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+                    <table id="LanguageArea" class="navbar-brand">
+	<tr>
+		<td style="padding: 15px 15px 15px 15px;">
+                                <label id="label_langSelected" for="langSelected" class="label_language">表示言語（Language）</label>
+                            </td>
+		<td>
+                                <select name="ctl00$langSelected" id="langSelected" class="form-control">
+			<option selected="selected" value="ja">日本語</option>
+			<option value="en">English</option>
+		</select>
+                            </td>
+	</tr>
+</table>
+
+
+                    
+                    <table class="navbar-brand navbar-right" style="height:50px;">
+                        <tr id="SyllabusSearchArea">
+	<td style="padding-top:6px;">
+                                <input type="text" maxlength="50" class="form-control" data-placement="bottom" data-original-title="高専検索" placeholder="シラバス検索キーワード" style="width:200px;" id="siteKeyword"/>
+                            </td>
+	<td style="padding-top:6px;">
+                                <button class="btn btn-default" onclick="searchThisSite()" id="btnSearchThisSite">検索</button>
+                            </td>
+</tr>
+
+                        
+                    </table>
+                    <div class="navbar-text navbar-text-min-none navbar-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="navbar-collapse navbar-brand navbar-right">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="page-header">
+
+            <ol class="breadcrumb">
+                <li><a href="/Pages/PublicSchools?lang=ja"><i class="glyphicon glyphicon-home"></i>ホーム</a></li>
+                
+
+    <li>
+        
+    </li>
+
+
+            </ol>
+            <div id="AlertMessage" class="alert alert-danger" style="display:none;">
+            </div>
+        </div>
+        <div class="container" style="margin-left:50px;margin-right:50px;width:90%;">
+            
+
+    <div class="kosen_logo_area">
+        <img src="../Content/images/img_logo_ja.png" alt="独立行政法人国立高等専門学校機構" />
+    </div>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="text-center" style="">国立高等専門学校では</h3>
+                <h3 class="kosen-panel-title text-left sub_labels">シラバスを統一したフォーマットで作成し公開しています．</h3>
+                <ul>
+                    <li class="kosen-panel-title">各校のシラバスはこのページの学校名をクリックしてご覧ください．各校のシラバスは学科別に表示されます．</li>
+                    <li class="kosen-panel-title">学科ごとに「本年度開講科目一覧」「本年度の開講科目とMCCの対応」をご覧いただけます．</li>
+                    <li class="kosen-panel-title">「カリキュラムマップ」「JABEEマップ」は順次公開します．</li>
+                    <li class="kosen-panel-title">キーワードでシラバスの内容を検索できます．検索範囲は表示されているページにより，全高専，学校，学科になります．複数のキーワードで絞り込む場合は、半角スペースで区切って下さい．</li>
+                </ul>                
+            </div>
+            <div class="panel-heading" style="">
+                <h3 class="panel-title text-left sub_labels">モデルコアカリキュラムをミニマムスタンダードとし各校の独自性を加えてカリキュラムを編成しています．</h3>
+                    <ul>
+                        <li class="kosen-panel-title">モデルコアカリキュラムによる高専の教育についてはリンク先でご覧ください．
+                            <a href="https://www.kosen-k.go.jp/about/profile/main_super_kosen.html" target="_blank">(モデルコアカリキュラム)</a>&nbsp;&nbsp;
+                   
+                            <a href="https://www.kosen-k.go.jp/wp/wp-content/uploads/2023/12/2c383e29-7e20-4b20-af19-ca3737450665.pdf" target="_blank">(モデルコアカリキュラム改訂版PDF)</a>
+                        </li>
+                        <li class="kosen-panel-title">各学科の開講科目とモデルコアカリキュラムの関係は「本年度開講科目とMCCの対応」をクリックしてください．</li>
+                    </ul>
+            </div>
+        </div>
+        <div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">学校一覧</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="school_table">
+                        
+                            <tr>
+                                <td>
+                                    <div>北海道</div>
+                                
+                                    
+                                            <div style='display:none'>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=0828&lang=ja">フォーラム高専</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>フォーラム高専</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=01&lang=ja">函館工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>函館工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=02&lang=ja">苫小牧工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>苫小牧工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=03&lang=ja">釧路工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>釧路工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=04&lang=ja">旭川工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>旭川工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                </td>
+                            </tr>
+
+                        
+                            <tr>
+                                <td>
+                                    <div>東北</div>
+                                
+                                    
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=05&lang=ja">八戸工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>八戸工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=06&lang=ja">一関工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>一関工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=07&lang=ja">仙台高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>仙台高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=08&lang=ja">秋田工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>秋田工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=09&lang=ja">鶴岡工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>鶴岡工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=10&lang=ja">福島工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>福島工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                </td>
+                            </tr>
+
+                        
+                            <tr>
+                                <td>
+                                    <div>関東信越</div>
+                                
+                                    
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=11&lang=ja">茨城工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>茨城工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=12&lang=ja">小山工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>小山工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=13&lang=ja">群馬工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>群馬工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=14&lang=ja">木更津工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>木更津工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=15&lang=ja">東京工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>東京工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=16&lang=ja">長岡工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>長岡工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=20&lang=ja">長野工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>長野工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style='display:none'>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=88&lang=ja">モデルコア高専5</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>モデルコア高専5</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style='display:none'>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=99&lang=ja">タイム高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>タイム高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style='display:none'>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=SC00000001&lang=ja">タイム工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>タイム工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style='display:none'>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=SC00000002&lang=ja">柴田工業高等専門学校2</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>柴田工業高等専門学校2</span>
+                                                </div>
+                                            </div>
+                                        
+                                </td>
+                            </tr>
+
+                        
+                            <tr>
+                                <td>
+                                    <div>東海北陸</div>
+                                
+                                    
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=17&lang=ja">富山高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>富山高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=18&lang=ja">石川工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>石川工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=19&lang=ja">福井工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>福井工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=21&lang=ja">岐阜工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>岐阜工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=22&lang=ja">沼津工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>沼津工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=23&lang=ja">豊田工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>豊田工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=24&lang=ja">鳥羽商船高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>鳥羽商船高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=25&lang=ja">鈴鹿工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>鈴鹿工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                </td>
+                            </tr>
+
+                        
+                            <tr>
+                                <td>
+                                    <div>近畿</div>
+                                
+                                    
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=26&lang=ja">舞鶴工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>舞鶴工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=27&lang=ja">明石工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>明石工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=28&lang=ja">奈良工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>奈良工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=29&lang=ja">和歌山工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>和歌山工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                </td>
+                            </tr>
+
+                        
+                            <tr>
+                                <td>
+                                    <div>中国</div>
+                                
+                                    
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=30&lang=ja">米子工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>米子工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=31&lang=ja">松江工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>松江工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=32&lang=ja">津山工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>津山工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=33&lang=ja">広島商船高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>広島商船高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=34&lang=ja">呉工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>呉工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=35&lang=ja">徳山工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>徳山工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=36&lang=ja">宇部工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>宇部工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=37&lang=ja">大島商船高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>大島商船高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                </td>
+                            </tr>
+
+                        
+                            <tr>
+                                <td>
+                                    <div>四国</div>
+                                
+                                    
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=38&lang=ja">阿南工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>阿南工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=39&lang=ja">香川高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>香川高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=40&lang=ja">新居浜工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>新居浜工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=41&lang=ja">弓削商船高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>弓削商船高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=42&lang=ja">高知工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>高知工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                </td>
+                            </tr>
+
+                        
+                            <tr>
+                                <td>
+                                    <div>九州</div>
+                                
+                                    
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=43&lang=ja">久留米工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>久留米工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=44&lang=ja">有明工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>有明工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=45&lang=ja">北九州工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>北九州工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=46&lang=ja">佐世保工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>佐世保工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=47&lang=ja">熊本高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>熊本高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=48&lang=ja">大分工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>大分工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=49&lang=ja">都城工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>都城工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=50&lang=ja">鹿児島工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>鹿児島工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                            <div style=''>
+                                                <a class="link_button btn btn-default" style="width:13em;" href="/Pages/PublicDepartments?school_id=51&lang=ja">沖縄工業高等専門学校</a>
+                                            </div>
+                                            <div style='display:none'>
+                                                <div class="btn btn-default" style="width:13em;float:left;margin:5px;">
+                                                    <span>沖縄工業高等専門学校</span>
+                                                </div>
+                                            </div>
+                                        
+                                </td>
+                            </tr>
+
+                        
+                    </table>  
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+
+    <div id="footer">
+        <br />
+        <br />
+        <div class="container">
+            <p class="text-muted credit">
+                ©2014 - MCC Web Syllabus.
+            </p>
+        </div>
+    </div>
+
+    <script src="/Scripts/jquery-2.1.0.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/mcc.js?v=20190215"></script>
+    <script src="/Scripts/Grid.js"></script>
+    <script>
+      $.ajaxSetup({
+        cache: false
+      });
+    </script>
+    
+
+</body>
+</html>
