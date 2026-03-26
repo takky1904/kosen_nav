@@ -42,6 +42,7 @@ class SyllabusScraper {
     required String kosenName,
     required int grade,
     required String courseId,
+    List<String>? scrapeTargets,
   }) async {
     final useMock =
         (Platform.environment['SYLLABUS_USE_MOCK'] ?? '').toLowerCase() ==
@@ -62,8 +63,12 @@ class SyllabusScraper {
 
     try {
       final schoolUri = await _resolveSchoolUri(topUri, kosenName);
-      final courseListUri = await _resolveCourseListUri(schoolUri, courseId);
-      final subjectSeeds = await _collectSubjectsByGrade(courseListUri, grade);
+      final subjectSeeds = await _collectSubjectSeeds(
+        schoolUri: schoolUri,
+        courseId: courseId,
+        grade: grade,
+        scrapeTargets: scrapeTargets,
+      );
 
       if (subjectSeeds.isEmpty) {
         throw SyllabusSourceUnavailableException(
@@ -112,6 +117,36 @@ class SyllabusScraper {
     }
   }
 
+  Future<List<_SubjectSeed>> _collectSubjectSeeds({
+    required Uri schoolUri,
+    required String courseId,
+    required int grade,
+    List<String>? scrapeTargets,
+  }) async {
+    final targets = (scrapeTargets ?? const <String>[])
+        .map((v) => v.trim())
+        .where((v) => v.isNotEmpty)
+        .toList(growable: false);
+
+    if (targets.isEmpty) {
+      final courseListUri = await _resolveCourseListUri(schoolUri, courseId);
+      return _collectSubjectsByGrade(courseListUri, grade);
+    }
+
+    final uris = await _resolveCourseListUrisByTargets(schoolUri, targets);
+    final byKey = <String, _SubjectSeed>{};
+
+    for (final uri in uris) {
+      final seeds = await _collectSubjectsByGrade(uri, grade);
+      for (final seed in seeds) {
+        final key = '${seed.detailUrl}|${_norm(seed.subjectName)}';
+        byKey.putIfAbsent(key, () => seed);
+      }
+    }
+
+    return byKey.values.toList(growable: false);
+  }
+
   Future<List<String>> fetchDepartments({required String kosenName}) async {
     final topUrl = Platform.environment['SYLLABUS_TOP_URL'];
     final topUri = (topUrl == null || topUrl.trim().isEmpty)
@@ -124,6 +159,49 @@ class SyllabusScraper {
     } catch (e) {
       throw SyllabusSourceUnavailableException(
         'Failed to fetch departments: $e',
+      );
+    }
+  }
+
+  Future<List<String>> fetchSchools() async {
+    final topUrl = Platform.environment['SYLLABUS_TOP_URL'];
+    final topUri = (topUrl == null || topUrl.trim().isEmpty)
+        ? _defaultTopUri
+        : Uri.parse(topUrl.trim());
+
+    try {
+      final document = await _fetchDocument(topUri);
+      final anchors = document.querySelectorAll('a[href]');
+
+      final schools = <String>[];
+      final seen = <String>{};
+
+      for (final anchor in anchors) {
+        final href = anchor.attributes['href'] ?? '';
+        if (!href.contains('/Pages/PublicDepartments')) {
+          continue;
+        }
+
+        final name = anchor.text.trim();
+        if (name.isEmpty) {
+          continue;
+        }
+
+        final key = _norm(name);
+        if (seen.add(key)) {
+          schools.add(name);
+        }
+      }
+
+      if (schools.isEmpty) {
+        throw SyllabusSourceUnavailableException(
+            'No schools found at top page.');
+      }
+
+      return schools;
+    } catch (e) {
+      throw SyllabusSourceUnavailableException(
+        'Failed to fetch schools: $e',
       );
     }
   }
@@ -193,7 +271,7 @@ class SyllabusScraper {
       final text = a.text.trim();
       if (!text.contains(courseId)) continue;
 
-      Element? container = a.parent;
+      var container = a.parent;
       while (container != null) {
         final links = container.querySelectorAll('a[href]');
         for (final link in links) {
@@ -228,6 +306,71 @@ class SyllabusScraper {
     throw SyllabusSourceUnavailableException(
       'Course subject list link not found for courseId=$courseId',
     );
+  }
+
+  Future<List<Uri>> _resolveCourseListUrisByTargets(
+    Uri schoolUri,
+    List<String> scrapeTargets,
+  ) async {
+    final document = await _fetchDocument(schoolUri);
+    final rows = document.querySelectorAll('.row');
+
+    final normalizedTargets = scrapeTargets
+        .map(_normalizeCourseName)
+        .where((v) => v.isNotEmpty)
+        .toList(growable: false);
+
+    final uris = <Uri>[];
+    final seen = <String>{};
+
+    for (final row in rows) {
+      final heading = row.querySelector('h4, h3, .list-group-item-heading');
+      if (heading == null) {
+        continue;
+      }
+
+      final headingText = _normalizeCourseName(heading.text);
+      if (headingText.isEmpty) {
+        continue;
+      }
+
+      final matched = normalizedTargets.any((target) {
+        return _courseMatches(headingText, target) ||
+            headingText.contains(target) ||
+            target.contains(headingText);
+      });
+
+      if (!matched) {
+        continue;
+      }
+
+      final links = row.querySelectorAll('a[href]');
+      for (final link in links) {
+        final label = link.text.trim();
+        if (!label.contains('本年度の開講科目一覧')) {
+          continue;
+        }
+
+        final href = link.attributes['href'];
+        if (href == null || href.isEmpty) {
+          continue;
+        }
+
+        final uri = schoolUri.resolve(href);
+        final uriText = uri.toString();
+        if (seen.add(uriText)) {
+          uris.add(uri);
+        }
+      }
+    }
+
+    if (uris.isEmpty) {
+      throw SyllabusSourceUnavailableException(
+        'Course subject links not found for targets=${scrapeTargets.join(',')}',
+      );
+    }
+
+    return uris;
   }
 
   Future<List<String>> _extractDepartmentNames(Uri schoolUri) async {
@@ -435,7 +578,7 @@ class SyllabusScraper {
   }
 
   int _findGradeColumnIndex(List<String> headers, int grade) {
-    final candidates = <String>['${grade}年', '$grade 年', '第${grade}学年'];
+    final candidates = <String>['$grade年', '$grade 年', '第$grade学年'];
     for (var i = 0; i < headers.length; i++) {
       final h = headers[i];
       for (final c in candidates) {
@@ -480,7 +623,7 @@ class SyllabusScraper {
   }
 
   int? _parseLabelPercent(String source, String label) {
-    final pattern = RegExp('$label[^\d]*(\d+(?:\.\d+)?)');
+    final pattern = RegExp('$label[^\\d]*(\\d+(?:\\.\\d+)?)');
     final m = pattern.firstMatch(source);
     if (m == null) return null;
     return double.tryParse(m.group(1) ?? '')?.round();

@@ -1,0 +1,170 @@
+{
+  "kosenId": "nagano",
+  "kosenName": "長野工業高等専門学校",
+  "aliases": [
+    "長野高専",
+    "長野"
+  ],
+  "version": "1.0",
+  "grades": {
+    "1": [
+      {
+        "id": "eng_common",
+        "displayName": "工学科",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通"
+        ]
+      }
+    ],
+    "2": [
+      {
+        "id": "mech_robo",
+        "displayName": "機械ロボティクス(MR)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：機械ロボティクス系"
+        ]
+      },
+      {
+        "id": "info_elec",
+        "displayName": "情報エレクトロニクス(IE)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：情報エレクトロニクス系"
+        ]
+      },
+      {
+        "id": "civil_design",
+        "displayName": "都市デザイン(CE)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：都市デザイン系"
+        ]
+      }
+    ],
+    "3": [
+      {
+        "id": "mech_robo",
+        "displayName": "機械ロボティクス(MR)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：機械ロボティクス系"
+        ]
+      },
+      {
+        "id": "info_elec_info",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：情報エレクトロニクス系",
+          "情報コース"
+        ]
+      },
+      {
+        "id": "info_elec_elec",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：情報エレクトロニクス系",
+          "電気コース"
+        ]
+      },
+      {
+        "id": "civil_design",
+        "displayName": "都市デザイン(CE)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：都市デザイン系"
+        ]
+      }
+    ],
+    "4": [
+      {
+        "id": "mech_robo",
+        "displayName": "機械ロボティクス(MR)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：機械ロボティクス系"
+        ]
+      },
+      {
+        "id": "info_elec_info",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：情報エレクトロニクス系",
+          "情報コース"
+        ]
+      },
+      {
+        "id": "info_elec_elec",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：情報エレクトロニクス系",
+          "電気コース"
+        ]
+      },
+      {
+        "id": "civil_design",
+        "displayName": "都市デザイン(CE)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：都市デザイン系"
+        ]
+      }
+    ],
+    "5": [
+      {
+        "id": "mech_robo",
+        "displayName": "機械ロボティクス(MR)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：機械ロボティクス系"
+        ]
+      },
+      {
+        "id": "info_elec_info",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：情報エレクトロニクス系",
+          "情報コース"
+        ]
+      },
+      {
+        "id": "info_elec_elec",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：情報エレクトロニクス系",
+          "電気コース"
+        ]
+      },
+      {
+        "id": "civil_design",
+        "displayName": "都市デザイン(CE)系",
+        "scrapeTargets": [
+          "一般科目：全系共通",
+          "専門科目：全系共通",
+          "専門科目：都市デザイン系"
+        ]
+      }
+    ]
+  }
+}

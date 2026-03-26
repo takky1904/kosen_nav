@@ -10,13 +10,25 @@ kosen_nav/
 │   │   │   ├── constants/
 │   │   │   │   ├── api_constants.dart
 │   │   │   │   └── app_constants.dart
-│   │   │   ├── database/              # (empty)
+│   │   │   ├── database/
+│   │   │   ├── network/
+│   │   │   │   └── connectivity_listener.dart
 │   │   │   ├── router/
 │   │   │   │   ├── app_navigator_key.dart
 │   │   │   │   └── app_router.dart
 │   │   │   └── theme/
 │   │   │       ├── app_theme.dart
 │   │   │       └── theme.dart
+│   │   ├── data/
+│   │   │   ├── local/
+│   │   │   │   ├── local_database.dart
+│   │   │   │   ├── sync_status.dart
+│   │   │   │   └── user_repository.dart
+│   │   │   └── sync/
+│   │   │       └── sync_service.dart
+│   │   ├── domain/
+│   │   │   └── models/
+│   │   │       └── user.dart
 │   │   ├── features/
 │   │   │   ├── dashboard/
 │   │   │   │   └── presentation/
@@ -25,6 +37,7 @@ kosen_nav/
 │   │   │   │   ├── application/
 │   │   │   │   │   └── grade_controller.dart
 │   │   │   │   ├── data/
+│   │   │   │   │   ├── course_repository.dart
 │   │   │   │   │   └── subject_api_client.dart
 │   │   │   │   ├── domain/
 │   │   │   │   │   ├── grade.dart
@@ -50,6 +63,14 @@ kosen_nav/
 │   │   │           ├── gantt_chart_screen.dart
 │   │   │           ├── tasks_screen.dart
 │   │   │           └── widgets/
+│   │   │               ├── backlog_gantt_chart.dart
+│   │   │               ├── edit_task_sheet.dart
+│   │   │               └── task_ai_mentor.dart
+│   │   ├── presentation/
+│   │   │   └── profile/
+│   │   │       ├── departments_api_client.dart
+│   │   │       ├── profile_controller.dart
+│   │   │       └── profile_screen.dart
 │   │   ├── shared/
 │   │   │   ├── loading_indicator.dart
 │   │   │   ├── menu_toggle_button.dart
@@ -70,6 +91,13 @@ kosen_nav/
 │       │   └── src/
 │       │       └── database.dart
 │       ├── routes/
+│       │   ├── api/
+│       │   │   ├── sync/
+│       │   │   └── v1/
+│       │   │       ├── departments/
+│       │   │       │   └── index.dart
+│       │   │       └── syllabus/
+│       │   │           └── index.dart
 │       │   ├── subjects/
 │       │   │   ├── index.dart
 │       │   │   └── [id].dart
@@ -82,6 +110,5 @@ kosen_nav/
 │       └── README.md
 ├── docs/
 ├── build/
-├── temp.txt
 └── folder.md
 ```

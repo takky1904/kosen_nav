@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:server/src/database.dart';
+import 'package:server/src/services/kosen_rule_service.dart';
 import 'package:server/src/services/syllabus_scraper.dart';
 
 Future<Response> onRequest(RequestContext context) async {
@@ -64,18 +65,25 @@ Future<Response> onRequest(RequestContext context) async {
 
       if (cached != null && !isLegacyMockPayload) {
         return Response(
-          statusCode: HttpStatus.ok,
           body: jsonEncode(cached),
           headers: {'content-type': 'application/json; charset=utf-8'},
         );
       }
     }
 
+    final ruleService = KosenRuleService();
+    final scrapeTargets = await ruleService.getScrapeTargets(
+      kosenName: kosenName,
+      grade: grade,
+      displayName: courseId,
+    );
+
     final scraper = SyllabusScraper();
     final data = await scraper.fetchSyllabus(
       kosenName: kosenName,
       grade: grade,
       courseId: courseId,
+      scrapeTargets: scrapeTargets,
     );
 
     try {
@@ -91,7 +99,6 @@ Future<Response> onRequest(RequestContext context) async {
     }
 
     return Response(
-      statusCode: HttpStatus.ok,
       body: jsonEncode(data),
       headers: {'content-type': 'application/json; charset=utf-8'},
     );

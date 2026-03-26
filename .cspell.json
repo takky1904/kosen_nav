@@ -9,6 +9,7 @@
     "MVVM",
     "Riverpod",
     "sqflite",
+    "pubspec",
     "notoSansJp"
   ]
 }

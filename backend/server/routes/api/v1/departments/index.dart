@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
+import 'package:server/src/services/kosen_rule_service.dart';
 import 'package:server/src/services/syllabus_scraper.dart';
 
 Future<Response> onRequest(RequestContext context) async {
@@ -17,12 +18,15 @@ Future<Response> onRequest(RequestContext context) async {
   }
 
   final kosenName = context.request.uri.queryParameters['kosenName']?.trim();
-  if (kosenName == null || kosenName.isEmpty) {
+  final gradeRaw = context.request.uri.queryParameters['grade']?.trim();
+  final grade = int.tryParse(gradeRaw ?? '');
+
+  if (kosenName == null || kosenName.isEmpty || grade == null) {
     return Response(
       statusCode: HttpStatus.badRequest,
       body: jsonEncode(
         <String, String>{
-          'error': 'Missing query parameter: kosenName',
+          'error': 'Missing or invalid query parameters: kosenName, grade',
         },
       ),
       headers: {'content-type': 'application/json; charset=utf-8'},
@@ -30,13 +34,33 @@ Future<Response> onRequest(RequestContext context) async {
   }
 
   try {
+    final ruleService = KosenRuleService();
+    final configuredDepartments = await ruleService.getDisplayNames(
+      kosenName: kosenName,
+      grade: grade,
+    );
+
+    if (configuredDepartments != null && configuredDepartments.isNotEmpty) {
+      return Response(
+        body: jsonEncode(<String, dynamic>{
+          'kosenName': kosenName,
+          'grade': grade,
+          'departments': configuredDepartments,
+          'source': 'rule-config',
+        }),
+        headers: {'content-type': 'application/json; charset=utf-8'},
+      );
+    }
+
     final scraper = SyllabusScraper();
     final departments = await scraper.fetchDepartments(kosenName: kosenName);
 
     return Response(
       body: jsonEncode(<String, dynamic>{
         'kosenName': kosenName,
+        'grade': grade,
         'departments': departments,
+        'source': 'syllabus-fallback',
       }),
       headers: {'content-type': 'application/json; charset=utf-8'},
     );

@@ -122,14 +122,6 @@ class _ProfileEditScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
-  static const List<String> _kosenOptions = <String>[
-    '長野工業高等専門学校',
-    '東京工業高等専門学校',
-    '沼津工業高等専門学校',
-    '鈴鹿工業高等専門学校',
-    '明石工業高等専門学校',
-  ];
-
   static const List<int> _gradeOptions = <int>[1, 2, 3, 4, 5];
 
   static const Map<String, String> _legacyKosenAlias = <String, String>{
@@ -149,6 +141,11 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
   @override
   Widget build(BuildContext context) {
     final profileAsync = ref.watch(userProfileProvider);
+    final schoolsAsync = ref.watch(schoolsProvider);
+    final schoolOptions = schoolsAsync.maybeWhen(
+      data: (value) => value,
+      orElse: () => const <String>[],
+    );
 
     if (!_isInitialized) {
       profileAsync.whenData((user) {
@@ -159,11 +156,21 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
       });
     }
 
-    final departmentsAsync = _selectedKosen == null
+    final selectedKosenInOptions =
+        _selectedKosen != null && schoolOptions.contains(_selectedKosen);
+
+    final departmentsAsync = _selectedKosen == null || _selectedGrade == null
         ? (_isInitialized
               ? const AsyncValue<List<String>>.data(<String>[])
               : const AsyncValue<List<String>>.loading())
-        : ref.watch(departmentsProvider(_selectedKosen!));
+        : ref.watch(
+            departmentsProvider(
+              DepartmentsQuery(
+                kosenName: _selectedKosen!,
+                grade: _selectedGrade!,
+              ),
+            ),
+          );
     final departmentOptions = departmentsAsync.maybeWhen(
       data: (value) => value,
       orElse: () => const <String>[],
@@ -202,9 +209,9 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
               const SizedBox(height: 20),
               _DropdownField<String>(
                 label: '高専名',
-                hintText: '高専を選択',
-                value: _selectedKosen,
-                items: _kosenOptions,
+                hintText: schoolOptions.isEmpty ? '高専一覧を取得中' : '高専を選択',
+                value: selectedKosenInOptions ? _selectedKosen : null,
+                items: schoolOptions,
                 onChanged: (value) {
                   setState(() {
                     _selectedKosen = value;
@@ -213,13 +220,43 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
                 },
               ),
               const SizedBox(height: 16),
+              schoolsAsync.when(
+                data: (schools) => schools.isEmpty
+                    ? const Padding(
+                        padding: EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          '高専一覧が取得できませんでした。時間をおいて再試行してください。',
+                          style: TextStyle(
+                            color: AppTheme.neonYellow,
+                            fontSize: 12,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                loading: () => const SizedBox.shrink(),
+                error: (err, stack) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    '高専一覧の取得に失敗しました: $err',
+                    style: const TextStyle(
+                      color: AppTheme.neonRed,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
               _DropdownField<int>(
                 label: '学年',
                 hintText: '学年を選択',
                 value: _selectedGrade,
                 items: _gradeOptions,
                 itemLabelBuilder: (grade) => '$grade年',
-                onChanged: (value) => setState(() => _selectedGrade = value),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGrade = value;
+                    _selectedCourse = null;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               _DropdownField<String>(
@@ -292,9 +329,6 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
 
   String? _normalizeSavedKosen(String? value) {
     if (value == null) return null;
-    if (_kosenOptions.contains(value)) {
-      return value;
-    }
     return _legacyKosenAlias[value] ?? value;
   }
 
@@ -304,7 +338,14 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
     final departments = _selectedKosen == null
         ? const <String>[]
         : (ref
-              .read(departmentsProvider(_selectedKosen!))
+              .read(
+                departmentsProvider(
+                  DepartmentsQuery(
+                    kosenName: _selectedKosen!,
+                    grade: _selectedGrade!,
+                  ),
+                ),
+              )
               .maybeWhen(
                 data: (value) => value,
                 orElse: () => const <String>[],

@@ -18,7 +18,7 @@ class DepartmentsApiClient {
 
   final Dio _dio;
 
-  Future<List<String>> fetchDepartments(String kosenName) async {
+  Future<List<String>> fetchDepartments(String kosenName, int grade) async {
     try {
       final triedNames = <String>[];
       final candidates = _kosenNameCandidates(kosenName);
@@ -28,7 +28,10 @@ class DepartmentsApiClient {
 
         final response = await _dio.get<dynamic>(
           '/api/v1/departments',
-          queryParameters: <String, dynamic>{'kosenName': candidate},
+          queryParameters: <String, dynamic>{
+            'kosenName': candidate,
+            'grade': grade,
+          },
         );
 
         if (response.statusCode != 200) {
