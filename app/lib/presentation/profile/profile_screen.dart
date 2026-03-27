@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../features/grades/application/grade_controller.dart';
+import '../../features/grades/data/course_repository.dart';
+import '../../data/network/syllabus_api_client.dart';
+import '../../data/sync/sync_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/models/user.dart';
 import '../../shared/widgets.dart';
@@ -202,6 +206,9 @@ class _ProfileEditScreen extends ConsumerStatefulWidget {
 
 class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
   static const List<int> _gradeOptions = <int>[1, 2, 3, 4, 5];
+  final SyllabusApiClient _syllabusApiClient = SyllabusApiClient();
+  final CourseRepository _courseRepository = CourseRepository();
+  final SyncService _syncService = SyncService();
 
   String? _selectedKosenId;
   int? _selectedGrade;
@@ -462,6 +469,25 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
           _selectedGrade!,
           _selectedCourseId!,
         );
+
+    try {
+      final subjects = await _syllabusApiClient.fetchSyllabusSubjects(
+        kosenId: _selectedKosenId!,
+        grade: _selectedGrade!,
+        courseId: _selectedCourseId!,
+      );
+      await _courseRepository.replaceCoursesFromSyllabus(subjects);
+      await _syncService.pushLocalChanges();
+      ref.invalidate(gradeNotifierProvider);
+      debugPrint(
+        '[Syllabus Verify] kosenId=${_selectedKosenId!}, grade=${_selectedGrade!}, courseId=${_selectedCourseId!}, count=${subjects.length}',
+      );
+      debugPrint(
+        '[Syllabus Verify] subjects=${subjects.map((s) => s['name']).toList()}',
+      );
+    } catch (e) {
+      debugPrint('[Syllabus Verify] fetch failed: $e');
+    }
 
     ref.invalidate(userProfileProvider);
 

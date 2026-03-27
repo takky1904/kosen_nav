@@ -117,6 +117,81 @@ class CourseRepository {
     await _emitCourses();
   }
 
+  Future<void> replaceCoursesFromSyllabus(
+    List<Map<String, dynamic>> subjects,
+  ) async {
+    final db = await LocalDatabase.instance;
+    final now = DateTime.now().millisecondsSinceEpoch;
+
+    await db.transaction((txn) async {
+      final existingRows = await txn.query(
+        'courses',
+        columns: <String>['id', 'sync_status'],
+      );
+
+      for (final row in existingRows) {
+        final id = row['id']?.toString();
+        if (id == null || id.isEmpty) {
+          continue;
+        }
+
+        final syncStatus = row['sync_status']?.toString() ?? SyncStatus.synced;
+        if (syncStatus == SyncStatus.pendingInsert) {
+          await txn.delete('courses', where: 'id = ?', whereArgs: <Object>[id]);
+          continue;
+        }
+
+        await txn.update(
+          'courses',
+          <String, Object>{
+            'sync_status': SyncStatus.pendingDelete,
+            'updated_at': now,
+          },
+          where: 'id = ?',
+          whereArgs: <Object>[id],
+        );
+      }
+
+      for (var i = 0; i < subjects.length; i++) {
+        final item = subjects[i];
+        final subjectId = item['subjectId']?.toString().trim();
+        final name = item['name']?.toString().trim() ?? '';
+        if (name.isEmpty) {
+          continue;
+        }
+
+        final credits = _toInt(item['credits']) ?? 2;
+        final examRatio = _toInt(item['examRatio']);
+        final safeExamRatio = examRatio?.clamp(0, 100);
+        final testWeight = (safeExamRatio?.toDouble() ?? 70.0) / 100.0;
+
+        await txn.insert('courses', <String, Object?>{
+          'id': (subjectId != null && subjectId.isNotEmpty)
+              ? subjectId
+              : 'syllabus_${now}_$i',
+          'remote_id': null,
+          'name': name,
+          'credits': credits,
+          'units': credits,
+          'teacher': item['teacher']?.toString(),
+          'exam_ratio': safeExamRatio?.toInt(),
+          'test_scores_json': jsonEncode(const <double?>[
+            null,
+            null,
+            null,
+            null,
+          ]),
+          'regular_score': null,
+          'test_weight': testWeight,
+          'sync_status': SyncStatus.pendingInsert,
+          'updated_at': now,
+        }, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+    });
+
+    await _emitCourses();
+  }
+
   Future<void> _emitCourses() async {
     final courses = await fetchCourses();
     if (!_coursesController.isClosed) {
@@ -180,5 +255,13 @@ class CourseRepository {
           ? (row['exam_ratio'] as num).toInt()
           : int.tryParse(row['exam_ratio']?.toString() ?? ''),
     );
+  }
+
+  int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
   }
 }

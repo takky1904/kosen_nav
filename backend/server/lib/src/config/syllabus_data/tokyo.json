@@ -1,0 +1,10 @@
+[
+  {
+    "grade": "3",
+    "courseId": "info",
+    "subjects": [
+      { "subjectId": "tokyo_3_info_algo", "name": "アルゴリズムとデータ構造", "isElective": false, "credits": 2, "teacher": "八王子 花子", "examRatio": 60 },
+      { "subjectId": "tokyo_3_info_eng", "name": "技術英語", "isElective": false, "credits": 1, "teacher": "高尾 ケン", "examRatio": 100 }
+    ]
+  }
+]
