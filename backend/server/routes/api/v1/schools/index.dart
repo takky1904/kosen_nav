@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
-import 'package:server/src/services/syllabus_scraper.dart';
+import 'package:server/src/services/kosen_rule_service.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   if (context.request.method != HttpMethod.get) {
@@ -17,19 +17,11 @@ Future<Response> onRequest(RequestContext context) async {
   }
 
   try {
-    final scraper = SyllabusScraper();
-    final schools = await scraper.fetchSchools();
+    final service = KosenRuleService();
+    final schools = await service.getAvailableSchools();
 
     return Response(
       body: jsonEncode(<String, dynamic>{'schools': schools}),
-      headers: {'content-type': 'application/json; charset=utf-8'},
-    );
-  } on SyllabusSourceUnavailableException catch (e, st) {
-    print('Schools API source unavailable: $e');
-    print(st);
-    return Response(
-      statusCode: HttpStatus.badGateway,
-      body: jsonEncode(<String, String>{'error': e.toString()}),
       headers: {'content-type': 'application/json; charset=utf-8'},
     );
   } catch (e, st) {

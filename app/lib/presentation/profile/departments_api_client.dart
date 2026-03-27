@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 
 import '../../core/constants/api_constants.dart';
+import 'profile_master_models.dart';
 
 class DepartmentsApiClient {
   DepartmentsApiClient({Dio? dio})
@@ -18,80 +19,39 @@ class DepartmentsApiClient {
 
   final Dio _dio;
 
-  Future<List<String>> fetchDepartments(String kosenName, int grade) async {
+  Future<List<DepartmentOption>> fetchDepartments(
+    String kosenId,
+    int grade,
+  ) async {
     try {
-      final triedNames = <String>[];
-      final candidates = _kosenNameCandidates(kosenName);
+      final response = await _dio.get<dynamic>(
+        '/api/v1/departments',
+        queryParameters: <String, dynamic>{'kosenId': kosenId, 'grade': grade},
+      );
 
-      for (final candidate in candidates) {
-        triedNames.add(candidate);
-
-        final response = await _dio.get<dynamic>(
-          '/api/v1/departments',
-          queryParameters: <String, dynamic>{
-            'kosenName': candidate,
-            'grade': grade,
-          },
-        );
-
-        if (response.statusCode != 200) {
-          continue;
-        }
-
-        final data = response.data;
-        if (data is! Map<String, dynamic>) {
-          continue;
-        }
-
-        final raw = data['departments'];
-        if (raw is! List) {
-          continue;
-        }
-
-        final departments = raw
-            .map((item) => item?.toString().trim() ?? '')
-            .where((name) => name.isNotEmpty)
-            .toList();
-
-        if (departments.isNotEmpty) {
-          return departments;
-        }
+      if (response.statusCode != 200) {
+        throw Exception('Department API returned ${response.statusCode}');
       }
 
-      throw Exception(
-        'Departments are empty for all school-name candidates: ${triedNames.join(', ')}',
-      );
+      final data = response.data;
+      if (data is! Map<String, dynamic>) {
+        throw Exception('Unexpected department API response format.');
+      }
+
+      final raw = data['departments'];
+      if (raw is! List) {
+        throw Exception('Department list is missing in API response.');
+      }
+
+      return raw
+          .whereType<Map<String, dynamic>>()
+          .map(DepartmentOption.fromJson)
+          .where((department) => department.id.isNotEmpty)
+          .toList(growable: false);
     } on DioException catch (e) {
       throw Exception('Network error while loading departments: ${e.message}');
     } on TimeoutException {
       throw Exception('Department API timeout.');
     }
-  }
-
-  List<String> _kosenNameCandidates(String input) {
-    final trimmed = input.trim();
-    final set = <String>{};
-
-    if (trimmed.isEmpty) {
-      return const <String>[];
-    }
-
-    set.add(trimmed);
-    set.add(trimmed.replaceAll('国立', ''));
-    set.add(trimmed.replaceAll('独立行政法人', ''));
-
-    var short = trimmed;
-    short = short.replaceAll('工業高等専門学校', '高専');
-    short = short.replaceAll('高等専門学校', '高専');
-    short = short.replaceAll('工業高専', '高専');
-    set.add(short);
-
-    final noSchoolSuffix = trimmed.replaceAll('学校', '');
-    set.add(noSchoolSuffix);
-
-    return set
-        .map((v) => v.trim())
-        .where((v) => v.isNotEmpty)
-        .toList(growable: false);
   }
 }

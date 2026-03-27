@@ -254,7 +254,10 @@ class SyncService {
             <String, Object?>{
               'remote_id': remoteId,
               'name': remote.name,
+              'credits': remote.credits,
               'units': remote.units,
+              'teacher': remote.teacher,
+              'exam_ratio': remote.examRatio,
               'test_scores_json': jsonEncode(remote.testScores),
               'regular_score': remote.regularScore,
               'test_weight': remote.testWeight,
@@ -271,7 +274,10 @@ class SyncService {
           'id': remoteId,
           'remote_id': remoteId,
           'name': remote.name,
+          'credits': remote.credits,
           'units': remote.units,
+          'teacher': remote.teacher,
+          'exam_ratio': remote.examRatio,
           'test_scores_json': jsonEncode(remote.testScores),
           'regular_score': remote.regularScore,
           'test_weight': remote.testWeight,
@@ -328,9 +334,13 @@ class SyncService {
     return SubjectModel(
       id: idOverride ?? row['id']?.toString() ?? '',
       name: row['name']?.toString() ?? '',
-      units: (row['units'] is num)
-          ? (row['units'] as num).toInt()
-          : int.tryParse(row['units']?.toString() ?? '2') ?? 2,
+      units: (row['credits'] is num)
+          ? (row['credits'] as num).toInt()
+          : ((row['units'] is num)
+                ? (row['units'] as num).toInt()
+                : int.tryParse(row['credits']?.toString() ?? '') ??
+                      int.tryParse(row['units']?.toString() ?? '2') ??
+                      2),
       testScores: scores,
       regularScore: row['regular_score'] == null
           ? null
@@ -338,6 +348,10 @@ class SyncService {
       testWeight: (row['test_weight'] is num)
           ? (row['test_weight'] as num).toDouble()
           : double.tryParse(row['test_weight']?.toString() ?? '0.7') ?? 0.7,
+      teacher: row['teacher']?.toString(),
+      examRatio: row['exam_ratio'] is num
+          ? (row['exam_ratio'] as num).toInt()
+          : int.tryParse(row['exam_ratio']?.toString() ?? ''),
     );
   }
 }

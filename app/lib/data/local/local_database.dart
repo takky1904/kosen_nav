@@ -7,7 +7,7 @@ class LocalDatabase {
   LocalDatabase._();
 
   static const String _dbName = 'kosen_nav.db';
-  static const int _dbVersion = 3;
+  static const int _dbVersion = 5;
 
   static Database? _instance;
 
@@ -48,7 +48,10 @@ class LocalDatabase {
         id TEXT PRIMARY KEY,
         remote_id TEXT,
         name TEXT NOT NULL,
+        credits INTEGER NOT NULL,
         units INTEGER NOT NULL,
+        teacher TEXT,
+        exam_ratio INTEGER,
         test_scores_json TEXT NOT NULL,
         regular_score REAL,
         test_weight REAL NOT NULL,
@@ -102,6 +105,32 @@ class LocalDatabase {
           updated_at INTEGER NOT NULL
         )
       ''');
+    }
+
+    if (oldVersion < 4) {
+      if (!await _columnExists(db, 'courses', 'credits')) {
+        await db.execute('ALTER TABLE courses ADD COLUMN credits INTEGER');
+        await db.execute(
+          'UPDATE courses SET credits = units WHERE credits IS NULL',
+        );
+      }
+
+      if (!await _columnExists(db, 'courses', 'teacher')) {
+        await db.execute('ALTER TABLE courses ADD COLUMN teacher TEXT');
+      }
+
+      if (!await _columnExists(db, 'courses', 'exam_ratio')) {
+        await db.execute('ALTER TABLE courses ADD COLUMN exam_ratio INTEGER');
+      }
+    }
+
+    if (oldVersion < 5) {
+      // Cleanup: remove courses imported by the legacy syllabus sync flow.
+      await db.delete(
+        'courses',
+        where:
+            'exam_ratio IS NOT NULL OR (teacher IS NOT NULL AND TRIM(teacher) != "")',
+      );
     }
   }
 

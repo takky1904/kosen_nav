@@ -102,6 +102,19 @@ class GradesScreen extends ConsumerWidget {
                                         : AppTheme.textPrimary,
                                   ),
                                 ),
+                                if (s.teacher != null &&
+                                    s.teacher!.trim().isNotEmpty) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    s.teacher!,
+                                    style: tt.bodyMedium?.copyWith(
+                                      fontSize: 11,
+                                      color: AppTheme.textSecondary,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                                 const SizedBox(height: 4),
                                 Row(
                                   children: [
@@ -120,6 +133,15 @@ class GradesScreen extends ConsumerWidget {
                                         value: s.regularScore != null
                                             ? '${s.regularScore!.toStringAsFixed(0)}点'
                                             : '--',
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Flexible(
+                                      child: _InfoChip(
+                                        label: '比率',
+                                        value: s.examRatio != null
+                                            ? 'テスト${s.examRatio}%'
+                                            : '手動',
                                       ),
                                     ),
                                   ],

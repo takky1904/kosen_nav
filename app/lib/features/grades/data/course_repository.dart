@@ -134,7 +134,10 @@ class CourseRepository {
       'id': subject.id,
       'remote_id': remoteId,
       'name': subject.name,
+      'credits': subject.credits,
       'units': subject.units,
+      'teacher': subject.teacher,
+      'exam_ratio': subject.examRatio,
       'test_scores_json': jsonEncode(subject.testScores),
       'regular_score': subject.regularScore,
       'test_weight': subject.testWeight,
@@ -158,9 +161,13 @@ class CourseRepository {
     return SubjectModel(
       id: row['id']?.toString() ?? '',
       name: row['name']?.toString() ?? '',
-      units: (row['units'] is num)
-          ? (row['units'] as num).toInt()
-          : int.tryParse(row['units']?.toString() ?? '2') ?? 2,
+      units: (row['credits'] is num)
+          ? (row['credits'] as num).toInt()
+          : ((row['units'] is num)
+                ? (row['units'] as num).toInt()
+                : int.tryParse(row['credits']?.toString() ?? '') ??
+                      int.tryParse(row['units']?.toString() ?? '2') ??
+                      2),
       testScores: scores,
       regularScore: row['regular_score'] == null
           ? null
@@ -168,6 +175,10 @@ class CourseRepository {
       testWeight: (row['test_weight'] is num)
           ? (row['test_weight'] as num).toDouble()
           : double.tryParse(row['test_weight']?.toString() ?? '0.7') ?? 0.7,
+      teacher: row['teacher']?.toString(),
+      examRatio: row['exam_ratio'] is num
+          ? (row['exam_ratio'] as num).toInt()
+          : int.tryParse(row['exam_ratio']?.toString() ?? ''),
     );
   }
 }

@@ -3,23 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/local/user_repository.dart';
 import '../../domain/models/user.dart';
 import 'departments_api_client.dart';
+import 'profile_master_models.dart';
 import 'schools_api_client.dart';
 
 class DepartmentsQuery {
-  const DepartmentsQuery({required this.kosenName, required this.grade});
+  const DepartmentsQuery({required this.kosenId, required this.grade});
 
-  final String kosenName;
+  final String kosenId;
   final int grade;
 
   @override
   bool operator ==(Object other) {
     return other is DepartmentsQuery &&
-        other.kosenName == kosenName &&
+        other.kosenId == kosenId &&
         other.grade == grade;
   }
 
   @override
-  int get hashCode => Object.hash(kosenName, grade);
+  int get hashCode => Object.hash(kosenId, grade);
 }
 
 class UserProfileNotifier extends AsyncNotifier<User> {
@@ -31,13 +32,13 @@ class UserProfileNotifier extends AsyncNotifier<User> {
   }
 
   Future<void> updateUserAffiliation(
-    String kosenName,
+    String kosenId,
     int grade,
     String courseId,
   ) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(
-      () => _repository.updateUserAffiliation(kosenName, grade, courseId),
+      () => _repository.updateUserAffiliation(kosenId, grade, courseId),
     );
   }
 }
@@ -54,13 +55,16 @@ final schoolsApiClientProvider = Provider<SchoolsApiClient>(
   (ref) => SchoolsApiClient(),
 );
 
-final schoolsProvider = FutureProvider<List<String>>((ref) async {
+final schoolsProvider = FutureProvider<List<SchoolOption>>((ref) async {
   final client = ref.watch(schoolsApiClientProvider);
   return client.fetchSchools();
 });
 
 final departmentsProvider =
-    FutureProvider.family<List<String>, DepartmentsQuery>((ref, query) async {
+    FutureProvider.family<List<DepartmentOption>, DepartmentsQuery>((
+      ref,
+      query,
+    ) async {
       final client = ref.watch(departmentsApiClientProvider);
-      return client.fetchDepartments(query.kosenName, query.grade);
+      return client.fetchDepartments(query.kosenId, query.grade);
     });

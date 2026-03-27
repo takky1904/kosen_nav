@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 
 import '../../core/constants/api_constants.dart';
+import 'profile_master_models.dart';
 
 class SchoolsApiClient {
   SchoolsApiClient({Dio? dio})
@@ -18,7 +19,7 @@ class SchoolsApiClient {
 
   final Dio _dio;
 
-  Future<List<String>> fetchSchools() async {
+  Future<List<SchoolOption>> fetchSchools() async {
     try {
       final response = await _dio.get<dynamic>('/api/v1/schools');
 
@@ -37,8 +38,12 @@ class SchoolsApiClient {
       }
 
       return raw
-          .map((item) => item?.toString().trim() ?? '')
-          .where((name) => name.isNotEmpty)
+          .whereType<Map<String, dynamic>>()
+          .map(SchoolOption.fromJson)
+          .where(
+            (school) =>
+                school.kosenId.isNotEmpty && school.kosenName.isNotEmpty,
+          )
           .toList(growable: false);
     } on DioException catch (e) {
       throw Exception('Network error while loading schools: ${e.message}');

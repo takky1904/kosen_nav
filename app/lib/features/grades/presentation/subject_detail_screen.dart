@@ -55,7 +55,9 @@ class SubjectDetailScreen extends ConsumerWidget {
                         color: predColor.withAlpha(20),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: predColor.withAlpha(180), width: 1.5),
+                          color: predColor.withAlpha(180),
+                          width: 1.5,
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: predColor.withAlpha(50),
@@ -157,23 +159,41 @@ class SubjectDetailScreen extends ConsumerWidget {
                     // ── Weight Settings ──────────────────────────────────────────────
                     Text('テスト比率', style: tt.headlineMedium),
                     const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _WeightSlider(
-                                initialWeight: subject.testWeight,
-                                onChanged: (v) => ref
-                                    .read(gradeNotifierProvider.notifier)
-                                    .updateWeights(subjectId, v),
-                              ),
-                            ],
+                    if (subject.examRatio != null)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppTheme.bgCard,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppTheme.border),
+                        ),
+                        child: Text(
+                          'シラバス比率を使用中: テスト ${subject.examRatio}% / 平常点 ${100 - subject.examRatio!.clamp(0, 100)}%',
+                          style: const TextStyle(
+                            color: AppTheme.textSecondary,
+                            fontSize: 13,
                           ),
                         ),
-                      ],
-                    ),
+                      )
+                    else
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _WeightSlider(
+                                  initialWeight: subject.testWeight,
+                                  onChanged: (v) => ref
+                                      .read(gradeNotifierProvider.notifier)
+                                      .updateWeights(subjectId, v),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     const SizedBox(height: 24),
 
                     // ── AI Advice ────────────────────────────────────────────────────
@@ -267,14 +287,18 @@ class _MetricCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(label,
-              style: const TextStyle(
-                  color: AppTheme.textSecondary, fontSize: 11)),
+          Text(
+            label,
+            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+          ),
           const SizedBox(height: 6),
           Text(
             value,
             style: TextStyle(
-                color: color, fontSize: 18, fontWeight: FontWeight.w900),
+              color: color,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ],
       ),
@@ -406,10 +430,7 @@ class _WeightSlider extends StatefulWidget {
   final double initialWeight;
   final ValueChanged<double> onChanged;
 
-  const _WeightSlider({
-    required this.initialWeight,
-    required this.onChanged,
-  });
+  const _WeightSlider({required this.initialWeight, required this.onChanged});
 
   @override
   State<_WeightSlider> createState() => _WeightSliderState();

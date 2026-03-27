@@ -2,153 +2,149 @@ import 'dart:convert';
 import 'dart:io';
 
 class CourseRule {
-  CourseRule({required this.displayName, required this.scrapeTargets});
+  CourseRule({
+    required this.id,
+    required this.displayName,
+  });
 
+  final String id;
   final String displayName;
-  final List<String> scrapeTargets;
 }
 
 class KosenRule {
   KosenRule({
+    required this.kosenId,
     required this.kosenName,
     required this.aliases,
     required this.grades,
   });
 
+  final String kosenId;
   final String kosenName;
   final List<String> aliases;
   final Map<int, List<CourseRule>> grades;
 }
 
 class KosenRuleService {
-  static const Map<String, String> _ruleKeyMap = <String, String>{
-    '長野工業高等専門学校': 'nagano',
-    '長野高専': 'nagano',
-  };
+  static final Map<String, KosenRule> _rulesById = <String, KosenRule>{};
+  static final Map<String, String> _nameOrAliasToId = <String, String>{};
+  static Future<void>? _initFuture;
 
-  Future<List<String>?> getDisplayNames({
-    required String kosenName,
-    required int grade,
-  }) async {
-    final rule = await loadRuleByKosenName(kosenName);
-    if (rule == null) {
-      return null;
-    }
-
-    final rules = rule.grades[grade];
-    if (rules == null || rules.isEmpty) {
-      return null;
-    }
-
-    return rules.map((r) => r.displayName).toList(growable: false);
+  Future<void> _ensureInitialized() {
+    return _initFuture ??= _loadAllRules();
   }
 
-  Future<List<String>?> getScrapeTargets({
-    required String kosenName,
-    required int grade,
-    required String displayName,
-  }) async {
-    final rule = await loadRuleByKosenName(kosenName);
-    if (rule == null) {
-      return null;
-    }
+  Future<List<Map<String, dynamic>>> getAvailableSchools() async {
+    await _ensureInitialized();
 
-    final rules = rule.grades[grade];
-    if (rules == null || rules.isEmpty) {
-      return null;
-    }
-
-    final normalizedDisplay = _normalize(displayName);
-    CourseRule? matched;
-
-    for (final item in rules) {
-      final normalizedRuleName = _normalize(item.displayName);
-      if (normalizedRuleName == normalizedDisplay ||
-          normalizedRuleName.contains(normalizedDisplay) ||
-          normalizedDisplay.contains(normalizedRuleName)) {
-        matched = item;
-        break;
-      }
-    }
-
-    if (matched == null) {
-      return null;
-    }
-
-    final targets = matched.scrapeTargets
-        .map((v) => v.trim())
-        .where((v) => v.isNotEmpty)
+    final schools = _rulesById.values
+        .map(
+          (rule) => <String, dynamic>{
+            'kosenId': rule.kosenId,
+            'kosenName': rule.kosenName,
+          },
+        )
         .toList(growable: false);
 
-    if (targets.isEmpty) {
-      return null;
-    }
+    schools.sort(
+      (a, b) => (a['kosenName'] as String).compareTo(b['kosenName'] as String),
+    );
 
-    return targets;
+    return schools;
   }
 
-  Future<KosenRule?> loadRuleByKosenName(String kosenName) async {
-    final ruleKey = _resolveRuleKey(kosenName);
-    if (ruleKey == null) {
-      return null;
+  Future<List<Map<String, dynamic>>> getDepartments(
+    String kosenId,
+    String grade,
+  ) async {
+    await _ensureInitialized();
+
+    final normalizedKosenId = _resolveKosenId(kosenId);
+    if (normalizedKosenId == null) {
+      return const <Map<String, dynamic>>[];
     }
 
-    final file = _locateRuleFile(ruleKey);
-    if (!await file.exists()) {
-      return null;
+    final parsedGrade = int.tryParse(grade.trim());
+    if (parsedGrade == null) {
+      return const <Map<String, dynamic>>[];
     }
 
-    final raw = await file.readAsString();
-    final decoded = jsonDecode(raw);
-    if (decoded is! Map<String, dynamic>) {
-      return null;
+    final rule = _rulesById[normalizedKosenId];
+    if (rule == null) {
+      return const <Map<String, dynamic>>[];
     }
 
-    return _parseRule(decoded);
+    final departments = rule.grades[parsedGrade] ?? const <CourseRule>[];
+    return departments
+        .map(
+          (item) => <String, dynamic>{
+            'id': item.id,
+            'displayName': item.displayName,
+          },
+        )
+        .toList(growable: false);
   }
 
-  String? _resolveRuleKey(String kosenName) {
-    final trimmed = kosenName.trim();
-    if (trimmed.isEmpty) {
-      return null;
-    }
+  Future<void> _loadAllRules() async {
+    _rulesById.clear();
+    _nameOrAliasToId.clear();
 
-    final direct = _ruleKeyMap[trimmed];
-    if (direct != null) {
-      return direct;
-    }
+    final dir = await _resolveRulesDirectory();
+    final entities = await dir.list().toList();
+    final files = entities
+        .whereType<File>()
+        .where((file) => file.path.toLowerCase().endsWith('.json'));
 
-    final normalized = _normalize(trimmed);
-    for (final entry in _ruleKeyMap.entries) {
-      final keyNormalized = _normalize(entry.key);
-      if (keyNormalized == normalized ||
-          keyNormalized.contains(normalized) ||
-          normalized.contains(keyNormalized)) {
-        return entry.value;
+    for (final file in files) {
+      final raw = await file.readAsString();
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map<String, dynamic>) {
+        continue;
+      }
+
+      final rule = _parseRule(decoded);
+      if (rule.kosenId.isEmpty || rule.kosenName.isEmpty) {
+        continue;
+      }
+
+      _rulesById[rule.kosenId] = rule;
+      _nameOrAliasToId[_normalize(rule.kosenId)] = rule.kosenId;
+      _nameOrAliasToId[_normalize(rule.kosenName)] = rule.kosenId;
+      for (final alias in rule.aliases) {
+        final normalized = _normalize(alias);
+        if (normalized.isNotEmpty) {
+          _nameOrAliasToId[normalized] = rule.kosenId;
+        }
       }
     }
-
-    return null;
   }
 
-  File _locateRuleFile(String ruleKey) {
+  Future<Directory> _resolveRulesDirectory() async {
     final candidates = <String>[
-      '${Directory.current.path}/lib/src/config/kosen_rules/$ruleKey.json',
-      '${Directory.current.path}/backend/server/lib/src/config/kosen_rules/$ruleKey.json',
+      '${Directory.current.path}/lib/src/config/kosen_rules',
+      '${Directory.current.path}/backend/server/lib/src/config/kosen_rules',
     ];
 
     for (final path in candidates) {
-      final normalizedPath = path.trim();
-      final file = File(normalizedPath);
-      if (file.existsSync()) {
-        return file;
+      final dir = Directory(path);
+      if (await dir.exists()) {
+        return dir;
       }
     }
 
-    return File(candidates.first.trim());
+    throw const FileSystemException('kosen_rules directory not found');
+  }
+
+  String? _resolveKosenId(String raw) {
+    final normalized = _normalize(raw);
+    if (normalized.isEmpty) {
+      return null;
+    }
+    return _nameOrAliasToId[normalized] ?? _rulesById[raw.trim()]?.kosenId;
   }
 
   KosenRule _parseRule(Map<String, dynamic> json) {
+    final kosenId = (json['kosenId'] ?? '').toString();
     final kosenName = (json['kosenName'] ?? '').toString();
 
     final aliasesRaw = json['aliases'];
@@ -177,21 +173,17 @@ class KosenRuleService {
             continue;
           }
 
+          final id = (item['id'] ?? '').toString().trim();
           final displayName = (item['displayName'] ?? '').toString().trim();
           if (displayName.isEmpty) {
             continue;
           }
 
-          final targetsRaw = item['scrapeTargets'];
-          final targets = targetsRaw is List
-              ? targetsRaw
-                  .map((v) => v.toString().trim())
-                  .where((v) => v.isNotEmpty)
-                  .toList(growable: false)
-              : const <String>[];
-
           rules.add(
-            CourseRule(displayName: displayName, scrapeTargets: targets),
+            CourseRule(
+              id: id.isEmpty ? _normalize(displayName) : id,
+              displayName: displayName,
+            ),
           );
         }
 
@@ -201,7 +193,12 @@ class KosenRuleService {
       }
     }
 
-    return KosenRule(kosenName: kosenName, aliases: aliases, grades: grades);
+    return KosenRule(
+      kosenId: kosenId,
+      kosenName: kosenName,
+      aliases: aliases,
+      grades: grades,
+    );
   }
 
   String _normalize(String value) {

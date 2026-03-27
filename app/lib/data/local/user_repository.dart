@@ -49,13 +49,13 @@ class UserRepository {
   }
 
   Future<User> updateUserAffiliation(
-    String kosenName,
+    String kosenId,
     int grade,
     String courseId,
   ) async {
     final user = User(
       id: _currentUserId,
-      kosenName: kosenName,
+      kosenName: kosenId,
       grade: grade,
       courseId: courseId,
     );

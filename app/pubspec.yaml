@@ -62,7 +62,18 @@ dev_dependencies:
   json_serializable: any
   riverpod_generator: any
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
 
+# pubspec.yaml の一番下（インデントに注意）
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  # 先ほど配置した画像のパスを指定
+  image_path: "assets/images/app_icon.png"
+  # Androidのアダプティブアイコン対応（背景色と前面画像）
+  # adaptive_icon_background: "#FFFFFF" # 必要であれば背景色を指定
+  # adaptive_icon_foreground: "assets/images/app_icon_foreground.png" # 必要であれば前面画像を分離
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

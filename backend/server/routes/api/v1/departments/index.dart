@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 import 'package:server/src/services/kosen_rule_service.dart';
-import 'package:server/src/services/syllabus_scraper.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   if (context.request.method != HttpMethod.get) {
@@ -17,16 +16,15 @@ Future<Response> onRequest(RequestContext context) async {
     );
   }
 
-  final kosenName = context.request.uri.queryParameters['kosenName']?.trim();
-  final gradeRaw = context.request.uri.queryParameters['grade']?.trim();
-  final grade = int.tryParse(gradeRaw ?? '');
+  final kosenId = context.request.uri.queryParameters['kosenId']?.trim();
+  final grade = context.request.uri.queryParameters['grade']?.trim();
 
-  if (kosenName == null || kosenName.isEmpty || grade == null) {
+  if (kosenId == null || kosenId.isEmpty || grade == null || grade.isEmpty) {
     return Response(
       statusCode: HttpStatus.badRequest,
       body: jsonEncode(
         <String, String>{
-          'error': 'Missing or invalid query parameters: kosenName, grade',
+          'error': 'Missing or invalid query parameters: kosenId, grade',
         },
       ),
       headers: {'content-type': 'application/json; charset=utf-8'},
@@ -35,41 +33,14 @@ Future<Response> onRequest(RequestContext context) async {
 
   try {
     final ruleService = KosenRuleService();
-    final configuredDepartments = await ruleService.getDisplayNames(
-      kosenName: kosenName,
-      grade: grade,
-    );
-
-    if (configuredDepartments != null && configuredDepartments.isNotEmpty) {
-      return Response(
-        body: jsonEncode(<String, dynamic>{
-          'kosenName': kosenName,
-          'grade': grade,
-          'departments': configuredDepartments,
-          'source': 'rule-config',
-        }),
-        headers: {'content-type': 'application/json; charset=utf-8'},
-      );
-    }
-
-    final scraper = SyllabusScraper();
-    final departments = await scraper.fetchDepartments(kosenName: kosenName);
+    final departments = await ruleService.getDepartments(kosenId, grade);
 
     return Response(
       body: jsonEncode(<String, dynamic>{
-        'kosenName': kosenName,
-        'grade': grade,
+        'kosenId': kosenId,
+        'grade': int.tryParse(grade),
         'departments': departments,
-        'source': 'syllabus-fallback',
       }),
-      headers: {'content-type': 'application/json; charset=utf-8'},
-    );
-  } on SyllabusSourceUnavailableException catch (e, st) {
-    print('Department API source unavailable: $e');
-    print(st);
-    return Response(
-      statusCode: HttpStatus.badGateway,
-      body: jsonEncode(<String, String>{'error': e.toString()}),
       headers: {'content-type': 'application/json; charset=utf-8'},
     );
   } catch (e, st) {

@@ -20,8 +20,25 @@ class GradeCalculator {
     if (testAvg == null && regular == null) return null;
 
     if (testAvg != null && regular != null) {
-      return (testAvg * s.testWeight + regular * s.regularWeight)
-          .clamp(0.0, 100.0);
+      double testRatio;
+      double regularRatio;
+
+      if (s.examRatio != null) {
+        final examPercent = s.examRatio!.clamp(0, 100).toDouble();
+        testRatio = examPercent / 100.0;
+        regularRatio = 1.0 - testRatio;
+      } else {
+        final total = s.testWeight + s.regularWeight;
+        if (total <= 0) {
+          testRatio = 0.7;
+          regularRatio = 0.3;
+        } else {
+          testRatio = s.testWeight / total;
+          regularRatio = s.regularWeight / total;
+        }
+      }
+
+      return (testAvg * testRatio + regular * regularRatio).clamp(0.0, 100.0);
     }
 
     // 片方のみ入力済み → 入力済みのものを weight 1.0 として返す（暫定）
@@ -59,8 +76,7 @@ class GradeCalculator {
   static GradeRank calcRelativeRank(double score, List<double> allScores) {
     if (allScores.isEmpty) return calcAbsoluteRank(score);
     final sorted = List<double>.from(allScores)..sort((a, b) => b.compareTo(a));
-    final rank =
-        sorted.indexWhere((s) => s <= score) / sorted.length;
+    final rank = sorted.indexWhere((s) => s <= score) / sorted.length;
     if (rank < 0.20) return GradeRank.a;
     if (rank < 0.50) return GradeRank.b;
     if (rank < 0.80) return GradeRank.c;

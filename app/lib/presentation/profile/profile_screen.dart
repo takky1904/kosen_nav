@@ -5,13 +5,52 @@ import '../../core/theme/app_theme.dart';
 import '../../domain/models/user.dart';
 import '../../shared/widgets.dart';
 import 'profile_controller.dart';
+import 'profile_master_models.dart';
 
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  @override
+  Widget build(BuildContext context) {
     final profileAsync = ref.watch(userProfileProvider);
+    final schoolsAsync = ref.watch(schoolsProvider);
+    final currentUser = profileAsync.maybeWhen(
+      data: (user) => user,
+      orElse: () => null,
+    );
+
+    final departmentsAsync =
+        (currentUser?.kosenName == null || currentUser?.grade == null)
+        ? const AsyncValue<List<DepartmentOption>>.data(<DepartmentOption>[])
+        : ref.watch(
+            departmentsProvider(
+              DepartmentsQuery(
+                kosenId: currentUser!.kosenName!,
+                grade: currentUser.grade!,
+              ),
+            ),
+          );
+
+    final kosenDisplay = _resolveKosenDisplayName(
+      kosenId: currentUser?.kosenName,
+      schools: schoolsAsync.maybeWhen(
+        data: (value) => value,
+        orElse: () => const <SchoolOption>[],
+      ),
+    );
+    final courseDisplay = _resolveCourseDisplayName(
+      courseId: currentUser?.courseId,
+      departments: departmentsAsync.maybeWhen(
+        data: (value) => value,
+        orElse: () => const <DepartmentOption>[],
+      ),
+    );
+
     final tt = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -30,9 +69,13 @@ class ProfileScreen extends ConsumerWidget {
             children: [
               Text('所属情報', style: tt.headlineMedium),
               const SizedBox(height: 8),
-              Text('シラバス取得に使う所属情報を表示しています。', style: tt.bodyMedium),
+              Text('マスタデータから取得した所属情報を表示しています。', style: tt.bodyMedium),
               const SizedBox(height: 20),
-              _ProfileInfoCard(user: user),
+              _ProfileInfoCard(
+                user: user,
+                kosenDisplayName: kosenDisplay,
+                courseDisplayName: courseDisplay,
+              ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -43,7 +86,6 @@ class ProfileScreen extends ConsumerWidget {
                         builder: (_) => const _ProfileEditScreen(),
                       ),
                     );
-                    // 編集画面から戻った時に表示内容を最新化する。
                     ref.invalidate(userProfileProvider);
                   },
                   icon: const Icon(Icons.edit),
@@ -56,36 +98,73 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+
+  String _resolveKosenDisplayName({
+    required String? kosenId,
+    required List<SchoolOption> schools,
+  }) {
+    if (kosenId == null || kosenId.isEmpty) {
+      return '未設定';
+    }
+
+    for (final school in schools) {
+      if (school.kosenId == kosenId) {
+        return school.kosenName;
+      }
+    }
+    return kosenId;
+  }
+
+  String _resolveCourseDisplayName({
+    required String? courseId,
+    required List<DepartmentOption> departments,
+  }) {
+    if (courseId == null || courseId.isEmpty) {
+      return '未設定';
+    }
+
+    for (final department in departments) {
+      if (department.id == courseId) {
+        return department.displayName;
+      }
+    }
+
+    return courseId;
+  }
 }
 
 class _ProfileInfoCard extends StatelessWidget {
-  const _ProfileInfoCard({required this.user});
+  const _ProfileInfoCard({
+    required this.user,
+    required this.kosenDisplayName,
+    required this.courseDisplayName,
+  });
 
   final User user;
+  final String kosenDisplayName;
+  final String courseDisplayName;
 
   @override
   Widget build(BuildContext context) {
-    final cardColor = AppTheme.bgCard.withValues(alpha: 0.88);
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: AppTheme.bgCard,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppTheme.border, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _InfoRow(label: '高専名', value: user.kosenName ?? '未設定'),
+          _InfoRow(label: '高専', value: kosenDisplayName),
           const SizedBox(height: 12),
           _InfoRow(
             label: '学年',
             value: user.grade == null ? '未設定' : '${user.grade}年',
           ),
           const SizedBox(height: 12),
-          _InfoRow(label: 'コース', value: user.courseId ?? '未設定'),
+          _InfoRow(label: 'コース', value: courseDisplayName),
         ],
       ),
     );
@@ -124,17 +203,9 @@ class _ProfileEditScreen extends ConsumerStatefulWidget {
 class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
   static const List<int> _gradeOptions = <int>[1, 2, 3, 4, 5];
 
-  static const Map<String, String> _legacyKosenAlias = <String, String>{
-    '長野高専': '長野工業高等専門学校',
-    '東京高専': '東京工業高等専門学校',
-    '沼津高専': '沼津工業高等専門学校',
-    '鈴鹿高専': '鈴鹿工業高等専門学校',
-    '明石高専': '明石工業高等専門学校',
-  };
-
-  String? _selectedKosen;
+  String? _selectedKosenId;
   int? _selectedGrade;
-  String? _selectedCourse;
+  String? _selectedCourseId;
 
   bool _isInitialized = false;
 
@@ -144,55 +215,73 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
     final schoolsAsync = ref.watch(schoolsProvider);
     final schoolOptions = schoolsAsync.maybeWhen(
       data: (value) => value,
-      orElse: () => const <String>[],
+      orElse: () => const <SchoolOption>[],
     );
 
     if (!_isInitialized) {
       profileAsync.whenData((user) {
-        _selectedKosen = _normalizeSavedKosen(user.kosenName);
+        _selectedKosenId = user.kosenName;
         _selectedGrade = user.grade;
-        _selectedCourse = user.courseId;
+        _selectedCourseId = user.courseId;
         _isInitialized = true;
       });
     }
 
     final selectedKosenInOptions =
-        _selectedKosen != null && schoolOptions.contains(_selectedKosen);
+        _selectedKosenId != null &&
+        schoolOptions.any((school) => school.kosenId == _selectedKosenId);
 
-    final departmentsAsync = _selectedKosen == null || _selectedGrade == null
+    final departmentsAsync = _selectedKosenId == null || _selectedGrade == null
         ? (_isInitialized
-              ? const AsyncValue<List<String>>.data(<String>[])
-              : const AsyncValue<List<String>>.loading())
+              ? const AsyncValue<List<DepartmentOption>>.data(
+                  <DepartmentOption>[],
+                )
+              : const AsyncValue<List<DepartmentOption>>.loading())
         : ref.watch(
             departmentsProvider(
               DepartmentsQuery(
-                kosenName: _selectedKosen!,
+                kosenId: _selectedKosenId!,
                 grade: _selectedGrade!,
               ),
             ),
           );
+
     final departmentOptions = departmentsAsync.maybeWhen(
       data: (value) => value,
-      orElse: () => const <String>[],
+      orElse: () => const <DepartmentOption>[],
     );
+
     final selectedCourseInOptions =
-        _selectedCourse != null && departmentOptions.contains(_selectedCourse);
+        _selectedCourseId != null &&
+        departmentOptions.any(
+          (department) => department.id == _selectedCourseId,
+        );
+
     final canSave =
-        _selectedKosen != null &&
+        _selectedKosenId != null &&
         _selectedGrade != null &&
         selectedCourseInOptions;
+
     final tt = Theme.of(context).textTheme;
 
-    if (_selectedCourse != null &&
+    if (_selectedCourseId != null &&
         departmentOptions.isNotEmpty &&
-        !departmentOptions.contains(_selectedCourse)) {
+        !departmentOptions.any(
+          (department) => department.id == _selectedCourseId,
+        )) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         setState(() {
-          _selectedCourse = null;
+          _selectedCourseId = null;
         });
       });
     }
+
+    final selectedSchool = selectedKosenInOptions
+        ? schoolOptions.firstWhere(
+            (school) => school.kosenId == _selectedKosenId,
+          )
+        : null;
 
     return Scaffold(
       backgroundColor: AppTheme.bgDeep,
@@ -207,15 +296,16 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
             children: [
               Text('所属情報を編集します。', style: tt.bodyMedium),
               const SizedBox(height: 20),
-              _DropdownField<String>(
-                label: '高専名',
+              _DropdownField<SchoolOption>(
+                label: '高専',
                 hintText: schoolOptions.isEmpty ? '高専一覧を取得中' : '高専を選択',
-                value: selectedKosenInOptions ? _selectedKosen : null,
+                value: selectedSchool,
                 items: schoolOptions,
+                itemLabelBuilder: (school) => school.kosenName,
                 onChanged: (value) {
                   setState(() {
-                    _selectedKosen = value;
-                    _selectedCourse = null;
+                    _selectedKosenId = value?.kosenId;
+                    _selectedCourseId = null;
                   });
                 },
               ),
@@ -254,19 +344,25 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
                 onChanged: (value) {
                   setState(() {
                     _selectedGrade = value;
-                    _selectedCourse = null;
+                    _selectedCourseId = null;
                   });
                 },
               ),
               const SizedBox(height: 16),
-              _DropdownField<String>(
+              _DropdownField<DepartmentOption>(
                 label: 'コース',
-                hintText: _selectedKosen == null ? '先に高専を選択' : 'コースを選択',
-                value: selectedCourseInOptions ? _selectedCourse : null,
+                hintText: _selectedKosenId == null ? '先に高専を選択' : 'コースを選択',
+                value: selectedCourseInOptions
+                    ? departmentOptions.firstWhere(
+                        (department) => department.id == _selectedCourseId,
+                      )
+                    : null,
                 items: departmentOptions,
-                onChanged: (value) => setState(() => _selectedCourse = value),
+                itemLabelBuilder: (department) => department.displayName,
+                onChanged: (value) =>
+                    setState(() => _selectedCourseId = value?.id),
               ),
-              if (_selectedKosen != null)
+              if (_selectedKosenId != null)
                 departmentsAsync.when(
                   data: (departments) => departments.isEmpty
                       ? const Padding(
@@ -327,39 +423,34 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
     );
   }
 
-  String? _normalizeSavedKosen(String? value) {
-    if (value == null) return null;
-    return _legacyKosenAlias[value] ?? value;
-  }
-
   Future<void> _saveProfile() async {
     final messenger = ScaffoldMessenger.of(context);
 
-    final departments = _selectedKosen == null
-        ? const <String>[]
-        : (ref
+    final departments = _selectedKosenId == null || _selectedGrade == null
+        ? const <DepartmentOption>[]
+        : ref
               .read(
                 departmentsProvider(
                   DepartmentsQuery(
-                    kosenName: _selectedKosen!,
+                    kosenId: _selectedKosenId!,
                     grade: _selectedGrade!,
                   ),
                 ),
               )
               .maybeWhen(
                 data: (value) => value,
-                orElse: () => const <String>[],
-              ));
+                orElse: () => const <DepartmentOption>[],
+              );
 
     final canSave =
-        _selectedKosen != null &&
+        _selectedKosenId != null &&
         _selectedGrade != null &&
-        _selectedCourse != null &&
-        departments.contains(_selectedCourse);
+        _selectedCourseId != null &&
+        departments.any((department) => department.id == _selectedCourseId);
 
     if (!canSave) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('高専名・学年・コースを正しく選択してください。')),
+        const SnackBar(content: Text('高専・学年・コースを正しく選択してください。')),
       );
       return;
     }
@@ -367,9 +458,9 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
     await ref
         .read(userProfileProvider.notifier)
         .updateUserAffiliation(
-          _selectedKosen!,
+          _selectedKosenId!,
           _selectedGrade!,
-          _selectedCourse!,
+          _selectedCourseId!,
         );
 
     ref.invalidate(userProfileProvider);
@@ -381,7 +472,7 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
   }
 }
 
-class _DropdownField<T> extends StatelessWidget {
+class _DropdownField<T> extends StatefulWidget {
   const _DropdownField({
     required this.label,
     required this.hintText,
@@ -399,24 +490,224 @@ class _DropdownField<T> extends StatelessWidget {
   final String Function(T value)? itemLabelBuilder;
 
   @override
-  Widget build(BuildContext context) {
-    return InputDecorator(
-      decoration: AppTheme.inputDecoration(label),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<T>(
-          value: value,
-          hint: Text(hintText),
-          isExpanded: true,
-          dropdownColor: AppTheme.bgCard,
-          items: items
-              .map(
-                (item) => DropdownMenuItem<T>(
-                  value: item,
-                  child: Text(itemLabelBuilder?.call(item) ?? item.toString()),
+  State<_DropdownField<T>> createState() => _DropdownFieldState<T>();
+}
+
+class _DropdownFieldState<T> extends State<_DropdownField<T>>
+    with SingleTickerProviderStateMixin {
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+  late final AnimationController _overlayController;
+  late final Animation<double> _fadeAnimation;
+  late final Animation<double> _sizeAnimation;
+  bool _isOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _overlayController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 170),
+      reverseDuration: const Duration(milliseconds: 130),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _overlayController,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+    _sizeAnimation = CurvedAnimation(
+      parent: _overlayController,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+  }
+
+  void _toggleOpen() {
+    if (widget.items.isEmpty) return;
+    if (_isOpen) {
+      _hideOverlay();
+    } else {
+      _showOverlay();
+    }
+  }
+
+  void _selectItem(T item) {
+    widget.onChanged(item);
+    _hideOverlay();
+  }
+
+  @override
+  void didUpdateWidget(covariant _DropdownField<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.items.isEmpty && _isOpen) {
+      _hideOverlay();
+    }
+  }
+
+  @override
+  void dispose() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    _overlayController.dispose();
+    super.dispose();
+  }
+
+  void _showOverlay() {
+    if (!mounted || _overlayEntry != null) return;
+    final overlay = Overlay.of(context);
+    final selectedValue = widget.value;
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: _hideOverlay,
+            ),
+          ),
+          CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(0, 72),
+            child: Material(
+              color: Colors.transparent,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: SizeTransition(
+                  sizeFactor: _sizeAnimation,
+                  axisAlignment: -1,
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width - 40,
+                    constraints: const BoxConstraints(maxHeight: 220),
+                    decoration: BoxDecoration(
+                      color: AppTheme.bgCard,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppTheme.border),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x33000000),
+                          blurRadius: 12,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ListView.separated(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: widget.items.length,
+                      separatorBuilder: (_, _) => Divider(
+                        height: 1,
+                        color: AppTheme.border.withAlpha(120),
+                      ),
+                      itemBuilder: (context, index) {
+                        final item = widget.items[index];
+                        final label =
+                            widget.itemLabelBuilder?.call(item) ??
+                            item.toString();
+                        final selected = selectedValue == item;
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => _selectItem(item),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 12,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      label,
+                                      style: TextStyle(
+                                        color: selected
+                                            ? AppTheme.neonGreen
+                                            : AppTheme.textPrimary,
+                                        fontWeight: selected
+                                            ? FontWeight.w700
+                                            : FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  if (selected)
+                                    const Icon(
+                                      Icons.check,
+                                      size: 18,
+                                      color: AppTheme.neonGreen,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              )
-              .toList(),
-          onChanged: onChanged,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    overlay.insert(_overlayEntry!);
+    _overlayController.forward(from: 0);
+    if (mounted) {
+      setState(() => _isOpen = true);
+    }
+  }
+
+  Future<void> _hideOverlay() async {
+    if (_overlayEntry == null) return;
+    await _overlayController.reverse();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    if (mounted && _isOpen) {
+      setState(() => _isOpen = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final displayValue = widget.value != null
+        ? widget.itemLabelBuilder?.call(widget.value as T) ??
+              widget.value.toString()
+        : null;
+    final isEnabled = widget.items.isNotEmpty;
+
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: GestureDetector(
+        onTap: _toggleOpen,
+        child: InputDecorator(
+          decoration: AppTheme.inputDecoration(widget.label),
+          child: Container(
+            padding: const EdgeInsets.only(right: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    displayValue ?? widget.hintText,
+                    style: TextStyle(
+                      color: displayValue != null
+                          ? AppTheme.textPrimary
+                          : (isEnabled
+                                ? AppTheme.textSecondary
+                                : AppTheme.textSecondary.withAlpha(140)),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Icon(
+                  _isOpen ? Icons.keyboard_arrow_up : Icons.arrow_drop_down,
+                  color: AppTheme.textSecondary,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
