@@ -7,7 +7,7 @@ class LocalDatabase {
   LocalDatabase._();
 
   static const String _dbName = 'kosen_nav.db';
-  static const int _dbVersion = 5;
+  static const int _dbVersion = 7;
 
   static Database? _instance;
 
@@ -53,6 +53,9 @@ class LocalDatabase {
         teacher TEXT,
         exam_ratio INTEGER,
         test_scores_json TEXT NOT NULL,
+        evaluations_json TEXT NOT NULL DEFAULT '[]',
+        periodic_tests_json TEXT NOT NULL DEFAULT '{"ratio":0,"count":4,"scores":[null,null,null,null]}',
+        variable_components_json TEXT NOT NULL DEFAULT '[]',
         regular_score REAL,
         test_weight REAL NOT NULL,
         sync_status TEXT NOT NULL DEFAULT '${SyncStatus.synced}',
@@ -131,6 +134,28 @@ class LocalDatabase {
         where:
             'exam_ratio IS NOT NULL OR (teacher IS NOT NULL AND TRIM(teacher) != "")',
       );
+    }
+
+    if (oldVersion < 6) {
+      if (!await _columnExists(db, 'courses', 'evaluations_json')) {
+        await db.execute(
+          "ALTER TABLE courses ADD COLUMN evaluations_json TEXT NOT NULL DEFAULT '[]'",
+        );
+      }
+    }
+
+    if (oldVersion < 7) {
+      if (!await _columnExists(db, 'courses', 'periodic_tests_json')) {
+        await db.execute(
+          "ALTER TABLE courses ADD COLUMN periodic_tests_json TEXT NOT NULL DEFAULT '{\"ratio\":0,\"count\":4,\"scores\":[null,null,null,null]}'",
+        );
+      }
+
+      if (!await _columnExists(db, 'courses', 'variable_components_json')) {
+        await db.execute(
+          "ALTER TABLE courses ADD COLUMN variable_components_json TEXT NOT NULL DEFAULT '[]'",
+        );
+      }
     }
   }
 

@@ -44,7 +44,10 @@ class GradesScreen extends ConsumerWidget {
             itemBuilder: (context, i) {
               final s = subjectList[i];
               final score = GradeCalculator.calcFinalScore(s);
-              final testAvg = GradeCalculator.calcTestAverage(s.testScores);
+              final avg = GradeCalculator.calcEvaluationAverage(s);
+              final enteredCount = s.evaluations
+                  .where((evaluation) => evaluation.userScore != null)
+                  .length;
               final isAtRisk = simData.atRiskSubjectIds.contains(s.id);
               final isFailing = score != null && score < 60;
 
@@ -120,28 +123,25 @@ class GradesScreen extends ConsumerWidget {
                                   children: [
                                     Flexible(
                                       child: _InfoChip(
-                                        label: 'テスト',
-                                        value: testAvg != null
-                                            ? '${testAvg.toStringAsFixed(1)}点'
+                                        label: '評価平均',
+                                        value: avg != null
+                                            ? '${avg.toStringAsFixed(1)}点'
                                             : '--',
                                       ),
                                     ),
                                     const SizedBox(width: 8),
                                     Flexible(
                                       child: _InfoChip(
-                                        label: '平常点',
-                                        value: s.regularScore != null
-                                            ? '${s.regularScore!.toStringAsFixed(0)}点'
-                                            : '--',
+                                        label: '入力済み',
+                                        value:
+                                            '$enteredCount/${s.evaluations.length}',
                                       ),
                                     ),
                                     const SizedBox(width: 8),
                                     Flexible(
                                       child: _InfoChip(
-                                        label: '比率',
-                                        value: s.examRatio != null
-                                            ? 'テスト${s.examRatio}%'
-                                            : '手動',
+                                        label: '評価項目',
+                                        value: '${s.evaluations.length}件',
                                       ),
                                     ),
                                   ],

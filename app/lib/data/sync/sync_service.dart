@@ -259,6 +259,17 @@ class SyncService {
               'teacher': remote.teacher,
               'exam_ratio': remote.examRatio,
               'test_scores_json': jsonEncode(remote.testScores),
+              'evaluations_json': jsonEncode(
+                remote.evaluations
+                    .map((evaluation) => evaluation.toJson())
+                    .toList(growable: false),
+              ),
+              'periodic_tests_json': jsonEncode(remote.periodicTests.toJson()),
+              'variable_components_json': jsonEncode(
+                remote.variableComponents
+                    .map((component) => component.toJson())
+                    .toList(growable: false),
+              ),
               'regular_score': remote.regularScore,
               'test_weight': remote.testWeight,
               'sync_status': SyncStatus.synced,
@@ -279,6 +290,17 @@ class SyncService {
           'teacher': remote.teacher,
           'exam_ratio': remote.examRatio,
           'test_scores_json': jsonEncode(remote.testScores),
+          'evaluations_json': jsonEncode(
+            remote.evaluations
+                .map((evaluation) => evaluation.toJson())
+                .toList(growable: false),
+          ),
+          'periodic_tests_json': jsonEncode(remote.periodicTests.toJson()),
+          'variable_components_json': jsonEncode(
+            remote.variableComponents
+                .map((component) => component.toJson())
+                .toList(growable: false),
+          ),
           'regular_score': remote.regularScore,
           'test_weight': remote.testWeight,
           'sync_status': SyncStatus.synced,
@@ -320,38 +342,19 @@ class SyncService {
   }
 
   SubjectModel _subjectFromRow(Map<String, Object?> row, {String? idOverride}) {
-    final rawScores = row['test_scores_json']?.toString();
-    List<double?> scores;
-    try {
-      final decoded = (jsonDecode(rawScores ?? '[]') as List<dynamic>);
-      scores = decoded
-          .map((value) => value == null ? null : (value as num).toDouble())
-          .toList();
-    } catch (_) {
-      scores = <double?>[null, null, null, null];
-    }
-
-    return SubjectModel(
-      id: idOverride ?? row['id']?.toString() ?? '',
-      name: row['name']?.toString() ?? '',
-      units: (row['credits'] is num)
-          ? (row['credits'] as num).toInt()
-          : ((row['units'] is num)
-                ? (row['units'] as num).toInt()
-                : int.tryParse(row['credits']?.toString() ?? '') ??
-                      int.tryParse(row['units']?.toString() ?? '2') ??
-                      2),
-      testScores: scores,
-      regularScore: row['regular_score'] == null
-          ? null
-          : (row['regular_score'] as num).toDouble(),
-      testWeight: (row['test_weight'] is num)
-          ? (row['test_weight'] as num).toDouble()
-          : double.tryParse(row['test_weight']?.toString() ?? '0.7') ?? 0.7,
-      teacher: row['teacher']?.toString(),
-      examRatio: row['exam_ratio'] is num
-          ? (row['exam_ratio'] as num).toInt()
-          : int.tryParse(row['exam_ratio']?.toString() ?? ''),
-    );
+    return SubjectModel.fromJson(<String, dynamic>{
+      'id': idOverride ?? row['id']?.toString() ?? '',
+      'name': row['name']?.toString() ?? '',
+      'credits': row['credits'],
+      'units': row['units'],
+      'teacher': row['teacher']?.toString(),
+      'exam_ratio': row['exam_ratio'],
+      'test_scores': row['test_scores_json']?.toString(),
+      'regular_score': row['regular_score'],
+      'test_weight': row['test_weight'],
+      'evaluations_json': row['evaluations_json']?.toString(),
+      'periodic_tests_json': row['periodic_tests_json']?.toString(),
+      'variable_components_json': row['variable_components_json']?.toString(),
+    });
   }
 }

@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../data/local/local_database.dart';
 import '../../../data/local/sync_status.dart';
+import '../domain/evaluation.dart';
 import '../domain/subject_model.dart';
 
 class CourseRepository {
@@ -33,7 +34,7 @@ class CourseRepository {
       whereArgs: <Object>[SyncStatus.pendingDelete],
       orderBy: 'updated_at DESC',
     );
-    return rows.map(_mapCourseRowToModel).toList();
+    return rows.map(_mapCourseRowToModel).toList(growable: false);
   }
 
   Future<SubjectModel> createCourse(SubjectModel subject) async {
@@ -131,9 +132,7 @@ class CourseRepository {
 
       for (final row in existingRows) {
         final id = row['id']?.toString();
-        if (id == null || id.isEmpty) {
-          continue;
-        }
+        if (id == null || id.isEmpty) continue;
 
         final syncStatus = row['sync_status']?.toString() ?? SyncStatus.synced;
         if (syncStatus == SyncStatus.pendingInsert) {
@@ -154,38 +153,37 @@ class CourseRepository {
 
       for (var i = 0; i < subjects.length; i++) {
         final item = subjects[i];
-        final subjectId = item['subjectId']?.toString().trim();
         final name = item['name']?.toString().trim() ?? '';
-        if (name.isEmpty) {
-          continue;
-        }
+        if (name.isEmpty) continue;
 
+        final id = item['subjectId']?.toString().trim();
         final credits = _toInt(item['credits']) ?? 2;
-        final examRatio = _toInt(item['examRatio']);
-        final safeExamRatio = examRatio?.clamp(0, 100);
-        final testWeight = (safeExamRatio?.toDouble() ?? 70.0) / 100.0;
 
-        await txn.insert('courses', <String, Object?>{
-          'id': (subjectId != null && subjectId.isNotEmpty)
-              ? subjectId
-              : 'syllabus_${now}_$i',
-          'remote_id': null,
-          'name': name,
-          'credits': credits,
-          'units': credits,
-          'teacher': item['teacher']?.toString(),
-          'exam_ratio': safeExamRatio?.toInt(),
-          'test_scores_json': jsonEncode(const <double?>[
-            null,
-            null,
-            null,
-            null,
-          ]),
-          'regular_score': null,
-          'test_weight': testWeight,
-          'sync_status': SyncStatus.pendingInsert,
-          'updated_at': now,
-        }, conflictAlgorithm: ConflictAlgorithm.replace);
+        final periodic = _parsePeriodicTestsFromSyllabus(item);
+        final variableComponents = _parseVariableComponentsFromSyllabus(
+          item,
+          periodicRatio: periodic.ratio,
+        );
+
+        final course = SubjectModel(
+          id: (id != null && id.isNotEmpty) ? id : 'syllabus_${now}_$i',
+          name: name,
+          units: credits,
+          periodicTests: periodic,
+          variableComponents: variableComponents,
+          teacher: item['teacher']?.toString(),
+        );
+
+        await txn.insert(
+          'courses',
+          _mapSubjectModelToRow(
+            course,
+            remoteId: null,
+            syncStatus: SyncStatus.pendingInsert,
+            updatedAt: DateTime.fromMillisecondsSinceEpoch(now),
+          ),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
       }
     });
 
@@ -205,6 +203,14 @@ class CourseRepository {
     required String syncStatus,
     required DateTime updatedAt,
   }) {
+    final periodicJson = jsonEncode(subject.periodicTests.toJson());
+    final variableJson = jsonEncode(
+      subject.variableComponents
+          .map((component) => component.toJson())
+          .toList(growable: false),
+    );
+    final legacyEvaluations = jsonEncode(subject.toJson()['evaluations']);
+
     return <String, Object?>{
       'id': subject.id,
       'remote_id': remoteId,
@@ -213,48 +219,102 @@ class CourseRepository {
       'units': subject.units,
       'teacher': subject.teacher,
       'exam_ratio': subject.examRatio,
-      'test_scores_json': jsonEncode(subject.testScores),
+      'test_scores_json': jsonEncode(subject.periodicTests.scores),
       'regular_score': subject.regularScore,
       'test_weight': subject.testWeight,
+      'evaluations_json': legacyEvaluations,
+      'periodic_tests_json': periodicJson,
+      'variable_components_json': variableJson,
       'sync_status': syncStatus,
       'updated_at': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   SubjectModel _mapCourseRowToModel(Map<String, Object?> row) {
-    final rawScores = row['test_scores_json']?.toString();
-    List<double?> scores;
-    try {
-      final decoded = (jsonDecode(rawScores ?? '[]') as List<dynamic>);
-      scores = decoded
-          .map((value) => value == null ? null : (value as num).toDouble())
-          .toList();
-    } catch (_) {
-      scores = <double?>[null, null, null, null];
+    return SubjectModel.fromJson(<String, dynamic>{
+      'id': row['id']?.toString() ?? '',
+      'name': row['name']?.toString() ?? '',
+      'credits': row['credits'],
+      'units': row['units'],
+      'teacher': row['teacher']?.toString(),
+      'exam_ratio': row['exam_ratio'],
+      'test_scores': row['test_scores_json']?.toString(),
+      'regular_score': row['regular_score'],
+      'test_weight': row['test_weight'],
+      'evaluations_json': row['evaluations_json']?.toString(),
+      'periodic_tests_json': row['periodic_tests_json']?.toString(),
+      'variable_components_json': row['variable_components_json']?.toString(),
+    });
+  }
+
+  PeriodicTests _parsePeriodicTestsFromSyllabus(Map<String, dynamic> item) {
+    final evaluations = _extractEvaluations(item['evaluations']);
+    for (final evaluation in evaluations) {
+      final id = (evaluation['id'] ?? '').toString().trim().toLowerCase();
+      if (id == 'exam') {
+        final ratio = _toInt(evaluation['ratio']) ?? 0;
+        return PeriodicTests(
+          ratio: ratio.clamp(0, 100),
+          count: 4,
+          scores: const <double?>[],
+        ).normalized();
+      }
     }
 
-    return SubjectModel(
-      id: row['id']?.toString() ?? '',
-      name: row['name']?.toString() ?? '',
-      units: (row['credits'] is num)
-          ? (row['credits'] as num).toInt()
-          : ((row['units'] is num)
-                ? (row['units'] as num).toInt()
-                : int.tryParse(row['credits']?.toString() ?? '') ??
-                      int.tryParse(row['units']?.toString() ?? '2') ??
-                      2),
-      testScores: scores,
-      regularScore: row['regular_score'] == null
-          ? null
-          : (row['regular_score'] as num).toDouble(),
-      testWeight: (row['test_weight'] is num)
-          ? (row['test_weight'] as num).toDouble()
-          : double.tryParse(row['test_weight']?.toString() ?? '0.7') ?? 0.7,
-      teacher: row['teacher']?.toString(),
-      examRatio: row['exam_ratio'] is num
-          ? (row['exam_ratio'] as num).toInt()
-          : int.tryParse(row['exam_ratio']?.toString() ?? ''),
-    );
+    if (item['periodicTests'] is Map<String, dynamic>) {
+      return PeriodicTests.fromJson(
+        item['periodicTests'] as Map<String, dynamic>,
+      ).normalized();
+    }
+
+    return const PeriodicTests(
+      ratio: 0,
+      count: 4,
+      scores: <double?>[],
+    ).normalized();
+  }
+
+  List<Evaluation> _parseVariableComponentsFromSyllabus(
+    Map<String, dynamic> item, {
+    required int periodicRatio,
+  }) {
+    final evaluations = _extractEvaluations(item['evaluations']);
+    if (evaluations.isNotEmpty) {
+      final variable = <Evaluation>[];
+      for (final raw in evaluations) {
+        final parsed = Evaluation.fromJson(raw);
+        final id = parsed.id.trim().toLowerCase();
+        if (id != 'exam' && parsed.id.isNotEmpty && parsed.name.isNotEmpty) {
+          variable.add(parsed.copyWith(userScore: null));
+        }
+      }
+
+      if (variable.isNotEmpty) {
+        return variable;
+      }
+    }
+
+    final remaining = (100 - periodicRatio).clamp(0, 100);
+    if (remaining == 0) {
+      return const <Evaluation>[];
+    }
+
+    return <Evaluation>[
+      Evaluation(id: 'normal', name: '平常点', ratio: remaining),
+    ];
+  }
+
+  List<Map<String, dynamic>> _extractEvaluations(dynamic rawEvaluations) {
+    if (rawEvaluations is! List) {
+      return const <Map<String, dynamic>>[];
+    }
+
+    return rawEvaluations
+        .whereType<Map>()
+        .map(
+          (entry) => entry.map((key, value) => MapEntry(key.toString(), value)),
+        )
+        .toList(growable: false);
   }
 
   int? _toInt(dynamic value) {

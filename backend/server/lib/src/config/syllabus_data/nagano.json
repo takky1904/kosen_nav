@@ -3,17 +3,41 @@
     "grade": "3",
     "courseId": "info_elec_info",
     "subjects": [
-      { "subjectId": "nagano_3_info_mathA", "name": "基礎数学A", "isElective": false, "credits": 2, "teacher": "轟 龍一", "examRatio": 70 },
-      { "subjectId": "nagano_3_info_zukudase", "name": "ZUKUDASEゼミ", "isElective": true, "credits": 1, "teacher": "久保田 和男", "examRatio": 0 },
-      { "subjectId": "nagano_3_info_prog", "name": "プログラミング演習", "isElective": false, "credits": 2, "teacher": "信州 太郎", "examRatio": 50 }
-    ]
-  },
-  {
-    "grade": "3",
-    "courseId": "mech",
-    "subjects": [
-      { "subjectId": "nagano_3_mech_mathA", "name": "基礎数学A", "isElective": false, "credits": 2, "teacher": "轟 龍一", "examRatio": 70 },
-      { "subjectId": "nagano_3_mech_design", "name": "機械設計法", "isElective": false, "credits": 2, "teacher": "善光寺 次郎", "examRatio": 80 }
+      {
+        "subjectId": "nagano_3_info_mathA",
+        "name": "基礎数学A",
+        "isElective": false,
+        "credits": 2,
+        "teacher": "轟 龍一",
+        "evaluations": [
+          { "id": "exam", "name": "定期試験", "ratio": 70 },
+          { "id": "normal", "name": "平常点", "ratio": 30 }
+        ]
+      },
+      {
+        "subjectId": "nagano_3_info_prog",
+        "name": "プログラミング演習",
+        "isElective": false,
+        "credits": 2,
+        "teacher": "信州 太郎",
+        "evaluations": [
+          { "id": "exam", "name": "定期試験", "ratio": 60 },
+          { "id": "quiz", "name": "小テスト", "ratio": 30 },
+          { "id": "report", "name": "レポート", "ratio": 10 }
+        ]
+      },
+      {
+        "subjectId": "nagano_3_info_pe",
+        "name": "体育",
+        "isElective": false,
+        "credits": 1,
+        "teacher": "信州 次郎",
+        "evaluations": [
+          { "id": "attitude", "name": "態度", "ratio": 40 },
+          { "id": "skill", "name": "技能", "ratio": 30 },
+          { "id": "report", "name": "レポート", "ratio": 30 }
+        ]
+      }
     ]
   }
 ]

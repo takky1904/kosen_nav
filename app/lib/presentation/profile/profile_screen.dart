@@ -462,31 +462,46 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
       return;
     }
 
-    await ref
-        .read(userProfileProvider.notifier)
-        .updateUserAffiliation(
-          _selectedKosenId!,
-          _selectedGrade!,
-          _selectedCourseId!,
-        );
-
+    String? syllabusError;
     try {
       final subjects = await _syllabusApiClient.fetchSyllabusSubjects(
         kosenId: _selectedKosenId!,
         grade: _selectedGrade!,
         courseId: _selectedCourseId!,
       );
-      await _courseRepository.replaceCoursesFromSyllabus(subjects);
-      await _syncService.pushLocalChanges();
-      ref.invalidate(gradeNotifierProvider);
-      debugPrint(
-        '[Syllabus Verify] kosenId=${_selectedKosenId!}, grade=${_selectedGrade!}, courseId=${_selectedCourseId!}, count=${subjects.length}',
-      );
-      debugPrint(
-        '[Syllabus Verify] subjects=${subjects.map((s) => s['name']).toList()}',
-      );
+
+      if (subjects.isEmpty) {
+        syllabusError = 'シラバス科目が0件でした。学校・学年・コースの組み合わせを確認してください。';
+      }
+
+      if (syllabusError == null) {
+        await ref
+            .read(userProfileProvider.notifier)
+            .updateUserAffiliation(
+              _selectedKosenId!,
+              _selectedGrade!,
+              _selectedCourseId!,
+            );
+
+        await _courseRepository.replaceCoursesFromSyllabus(subjects);
+        await _syncService.pushLocalChanges();
+        ref.invalidate(gradeNotifierProvider);
+
+        debugPrint(
+          '[Syllabus Verify] kosenId=${_selectedKosenId!}, grade=${_selectedGrade!}, courseId=${_selectedCourseId!}, count=${subjects.length}',
+        );
+        debugPrint(
+          '[Syllabus Verify] subjects=${subjects.map((s) => s['name']).toList()}',
+        );
+      }
     } catch (e) {
       debugPrint('[Syllabus Verify] fetch failed: $e');
+      syllabusError = 'シラバス取得に失敗しました: $e';
+    }
+
+    if (syllabusError != null) {
+      messenger.showSnackBar(SnackBar(content: Text(syllabusError)));
+      return;
     }
 
     ref.invalidate(userProfileProvider);

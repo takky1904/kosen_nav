@@ -57,30 +57,52 @@ class GradeNotifier extends AsyncNotifier<List<SubjectModel>> {
 
   // ── Score Updates ──────────────────────────────────
 
-  Future<void> updateTestScore(
+  Future<void> updatePeriodicTestScore(
     String subjectId,
     int index,
     double? score,
   ) async {
     final subjects = state.value ?? [];
     final subject = subjects.firstWhere((s) => s.id == subjectId);
-    final updatedSubject = subject.withTestScore(index, score);
+    final updatedSubject = subject.withPeriodicTestScore(index, score);
     await updateSubject(updatedSubject);
   }
 
-  Future<void> updateRegularScore(String subjectId, double? score) async {
+  Future<void> updateVariableComponentScore(
+    String subjectId,
+    String componentId,
+    double? score,
+  ) async {
     final subjects = state.value ?? [];
     final subject = subjects.firstWhere((s) => s.id == subjectId);
-    final updatedSubject = subject.copyWith(regularScore: score);
-    await updateSubject(updatedSubject);
-  }
-
-  Future<void> updateWeights(String subjectId, double testWeight) async {
-    final subjects = state.value ?? [];
-    final subject = subjects.firstWhere((s) => s.id == subjectId);
-    final updatedSubject = subject.copyWith(
-      testWeight: (testWeight * 10).roundToDouble() / 10.0,
+    final updatedSubject = subject.withVariableComponentScore(
+      componentId,
+      score,
     );
+    await updateSubject(updatedSubject);
+  }
+
+  Future<void> addVariableComponent(
+    String subjectId, {
+    required String name,
+    required int ratio,
+  }) async {
+    final subjects = state.value ?? [];
+    final subject = subjects.firstWhere((s) => s.id == subjectId);
+    final updatedSubject = subject.addVariableComponent(
+      name: name,
+      ratio: ratio,
+    );
+    await updateSubject(updatedSubject);
+  }
+
+  Future<void> removeVariableComponent(
+    String subjectId,
+    String componentId,
+  ) async {
+    final subjects = state.value ?? [];
+    final subject = subjects.firstWhere((s) => s.id == subjectId);
+    final updatedSubject = subject.removeVariableComponent(componentId);
     await updateSubject(updatedSubject);
   }
 }

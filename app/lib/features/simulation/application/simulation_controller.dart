@@ -63,7 +63,7 @@ class SimulationController extends AsyncNotifier<SimulationState> {
   String predictionText(SubjectModel subject) {
     final score = GradeCalculator.calcFinalScore(subject);
     if (score == null) {
-      return 'データ不足のため予測できません。テスト点または平常点を入力してください。';
+      return 'データ不足のため予測できません。評価項目の点数を入力してください。';
     }
     if (score >= 80) {
       return 'このまま維持すれば高評価が見込めます。';
@@ -79,16 +79,18 @@ class SimulationController extends AsyncNotifier<SimulationState> {
 
   String generateAdvice(SubjectModel subject) {
     final score = GradeCalculator.calcFinalScore(subject);
-    final hasRegular = subject.regularScore != null;
-    final testAvg = GradeCalculator.calcTestAverage(subject.testScores);
+    final hasInput = subject.evaluations.any(
+      (evaluation) => evaluation.userScore != null,
+    );
+    final testAvg = GradeCalculator.calcTestAverage(subject);
 
     if (score == null) {
       return 'まずは1つでも評価データを入力して、到達ラインを可視化しましょう。';
     }
 
     if (score < 60) {
-      if (!hasRegular) {
-        return '平常点が未入力です。提出物と出席を最優先で確保しましょう。';
+      if (!hasInput) {
+        return '評価項目の入力が未完了です。提出物や試験結果を先に記録しましょう。';
       }
       return '次回テストで +10 点以上を目標に、苦手単元を優先復習しましょう。';
     }

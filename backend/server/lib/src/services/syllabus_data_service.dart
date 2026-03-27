@@ -16,13 +16,8 @@ class _SyllabusBlock {
 /// Loads static syllabus master data JSON files and resolves subjects by
 /// `kosenId`, `grade`, and `courseId`.
 class SyllabusDataService {
-  static final Map<String, List<_SyllabusBlock>> _blocksByKosenId =
+  final Map<String, List<_SyllabusBlock>> _blocksByKosenId =
       <String, List<_SyllabusBlock>>{};
-  static Future<void>? _initFuture;
-
-  Future<void> _ensureInitialized() {
-    return _initFuture ??= _loadAllData();
-  }
 
   /// Returns subjects matched by profile conditions.
   ///
@@ -32,7 +27,8 @@ class SyllabusDataService {
     String grade,
     String courseId,
   ) async {
-    await _ensureInitialized();
+    // Always reload to avoid serving stale JSON after master-data edits.
+    await _loadAllData();
 
     final normalizedKosenId = _normalize(kosenId);
     final normalizedGrade = grade.trim();

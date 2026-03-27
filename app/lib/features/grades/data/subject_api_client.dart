@@ -1,24 +1,18 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import '../../../core/constants/api_constants.dart';
 import '../domain/subject_model.dart';
 
 class SubjectApiClient {
   final Dio _dio;
-
-  static String get _baseUrl {
-    if (kIsWeb) return 'http://localhost:8080';
-    // 【重要】Android実機の場合は、PCのIPアドレスに書き換えが必要
-    return 'http://192.168.1.5:8080';
-  }
 
   SubjectApiClient({Dio? dio})
     : _dio =
           dio ??
           Dio(
             BaseOptions(
-              baseUrl: _baseUrl,
+              baseUrl: ApiConstants.baseUrl,
               connectTimeout: const Duration(seconds: 10),
               receiveTimeout: const Duration(seconds: 10),
             ),
