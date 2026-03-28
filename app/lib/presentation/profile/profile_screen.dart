@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/grades/application/grade_controller.dart';
 import '../../features/grades/data/course_repository.dart';
 import '../../data/network/syllabus_api_client.dart';
 import '../../data/sync/sync_service.dart';
@@ -19,6 +20,19 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  Future<void> _openEditScreen() async {
+    final saved = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(builder: (_) => const _ProfileEditScreen()),
+    );
+    if (!mounted) return;
+    ref.invalidate(userProfileProvider);
+    if (saved == true) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('所属情報を保存しました。')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final profileAsync = ref.watch(userProfileProvider);
@@ -64,6 +78,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         title: Text('プロフィール設定', style: tt.headlineLarge),
       ),
       body: profileAsync.when(
+        skipLoadingOnRefresh: true,
+        skipLoadingOnReload: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
         data: (user) => SingleChildScrollView(
@@ -79,22 +95,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 user: user,
                 kosenDisplayName: kosenDisplay,
                 courseDisplayName: courseDisplay,
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const _ProfileEditScreen(),
-                      ),
-                    );
-                    ref.invalidate(userProfileProvider);
-                  },
-                  icon: const Icon(Icons.edit),
-                  label: const Text('変更する'),
-                ),
+                onEdit: _openEditScreen,
               ),
             ],
           ),
@@ -142,11 +143,13 @@ class _ProfileInfoCard extends StatelessWidget {
     required this.user,
     required this.kosenDisplayName,
     required this.courseDisplayName,
+    required this.onEdit,
   });
 
   final User user;
   final String kosenDisplayName;
   final String courseDisplayName;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +164,19 @@ class _ProfileInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              onPressed: onEdit,
+              tooltip: '所属情報を変更',
+              icon: const Icon(Icons.settings),
+              style: IconButton.styleFrom(
+                backgroundColor: AppTheme.bgSurface,
+                foregroundColor: AppTheme.neonGreen,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
           _InfoRow(label: '高専', value: kosenDisplayName),
           const SizedBox(height: 12),
           _InfoRow(
@@ -220,10 +236,12 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
   Widget build(BuildContext context) {
     final profileAsync = ref.watch(userProfileProvider);
     final schoolsAsync = ref.watch(schoolsProvider);
-    final schoolOptions = schoolsAsync.maybeWhen(
+    final schoolOptionsRaw = schoolsAsync.maybeWhen(
       data: (value) => value,
       orElse: () => const <SchoolOption>[],
     );
+    final schoolOptions = [...schoolOptionsRaw]
+      ..sort((a, b) => a.kosenId.compareTo(b.kosenId));
 
     if (!_isInitialized) {
       profileAsync.whenData((user) {
@@ -294,6 +312,8 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
       backgroundColor: AppTheme.bgDeep,
       appBar: AppBar(title: Text('所属情報の変更', style: tt.headlineLarge)),
       body: profileAsync.when(
+        skipLoadingOnRefresh: true,
+        skipLoadingOnReload: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
         data: (_) => SingleChildScrollView(
@@ -309,6 +329,13 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
                 value: selectedSchool,
                 items: schoolOptions,
                 itemLabelBuilder: (school) => school.kosenName,
+                searchKeywordsBuilder: (school) => <String>[
+                  school.kosenName,
+                  school.kosenId,
+                  ...school.aliases,
+                ],
+                searchable: true,
+                searchHintText: '高専名で検索',
                 onChanged: (value) {
                   setState(() {
                     _selectedKosenId = value?.kosenId;
@@ -431,7 +458,9 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
   }
 
   Future<void> _saveProfile() async {
+    if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
+    final userProfileNotifier = ref.read(userProfileProvider.notifier);
 
     final departments = _selectedKosenId == null || _selectedGrade == null
         ? const <DepartmentOption>[]
@@ -470,22 +499,29 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
         courseId: _selectedCourseId!,
       );
 
+      if (!mounted) return;
+
       if (subjects.isEmpty) {
         syllabusError = 'シラバス科目が0件でした。学校・学年・コースの組み合わせを確認してください。';
       }
 
       if (syllabusError == null) {
-        await ref
-            .read(userProfileProvider.notifier)
-            .updateUserAffiliation(
-              _selectedKosenId!,
-              _selectedGrade!,
-              _selectedCourseId!,
-            );
+        await userProfileNotifier.updateUserAffiliation(
+          _selectedKosenId!,
+          _selectedGrade!,
+          _selectedCourseId!,
+        );
+
+        if (!mounted) return;
 
         await _courseRepository.replaceCoursesFromSyllabus(subjects);
-        await _syncService.pushLocalChanges();
-        ref.invalidate(gradeNotifierProvider);
+        unawaited(
+          _syncService.pushLocalChanges().catchError((error, _) {
+            debugPrint('[Syllabus Verify] background sync failed: $error');
+          }),
+        );
+
+        if (!mounted) return;
 
         debugPrint(
           '[Syllabus Verify] kosenId=${_selectedKosenId!}, grade=${_selectedGrade!}, courseId=${_selectedCourseId!}, count=${subjects.length}',
@@ -499,17 +535,15 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
       syllabusError = 'シラバス取得に失敗しました: $e';
     }
 
+    if (!mounted) return;
+
     if (syllabusError != null) {
       messenger.showSnackBar(SnackBar(content: Text(syllabusError)));
       return;
     }
 
     ref.invalidate(userProfileProvider);
-
-    if (!mounted) return;
-
-    Navigator.of(context).pop();
-    messenger.showSnackBar(const SnackBar(content: Text('所属情報を保存しました。')));
+    Navigator.of(context).pop(true);
   }
 }
 
@@ -521,6 +555,9 @@ class _DropdownField<T> extends StatefulWidget {
     required this.onChanged,
     this.value,
     this.itemLabelBuilder,
+    this.searchKeywordsBuilder,
+    this.searchable = false,
+    this.searchHintText,
   });
 
   final String label;
@@ -529,6 +566,9 @@ class _DropdownField<T> extends StatefulWidget {
   final ValueChanged<T?> onChanged;
   final T? value;
   final String Function(T value)? itemLabelBuilder;
+  final Iterable<String> Function(T value)? searchKeywordsBuilder;
+  final bool searchable;
+  final String? searchHintText;
 
   @override
   State<_DropdownField<T>> createState() => _DropdownFieldState<T>();
@@ -541,7 +581,14 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>>
   late final AnimationController _overlayController;
   late final Animation<double> _fadeAnimation;
   late final Animation<double> _sizeAnimation;
+  TextEditingController? _searchController;
   bool _isOpen = false;
+  String _searchQuery = '';
+
+  TextEditingController get _searchCtrl {
+    _searchController ??= TextEditingController();
+    return _searchController!;
+  }
 
   @override
   void initState() {
@@ -589,6 +636,7 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>>
   void dispose() {
     _overlayEntry?.remove();
     _overlayEntry = null;
+    _searchController?.dispose();
     _overlayController.dispose();
     super.dispose();
   }
@@ -597,6 +645,8 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>>
     if (!mounted || _overlayEntry != null) return;
     final overlay = Overlay.of(context);
     final selectedValue = widget.value;
+    _searchQuery = '';
+    _searchCtrl.clear();
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Stack(
@@ -633,54 +683,136 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>>
                         ),
                       ],
                     ),
-                    child: ListView.separated(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      itemCount: widget.items.length,
-                      separatorBuilder: (_, _) => Divider(
-                        height: 1,
-                        color: AppTheme.border.withAlpha(120),
-                      ),
-                      itemBuilder: (context, index) {
-                        final item = widget.items[index];
-                        final label =
-                            widget.itemLabelBuilder?.call(item) ??
-                            item.toString();
-                        final selected = selectedValue == item;
-                        return Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => _selectItem(item),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 12,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      label,
-                                      style: TextStyle(
-                                        color: selected
-                                            ? AppTheme.neonGreen
-                                            : AppTheme.textPrimary,
-                                        fontWeight: selected
-                                            ? FontWeight.w700
-                                            : FontWeight.w500,
-                                      ),
+                    child: Builder(
+                      builder: (context) {
+                        final filteredItems = widget.items
+                            .where((item) {
+                              if (_searchQuery.trim().isEmpty) return true;
+                              final query = _searchQuery.trim().toLowerCase();
+                              final keys = <String>[
+                                widget.itemLabelBuilder?.call(item) ??
+                                    item.toString(),
+                                ...(widget.searchKeywordsBuilder?.call(item) ??
+                                    const <String>[]),
+                              ];
+
+                              return keys.any(
+                                (key) => key.toLowerCase().contains(query),
+                              );
+                            })
+                            .toList(growable: false);
+
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (widget.searchable) ...[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  10,
+                                  10,
+                                  10,
+                                  8,
+                                ),
+                                child: TextField(
+                                  controller: _searchCtrl,
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                    hintText: widget.searchHintText ?? '検索',
+                                    prefixIcon: const Icon(
+                                      Icons.search,
+                                      size: 18,
+                                    ),
+                                    isDense: true,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 10,
                                     ),
                                   ),
-                                  if (selected)
-                                    const Icon(
-                                      Icons.check,
-                                      size: 18,
-                                      color: AppTheme.neonGreen,
-                                    ),
-                                ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _searchQuery = value;
+                                    });
+                                    _overlayEntry?.markNeedsBuild();
+                                  },
+                                ),
                               ),
+                              Divider(
+                                height: 1,
+                                color: AppTheme.border.withAlpha(120),
+                              ),
+                            ],
+                            Flexible(
+                              child: filteredItems.isEmpty
+                                  ? const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 16,
+                                        horizontal: 12,
+                                      ),
+                                      child: Text(
+                                        '一致する候補がありません',
+                                        style: TextStyle(
+                                          color: AppTheme.textSecondary,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    )
+                                  : ListView.separated(
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      itemCount: filteredItems.length,
+                                      separatorBuilder: (_, _) => Divider(
+                                        height: 1,
+                                        color: AppTheme.border.withAlpha(120),
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        final item = filteredItems[index];
+                                        final label =
+                                            widget.itemLabelBuilder?.call(
+                                              item,
+                                            ) ??
+                                            item.toString();
+                                        final selected = selectedValue == item;
+                                        return Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            onTap: () => _selectItem(item),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 12,
+                                                  ),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      label,
+                                                      style: TextStyle(
+                                                        color: selected
+                                                            ? AppTheme.neonGreen
+                                                            : AppTheme
+                                                                  .textPrimary,
+                                                        fontWeight: selected
+                                                            ? FontWeight.w700
+                                                            : FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  if (selected)
+                                                    const Icon(
+                                                      Icons.check,
+                                                      size: 18,
+                                                      color: AppTheme.neonGreen,
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
                             ),
-                          ),
+                          ],
                         );
                       },
                     ),

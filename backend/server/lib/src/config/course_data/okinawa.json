@@ -1,7 +1,7 @@
 {
   "kosenId": "okinawa",
   "kosenName": "沖縄工業高等専門学校",
-  "aliases": ["沖縄高専","沖縄"],
+  "aliases": ["沖縄高専","沖縄","おきなわ"],
   "version": "1.0",
   "grades": {
     "1": [

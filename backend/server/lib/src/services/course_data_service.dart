@@ -47,6 +47,7 @@ class CourseDataService {
           (rule) => <String, dynamic>{
             'kosenId': rule.kosenId,
             'kosenName': rule.kosenName,
+            'aliases': rule.aliases,
           },
         )
         .toList(growable: false);

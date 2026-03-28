@@ -1,7 +1,7 @@
 {
   "kosenId": "osaka_koritsu_daigaku",
   "kosenName": "大阪公立大学工業高等専門学校",
-  "aliases": ["大阪公立大学工業高専","大阪公立大学工業"],
+  "aliases": ["大阪公立大学工業高専","大阪公立大学工業","おおさかこうりつだいがくこうぎょう"],
   "version": "1.0",
   "grades": {
     "1": [

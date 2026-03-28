@@ -36,10 +36,16 @@ class UserProfileNotifier extends AsyncNotifier<User> {
     int grade,
     String courseId,
   ) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(
-      () => _repository.updateUserAffiliation(kosenId, grade, courseId),
-    );
+    try {
+      final updated = await _repository.updateUserAffiliation(
+        kosenId,
+        grade,
+        courseId,
+      );
+      state = AsyncValue.data(updated);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 {
   "kosenId": "hakodate",
   "kosenName": "函館工業高等専門学校",
-  "aliases": ["函館高専","函館"],
+  "aliases": ["函館高専","函館","はこだて"],
   "version": "1.0",
   "grades": {
     "1": [

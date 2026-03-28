@@ -21,6 +21,8 @@ class SubjectDetailScreen extends ConsumerWidget {
     final simAsync = ref.watch(simulationProvider);
 
     return subjectsAsync.when(
+      skipLoadingOnRefresh: true,
+      skipLoadingOnReload: true,
       data: (subjects) {
         final subject = subjects.firstWhere(
           (s) => s.id == subjectId,
@@ -30,6 +32,8 @@ class SubjectDetailScreen extends ConsumerWidget {
         );
 
         return simAsync.when(
+          skipLoadingOnRefresh: true,
+          skipLoadingOnReload: true,
           data: (sim) {
             final simulator = ref.read(simulationProvider.notifier);
             final score = GradeCalculator.calcFinalScore(subject);
@@ -37,11 +41,11 @@ class SubjectDetailScreen extends ConsumerWidget {
             final periodic = subject.periodicTests
                 .copyWith(count: _fixedPeriodicCount)
                 .normalized();
-            final stageEvaluation = score != null
-              ? GradeCalculator.calcAbsoluteRank(
-                score,
-                ).description.split(' ').first
-              : '--';
+            final stageRank = score != null
+                ? GradeCalculator.calcAbsoluteRank(score)
+                : null;
+            final stageEvaluation =
+                stageRank?.description.split(' ').first ?? '--';
 
             final prediction = simulator.predictionText(subject);
             final advice = simulator.generateAdvice(subject);
@@ -92,7 +96,7 @@ class SubjectDetailScreen extends ConsumerWidget {
                             child: _MetricCard(
                               label: '段階評価',
                               value: stageEvaluation,
-                              color: AppTheme.neonBlue,
+                              color: _rankColor(stageRank),
                             ),
                           ),
                         ],
@@ -173,14 +177,6 @@ class SubjectDetailScreen extends ConsumerWidget {
                                       value,
                                     );
                               },
-                              onDelete: () {
-                                ref
-                                    .read(gradeNotifierProvider.notifier)
-                                    .removeVariableComponent(
-                                      subject.id,
-                                      component.id,
-                                    );
-                              },
                             ),
                           ),
                         ),
@@ -212,6 +208,11 @@ class SubjectDetailScreen extends ConsumerWidget {
                       _EvaluationRatioBar(
                         periodicRatio: periodic.ratio,
                         components: subject.variableComponents,
+                      ),
+                      const SizedBox(height: 12),
+                      _SubjectMetaCard(
+                        units: subject.units,
+                        teacher: subject.teacher,
                       ),
                     ],
                   ),
@@ -246,6 +247,21 @@ class SubjectDetailScreen extends ConsumerWidget {
     if (score >= 70) return AppTheme.neonYellow;
     if (score >= 60) return AppTheme.neonOrange;
     return AppTheme.neonRed;
+  }
+
+  static Color _rankColor(GradeRank? rank) {
+    switch (rank) {
+      case GradeRank.a:
+        return AppTheme.neonGreen;
+      case GradeRank.b:
+        return AppTheme.neonYellow;
+      case GradeRank.c:
+        return AppTheme.neonOrange;
+      case GradeRank.d:
+        return AppTheme.neonRed;
+      case null:
+        return AppTheme.textSecondary;
+    }
   }
 }
 
@@ -387,12 +403,10 @@ class _VariableComponentInputCard extends StatefulWidget {
   const _VariableComponentInputCard({
     required this.component,
     required this.onChanged,
-    required this.onDelete,
   });
 
   final Evaluation component;
   final ValueChanged<double?> onChanged;
-  final VoidCallback onDelete;
 
   @override
   State<_VariableComponentInputCard> createState() =>
@@ -467,20 +481,6 @@ class _VariableComponentInputCardState
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 28,
-              height: 28,
-              child: IconButton(
-                onPressed: widget.onDelete,
-                icon: const Icon(Icons.delete_outline),
-                color: AppTheme.neonRed,
-                tooltip: '項目を削除',
-                iconSize: 20,
-                padding: EdgeInsets.zero,
-                alignment: Alignment.center,
-                constraints: const BoxConstraints(),
               ),
             ),
           ],
@@ -674,6 +674,75 @@ class _EvaluationRatioBar extends StatelessWidget {
       );
     }
     return segments;
+  }
+}
+
+class _SubjectMetaCard extends StatelessWidget {
+  const _SubjectMetaCard({required this.units, required this.teacher});
+
+  final int units;
+  final String? teacher;
+
+  @override
+  Widget build(BuildContext context) {
+    final safeTeacher = (teacher == null || teacher!.trim().isEmpty)
+        ? '未設定'
+        : teacher!.trim();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.bgCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.border),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _MetaInfoTile(label: '単位数', value: '$units単位'),
+          ),
+          Container(width: 1, height: 44, color: AppTheme.border),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 14),
+              child: _MetaInfoTile(label: '担当教員', value: safeTeacher),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetaInfoTile extends StatelessWidget {
+  const _MetaInfoTile({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
   }
 }
 

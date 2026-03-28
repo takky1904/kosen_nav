@@ -1,7 +1,7 @@
 {
   "kosenId": "tokyo",
   "kosenName": "東京工業高等専門学校",
-  "aliases": ["東京高専","東京"],
+  "aliases": ["東京高専","東京","とうきょう"],
   "version": "1.0",
   "grades": {
     "1": [

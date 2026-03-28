@@ -1,7 +1,7 @@
 {
   "kosenId": "sendai",
   "kosenName": "仙台高等専門学校",
-  "aliases": ["仙台高専","仙台"],
+  "aliases": ["仙台高専","仙台","せんだい"],
   "version": "1.0",
   "grades": {
     "1": [

@@ -1,7 +1,7 @@
 {
   "kosenId": "kitakyushu",
   "kosenName": "北九州工業高等専門学校",
-  "aliases": ["北九州高専","北九州"],
+  "aliases": ["北九州高専","北九州","きたきゅうしゅう"],
   "version": "1.0",
   "grades": {
     "1": [
