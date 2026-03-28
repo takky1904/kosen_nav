@@ -45,9 +45,11 @@ class GradesScreen extends ConsumerWidget {
               final s = subjectList[i];
               final score = GradeCalculator.calcFinalScore(s);
               final avg = GradeCalculator.calcEvaluationAverage(s);
-              final enteredCount = s.evaluations
-                  .where((evaluation) => evaluation.userScore != null)
-                  .length;
+              final stageEvaluation = score != null
+                  ? GradeCalculator.calcAbsoluteRank(
+                      score,
+                    ).description.split(' ').first
+                  : '--';
               final isAtRisk = simData.atRiskSubjectIds.contains(s.id);
               final isFailing = score != null && score < 60;
 
@@ -132,9 +134,8 @@ class GradesScreen extends ConsumerWidget {
                                     const SizedBox(width: 8),
                                     Flexible(
                                       child: _InfoChip(
-                                        label: '入力済み',
-                                        value:
-                                            '$enteredCount/${s.evaluations.length}',
+                                        label: '段階評価',
+                                        value: stageEvaluation,
                                       ),
                                     ),
                                     const SizedBox(width: 8),

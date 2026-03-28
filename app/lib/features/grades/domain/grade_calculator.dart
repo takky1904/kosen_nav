@@ -61,11 +61,11 @@ class GradeCalculator {
     return totalWeighted / totalUnits;
   }
 
-  /// 絶対評価によるランク（相対評価の雛形;現在は点数のみで判定）
-  /// 将来的にクラス全員のスコアリストを受け取る相対評価に差し替え可能
+  /// 絶対評価によるランク（点数レンジで判定）
+  /// 優: 80以上 / 良: 70以上 / 可: 60以上 / 不可: 60未満
   static GradeRank calcAbsoluteRank(double score) {
-    if (score >= 90) return GradeRank.a;
-    if (score >= 75) return GradeRank.b;
+    if (score >= 80) return GradeRank.a;
+    if (score >= 70) return GradeRank.b;
     if (score >= 60) return GradeRank.c;
     return GradeRank.d;
   }

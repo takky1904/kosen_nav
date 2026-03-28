@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
-import 'package:server/src/services/kosen_rule_service.dart';
+import 'package:server/src/services/course_data_service.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   if (context.request.method != HttpMethod.get) {
@@ -32,8 +32,8 @@ Future<Response> onRequest(RequestContext context) async {
   }
 
   try {
-    final ruleService = KosenRuleService();
-    final departments = await ruleService.getDepartments(kosenId, grade);
+    final courseDataService = CourseDataService();
+    final departments = await courseDataService.getDepartments(kosenId, grade);
 
     return Response(
       body: jsonEncode(<String, dynamic>{

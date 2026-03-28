@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
-import 'package:server/src/services/kosen_rule_service.dart';
+import 'package:server/src/services/course_data_service.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   if (context.request.method != HttpMethod.get) {
@@ -17,7 +17,7 @@ Future<Response> onRequest(RequestContext context) async {
   }
 
   try {
-    final service = KosenRuleService();
+    final service = CourseDataService();
     final schools = await service.getAvailableSchools();
 
     return Response(

@@ -11,13 +11,13 @@ extension GradeRankExt on GradeRank {
   String get description {
     switch (this) {
       case GradeRank.a:
-        return '優 (上位20%)';
+        return '優 (80〜100)';
       case GradeRank.b:
-        return '良 (上位20〜50%)';
+        return '良 (70〜79)';
       case GradeRank.c:
-        return '可 (上位50〜80%)';
+        return '可 (60〜69)';
       case GradeRank.d:
-        return '不可 (下位20%)';
+        return '不可 (0〜59)';
     }
   }
 }

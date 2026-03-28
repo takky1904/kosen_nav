@@ -37,11 +37,11 @@ class SubjectDetailScreen extends ConsumerWidget {
             final periodic = subject.periodicTests
                 .copyWith(count: _fixedPeriodicCount)
                 .normalized();
-            final enteredCount =
-                periodic.scores.where((score) => score != null).length +
-                subject.variableComponents
-                    .where((component) => component.userScore != null)
-                    .length;
+            final stageEvaluation = score != null
+              ? GradeCalculator.calcAbsoluteRank(
+                score,
+                ).description.split(' ').first
+              : '--';
 
             final prediction = simulator.predictionText(subject);
             final advice = simulator.generateAdvice(subject);
@@ -90,9 +90,8 @@ class SubjectDetailScreen extends ConsumerWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: _MetricCard(
-                              label: '入力済み',
-                              value:
-                                  '$enteredCount/${_fixedPeriodicCount + subject.variableComponents.length}',
+                              label: '段階評価',
+                              value: stageEvaluation,
                               color: AppTheme.neonBlue,
                             ),
                           ),
@@ -826,7 +825,7 @@ class _ComponentSliderBarState extends State<_ComponentSliderBar> {
             ),
             const SizedBox(width: 8),
             Text(
-              '${_dragValue.toStringAsFixed(0)}',
+              _dragValue.toStringAsFixed(0),
               style: const TextStyle(
                 color: color,
                 fontWeight: FontWeight.w700,

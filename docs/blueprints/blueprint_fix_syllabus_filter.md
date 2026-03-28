@@ -7,7 +7,7 @@
 ## Target Files
 - **App**: `app/lib/data/network/syllabus_api_client.dart`
 - **Backend**:
-  - `backend/lib/src/services/kosen_rule_service.dart`
+  - `backend/lib/src/services/course_data_service.dart`
   - `backend/lib/src/services/syllabus_scraper.dart`
   - `backend/routes/api/v1/syllabus/index.dart`
 
@@ -17,8 +17,8 @@
 1. `syllabus_api_client.dart` を修正し、シラバス取得のAPIリクエスト (`GET /api/v1/syllabus`) を送る際に、現在ログインしているユーザーの `kosenName` (または `kosenId`), `grade`, `courseId` をクエリパラメータとして確実に付与するようにしてください。
    例: `/api/v1/syllabus?kosenId=nagano&grade=3&courseId=info_elec_info`
 
-### Step 2: Backend Side - Load `scrapeTargets` (`kosen_rule_service.dart`)
-1. `kosen_rule_service.dart` に、リクエストされた `kosenId` に対応するJSONファイル（例: `nagano.json`）を読み込む処理を実装してください。
+### Step 2: Backend Side - Load `scrapeTargets` (`course_data_service.dart`)
+1. `course_data_service.dart` に、リクエストされた `kosenId` に対応するJSONファイル（例: `nagano.json`）を読み込む処理を実装してください。
 2. JSONの `grades` オブジェクトから該当する学年（例: `"3"`）の配列を取得し、その中からリクエストされた `courseId`（例: `"info_elec_info"`）に一致するオブジェクトを検索してください。
 3. 一致したオブジェクトの `scrapeTargets` 配列（例: `["一般科目：全系共通", "専門科目：全系共通", ...]`) を抽出して返すメソッドを実装してください。
 

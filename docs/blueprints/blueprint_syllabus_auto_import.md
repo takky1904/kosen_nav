@@ -5,7 +5,7 @@
 - **Core Concept**: 既存の「手動追加UI」は残しつつ、プロフィール登録後の「初期セットアップ」フローとしてシラバス自動同期ボタンを追加する。
 - **Target Files**:
   - **Backend**:
-    - `backend/lib/src/config/kosen_rules/nagano.json` (高専別JSON定義)
+    - `backend/lib/src/config/course_data/nagano.json` (高専別JSON定義)
     - `backend/lib/src/services/syllabus_scraper.dart` (スクレイパー実装)
     - `backend/routes/api/v1/syllabus/index.dart` (APIエンドポイント)
   - **App (Frontend)**:

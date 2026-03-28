@@ -26,11 +26,11 @@ kosen_nav/
 │       ├── lib/
 │       │   └── src/
 │       │       ├── config/
-│       │       │   └── kosen_rules/
+│       │       │   └── course_data/
 │       │       │       └── nagano.json
 │       │       ├── models/
 │       │       ├── services/
-│       │       │   └── kosen_rule_service.dart
+│       │       │   └── course_data_service.dart
 │       │       └── database.dart
 │       ├── routes/
 │       │   ├── api/

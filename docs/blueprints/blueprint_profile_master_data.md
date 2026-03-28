@@ -2,11 +2,11 @@
 
 ## Context
 - **Goal**: アプリのプロフィール画面における「高専」「学年」「コース」の選択ドロップダウンを、スクレイピングではなくバックエンドのJSONファイル群（マスタデータ）から動的に生成する構成に作り直す。
-- **Core Concept**: `backend/lib/src/config/kosen_rules/` にある複数のJSONファイル（`nagano.json`, `tokyo.json`, `akashi.json`）を読み込み、API経由でアプリに提供する。
+- **Core Concept**: `backend/lib/src/config/course_data/` にある複数のJSONファイル（`nagano.json`, `tokyo.json`, `akashi.json`）を読み込み、API経由でアプリに提供する。
 
 ## Target Files
 - **Backend**:
-  - `backend/lib/src/services/kosen_rule_service.dart` (JSONを読み込むロジック)
+  - `backend/lib/src/services/course_data_service.dart` (JSONを読み込むロジック)
   - `backend/routes/api/v1/schools/index.dart` (高専一覧を返すAPI)
   - `backend/routes/api/v1/departments/index.dart` (学科/コース一覧を返すAPI)
 - **App**:
@@ -15,8 +15,8 @@
 
 ## Step-by-Step Instructions
 
-### Step 1: Backend - Implement KosenRuleService
-1. `kosen_rule_service.dart` に、`config/kosen_rules/` ディレクトリ内のすべての `.json` ファイルを読み込み、メモリ上にキャッシュする処理（初期化処理）を実装してください。
+### Step 1: Backend - Implement CourseDataService
+1. `course_data_service.dart` に、`config/course_data/` ディレクトリ内のすべての `.json` ファイルを読み込み、メモリ上にキャッシュする処理（初期化処理）を実装してください。
 2. 以下の2つのメソッドを提供してください：
    - `List<Map<String, dynamic>> getAvailableSchools()`: 読み込んだすべてのJSONから `kosenId` と `kosenName` のペアのリストを返す。
    - `List<Map<String, dynamic>> getDepartments(String kosenId, String grade)`: 指定された高専・学年に紐づく `id` と `displayName` のリストを返す。
