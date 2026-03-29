@@ -158,9 +158,9 @@ class GradesScreen extends ConsumerWidget {
 
   Color _scoreAccentColor(double? s) {
     if (s == null) return AppTheme.border;
-    if (s >= 90) return const Color(0xFF2ECC71);
-    if (s >= 80) return const Color(0xFF16A085);
-    if (s >= 60) return const Color(0xFFF39C12);
-    return const Color(0xFFE11D48);
+    if (s >= 80) return AppTheme.neonGreen;
+    if (s >= 70) return AppTheme.neonYellow;
+    if (s >= 60) return AppTheme.neonOrange;
+    return AppTheme.neonRed;
   }
 }
