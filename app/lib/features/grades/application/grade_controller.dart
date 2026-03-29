@@ -31,14 +31,6 @@ class GradeNotifier extends AsyncNotifier<List<SubjectModel>> {
 
   // ── CRUD ──────────────────────────────────────────
 
-  Future<void> addSubject(SubjectModel subject) async {
-    try {
-      await _repository.createCourse(subject);
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
-  }
-
   Future<void> updateSubject(SubjectModel subject) async {
     try {
       await _repository.updateCourse(subject);
