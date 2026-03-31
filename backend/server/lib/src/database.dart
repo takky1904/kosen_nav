@@ -17,7 +17,7 @@ class DB {
     _connection ??= await Connection.open(
       Endpoint(
         host: 'localhost', // Dockerで動かしているDBの住所
-        database: 'kosen_nav',
+        database: 'kosenar',
         username: 'user',
         password: 'password',
       ),

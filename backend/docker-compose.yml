@@ -1,12 +1,12 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: kosen_nav_db
+    container_name: kosenar_db
     restart: always
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: kosen_nav
+      POSTGRES_DB: kosenar
     ports:
       - "5432:5432"
     volumes:

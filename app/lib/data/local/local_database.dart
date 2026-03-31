@@ -6,7 +6,7 @@ import 'sync_status.dart';
 class LocalDatabase {
   LocalDatabase._();
 
-  static const String _dbName = 'kosen_nav.db';
+  static const String _dbName = 'kosenar.db';
   static const int _dbVersion = 7;
 
   static Database? _instance;

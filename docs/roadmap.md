@@ -1,4 +1,4 @@
-# KOSEN NAV Roadmap
+# Kosenar Roadmap
 
 ## Phase 1: 基礎機能 (Done)
 - [x] プロジェクト構成のセットアップ

@@ -1,7 +1,7 @@
-# KOSEN NAV Folder Structure
+# Kosenar Folder Structure
 
 ```text
-kosen_nav/
+kosenar/
 ├── app/                                  # Flutter frontend
 │   ├── lib/
 │   │   ├── core/

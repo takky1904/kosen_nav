@@ -1,7 +1,7 @@
-# KOSEN NAV アプリアイコン制作プロンプト
+# Kosenar アプリアイコン制作プロンプト
 
 ## 1. アプリ説明（生成AIへの文脈）
-KOSEN NAV は、高専生向けの学習ナビゲーションアプリ。
+Kosenar は、高専生向けの学習ナビゲーションアプリ。KOSEN + Dominar（スペイン語で意のままに操る）を掛け合わせたアプリ。
 日々の課題・締切・進捗（TODO / DOING / DONE）と、履修科目の成績管理・評価シミュレーションを一体化し、
 「何を先にやるべきか」と「進級に必要な学習状態」を可視化する。
 
@@ -22,7 +22,7 @@ KOSEN NAV は、高専生向けの学習ナビゲーションアプリ。
 
 
 ## 2. アイコン生成プロンプト（本命）
-Create a premium mobile app icon for "KOSEN NAV", a Japanese technical college student productivity app that combines task management and grade analytics.
+Create a premium mobile app icon for "Kosenar", a Japanese technical college student productivity app that combines task management and grade analytics.
 
 Design concept:
 - Central symbol: a geometric compass pointer fused with an upward academic chart line, expressing "navigation + progress".

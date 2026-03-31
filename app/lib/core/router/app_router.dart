@@ -162,7 +162,7 @@ class AppShell extends ConsumerWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              'KOSEN NAV',
+                              'Kosenar',
                               overflow: TextOverflow.ellipsis,
                               style: AppTheme.logoStyle.copyWith(
                                 color: AppTheme.textPrimary,

@@ -1,6 +1,6 @@
 {
-    "name": "kosen_nav",
-    "short_name": "kosen_nav",
+    "name": "Kosenar",
+    "short_name": "Kosenar",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

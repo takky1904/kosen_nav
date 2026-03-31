@@ -10,16 +10,16 @@ final navigatorKey = appNavigatorKey;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await appConnectivityListener.start();
-  runApp(const ProviderScope(child: KosenNavApp()));
+  runApp(const ProviderScope(child: KosenarApp()));
 }
 
-class KosenNavApp extends StatelessWidget {
-  const KosenNavApp({super.key});
+class KosenarApp extends StatelessWidget {
+  const KosenarApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'KOSEN NAV',
+      title: 'Kosenar',
       theme: AppTheme.dark,
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,

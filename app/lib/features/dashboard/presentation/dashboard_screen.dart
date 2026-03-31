@@ -27,7 +27,7 @@ class DashboardScreen extends ConsumerWidget {
           SliverAppBar(
             floating: true,
             leading: const MenuToggleButton(),
-            title: Text('KOSEN NAV', style: AppTheme.logoStyle),
+            title: Text('Kosenar', style: AppTheme.logoStyle),
             backgroundColor: AppTheme.bgDeep,
             actions: const [SizedBox(width: 16)],
           ),

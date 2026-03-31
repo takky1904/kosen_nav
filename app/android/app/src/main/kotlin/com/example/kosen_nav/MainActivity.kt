@@ -1,4 +1,4 @@
-package com.example.kosen_nav
+package com.example.kosenar
 
 import io.flutter.embedding.android.FlutterActivity
 
