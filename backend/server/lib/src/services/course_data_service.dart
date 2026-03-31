@@ -103,7 +103,14 @@ class CourseDataService {
         .where((file) => file.path.toLowerCase().endsWith('.json'));
 
     for (final file in files) {
-      final raw = await file.readAsString();
+      String raw;
+      try {
+        final bytes = await file.readAsBytes();
+        raw = utf8.decode(bytes);
+      } catch (e) {
+        // Fallback to default system encoding
+        raw = await file.readAsString();
+      }
       final decoded = jsonDecode(raw);
       if (decoded is! Map<String, dynamic>) {
         continue;
@@ -145,7 +152,14 @@ class CourseDataService {
         .where((file) => file.path.toLowerCase().endsWith('.json'));
 
     for (final file in files) {
-      final raw = await file.readAsString();
+      String raw;
+      try {
+        final bytes = await file.readAsBytes();
+        raw = utf8.decode(bytes);
+      } catch (e) {
+        // Fallback to default system encoding
+        raw = await file.readAsString();
+      }
       final decoded = jsonDecode(raw);
       if (decoded is! Map<String, dynamic>) {
         continue;
