@@ -1,11 +1,17 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "adb-reverse-8080-pixel8a",
-      "type": "shell",
-      "command": "adb -s adb-49261JEKB04024-sAltlL._adb-tls-connect._tcp reverse tcp:8080 tcp:8080",
-      "problemMatcher": []
-    }
-  ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "adb-reverse-8080-all",
+			"type": "shell",
+			"command": "$devices = (adb devices | Select-String '\\sdevice$' | ForEach-Object { ($_ -split '\\s+')[0] }); if (-not $devices) { throw 'No adb device connected.' }; foreach ($d in $devices) { adb -s $d reverse tcp:8080 tcp:8080 }; adb reverse --list",
+			"problemMatcher": []
+		},
+		{
+			"label": "adb-reverse-remove-8080-all",
+			"type": "shell",
+			"command": "$devices = (adb devices | Select-String '\\sdevice$' | ForEach-Object { ($_ -split '\\s+')[0] }); if (-not $devices) { throw 'No adb device connected.' }; foreach ($d in $devices) { adb -s $d reverse --remove tcp:8080 }",
+			"problemMatcher": []
+		}
+	]
 }

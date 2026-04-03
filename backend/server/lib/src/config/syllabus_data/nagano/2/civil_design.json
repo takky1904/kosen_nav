@@ -1,10 +1,10 @@
 {
   "version": "1.0",
-  "grade": "1",
-  "courseId": "eng_common",
+  "grade": "2",
+  "courseId": "civil_design",
   "subjects": [
     {
-      "subjectId": "akashi_1_common_mathA",
+      "subjectId": "nagano_2_info_mathA",
       "name": "基礎数学A",
       "isElective": false,
       "credits": 2,
@@ -23,7 +23,7 @@
       ]
     },
     {
-      "subjectId": "akashi_1_common_prog",
+      "subjectId": "nagano_2_info_prog",
       "name": "プログラミング演習",
       "isElective": false,
       "credits": 2,
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "subjectId": "akashi_1_common_pe",
+      "subjectId": "nagano_2_info_pe",
       "name": "体育",
       "isElective": false,
       "credits": 1,

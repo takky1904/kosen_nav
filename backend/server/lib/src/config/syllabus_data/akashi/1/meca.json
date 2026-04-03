@@ -1,0 +1,89 @@
+{
+  "version": "1.1",
+  "grade": "1",
+  "courseId": "meca",
+  "subjects": [
+    {
+      "subjectId": "akashi_1_meca_Japanese1-1",
+      "name": "国語Ⅰ-1",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "丹下 暖子",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80
+        },
+        {
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 10
+        },
+        {
+          "id":"effort",
+          "name":"取り組み",
+          "ratio":10
+        }
+      ]
+    },
+    {
+      "subjectId": "akashi_1_meca_active_learning",
+      "name": "アクティブラーニング入門",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "久保田 育美,生田 麻実",
+      "evaluations": [
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30
+        },
+        {
+          "id": "presentation",
+          "name": "発表",
+          "ratio": 20
+        },
+        {
+          "id": "reflection",
+          "name": "振り返り",
+          "ratio": 30
+        },
+        {
+          "id":"effort",
+          "name":"取り組み",
+          "ratio":20
+        }
+      ]
+    },
+    {
+      "subjectId": "akashi_1_meca_music",
+      "name": "音楽-1",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "泉 由香",
+      "evaluations": [
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 25
+        },
+        {
+          "id": "skill",
+          "name": "実技テスト",
+          "ratio": 35
+        },
+        {
+          "id": "song_quiz",
+          "name": "歌の小テスト",
+          "ratio": 20
+        },
+        {
+          "id": "codename_quiz",
+          "name": "コードネームの小テスト",
+          "ratio": 20
+        }
+      ]
+    }
+  ]
+}

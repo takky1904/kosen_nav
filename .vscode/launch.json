@@ -5,24 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "app (local reverse)",
+            "name": "app (local reverse auto)",
             "cwd": "app",
             "request": "launch",
             "type": "dart",
-            "deviceId": "adb-49261JEKB04024-sAltlL._adb-tls-connect._tcp",
             "toolArgs": [
                 "--dart-define=API_BASE_URL=http://127.0.0.1:8080"
             ],
-            "preLaunchTask": "adb-reverse-8080-pixel8a"
+            "preLaunchTask": "adb-reverse-8080-all"
         },
         {
             "name": "app (lan direct)",
             "cwd": "app",
             "request": "launch",
             "type": "dart",
-            "deviceId": "adb-49261JEKB04024-sAltlL._adb-tls-connect._tcp",
             "toolArgs": [
                 "--dart-define=API_BASE_URL=http://192.168.1.5:8080"
+            ]
+        },
+        {
+            "name": "app (custom api url)",
+            "cwd": "app",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define=API_BASE_URL=${input:apiBaseUrl}"
             ]
         },
         {
@@ -30,7 +37,6 @@
             "cwd": "app",
             "request": "launch",
             "type": "dart",
-            "deviceId": "adb-49261JEKB04024-sAltlL._adb-tls-connect._tcp",
             "toolArgs": [
                 "--dart-define=API_BASE_URL=https://api.example.com"
             ]
@@ -61,12 +67,20 @@
     ],
     "compounds": [
         {
-            "name": "local fullstack (server + app reverse)",
+            "name": "local fullstack (server + app reverse auto)",
             "configurations": [
                 "server",
-                "app (local reverse)"
+                "app (local reverse auto)"
             ],
             "stopAll": true
+        }
+    ],
+    "inputs": [
+        {
+            "id": "apiBaseUrl",
+            "type": "promptString",
+            "description": "APIのベースURLを入力 (例: http://127.0.0.1:8080, http://192.168.1.5:8080)",
+            "default": "http://127.0.0.1:8080"
         }
     ]
 }
