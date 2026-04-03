@@ -4,18 +4,21 @@ class Evaluation {
     required this.name,
     required this.ratio,
     this.userScore,
+    this.maxScore = 100,
   });
 
   final String id;
   final String name;
   final int ratio;
   final double? userScore;
+  final int maxScore; // 満点（例: 30, 60, 100など）
 
   Evaluation copyWith({
     String? id,
     String? name,
     int? ratio,
     double? userScore,
+    int? maxScore,
     bool clearUserScore = false,
   }) {
     return Evaluation(
@@ -23,6 +26,7 @@ class Evaluation {
       name: name ?? this.name,
       ratio: ratio ?? this.ratio,
       userScore: clearUserScore ? null : (userScore ?? this.userScore),
+      maxScore: maxScore ?? this.maxScore,
     );
   }
 
@@ -32,6 +36,7 @@ class Evaluation {
       name: (json['name'] ?? '').toString(),
       ratio: _parseInt(json['ratio'])?.clamp(0, 100) ?? 0,
       userScore: _parseDouble(json['userScore'] ?? json['score']),
+      maxScore: _parseInt(json['maxScore']) ?? 100,
     );
   }
 
@@ -41,6 +46,7 @@ class Evaluation {
       'name': name,
       'ratio': ratio,
       'userScore': userScore,
+      'maxScore': maxScore,
     };
   }
 
@@ -65,11 +71,13 @@ class PeriodicTests {
     required this.ratio,
     this.count = 4,
     required this.scores,
+    this.maxScore = 100,
   });
 
   final int ratio;
   final int count;
   final List<double?> scores;
+  final int maxScore; // 定期試験の満点
 
   PeriodicTests normalized() {
     final normalizedScores = List<double?>.filled(count, null, growable: false);
@@ -80,14 +88,21 @@ class PeriodicTests {
       ratio: ratio.clamp(0, 100),
       count: count,
       scores: normalizedScores,
+      maxScore: maxScore,
     );
   }
 
-  PeriodicTests copyWith({int? ratio, int? count, List<double?>? scores}) {
+  PeriodicTests copyWith({
+    int? ratio,
+    int? count,
+    List<double?>? scores,
+    int? maxScore,
+  }) {
     return PeriodicTests(
       ratio: ratio ?? this.ratio,
       count: count ?? this.count,
       scores: scores ?? this.scores,
+      maxScore: maxScore ?? this.maxScore,
     ).normalized();
   }
 
@@ -105,10 +120,16 @@ class PeriodicTests {
       ratio: Evaluation._parseInt(json['ratio']) ?? 0,
       count: parsedCount <= 0 ? 4 : parsedCount,
       scores: parsedScores,
+      maxScore: Evaluation._parseInt(json['maxScore']) ?? 100,
     ).normalized();
   }
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{'ratio': ratio, 'count': count, 'scores': scores};
+    return <String, dynamic>{
+      'ratio': ratio,
+      'count': count,
+      'scores': scores,
+      'maxScore': maxScore,
+    };
   }
 }

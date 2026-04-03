@@ -22,7 +22,20 @@ class GradeCalculator {
     return candidates.reduce((a, b) => a + b) / candidates.length;
   }
 
-  /// 最終成績スコア（Σ userScore * ratio/100）
+  /// 最終成績スコア（ratio合計で正規化された100点満点スコア）
+  ///
+  /// Ultimate Normalization Engine:
+  /// 計算ロジック:
+  /// 1. 定期試験の平均を算出: testAvg = Σ(test scores) / count
+  /// 2. 正規化前の実得点に変換: testActual = testAvg * (maxScore / 100)
+  /// 3. 各コンポーネントも正規化前の実得点に変換
+  /// 4. 最終成績 = Σ ( (実得点 / maxScore) * (ratio / totalRatioSum) * 100 )
+  ///
+  /// 例: ベーシックサイエンス・ラボ (totalRatioSum=100)
+  ///   物理試験：25/30 * (15/100) * 100 = 12.5点
+  ///   物理レポ：60/70 * (35/100) * 100 = 30.0点
+  ///   化学レポ：90/100 * (50/100) * 100 = 45.0点
+  ///   合計 = 87.5点
   static double? calcFinalScore(SubjectModel s) {
     final hasAnyInput =
         s.periodicTests.scores.any((score) => score != null) ||
@@ -31,18 +44,42 @@ class GradeCalculator {
       return null;
     }
 
-    final testAvg = calcTestAverage(s);
-    final weightedTest =
-        (testAvg ?? 0) * (s.periodicTests.ratio.clamp(0, 100) / 100.0);
-
-    double weightedVariable = 0;
-    for (final component in s.variableComponents) {
-      final score = (component.userScore ?? 0).clamp(0.0, 100.0);
-      final ratio = component.ratio.clamp(0, 100) / 100.0;
-      weightedVariable += score * ratio;
+    final totalRatioSum = s.totalRatioSum;
+    if (totalRatioSum == 0) {
+      return null; // 無効: ratioの合計が0
     }
 
-    return (weightedTest + weightedVariable).clamp(0.0, 100.0);
+    double finalScore = 0.0;
+
+    // ステップ1-2: 定期試験の処理
+    final testAvg = calcTestAverage(s);
+    if (testAvg != null) {
+      // 0-100スケールから実得点に変換
+      final testActual = testAvg * (s.periodicTests.maxScore / 100.0);
+      // 正規化パターン: (実得点 / maxScore) * (ratio / totalRatioSum) * 100
+      final testNormalized =
+          (testActual / s.periodicTests.maxScore) *
+          (s.periodicTests.ratio / totalRatioSum) *
+          100.0;
+      finalScore += testNormalized;
+    }
+
+    // ステップ3: 可変コンポーネントの処理
+    for (final component in s.variableComponents) {
+      final score = component.userScore;
+      if (score != null) {
+        // 0-100スケールから実得点に変換
+        final componentActual = score * (component.maxScore / 100.0);
+        // 正規化パターン
+        final componentNormalized =
+            (componentActual / component.maxScore) *
+            (component.ratio / totalRatioSum) *
+            100.0;
+        finalScore += componentNormalized;
+      }
+    }
+
+    return finalScore.clamp(0.0, 100.0);
   }
 
   /// 履修全科目の加重平均スコア（点数 × 単位数 / 総単位数）

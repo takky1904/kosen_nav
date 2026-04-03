@@ -106,7 +106,7 @@ class SubjectDetailScreen extends ConsumerWidget {
 
                       if (hasPeriodicTests) ...[
                         Text(
-                          '定期試験 (${periodic.ratio}%)',
+                          '定期試験 (${subject.getPeriodicTestWeightPercentage().toStringAsFixed(1)}%)',
                           style: tt.headlineMedium,
                         ),
                         const SizedBox(height: 10),
@@ -123,6 +123,7 @@ class SubjectDetailScreen extends ConsumerWidget {
                                 child: _PeriodicTestField(
                                   label: '第${index + 1}回',
                                   initialValue: scoreAt,
+                                  maxScore: subject.periodicTests.maxScore,
                                   onChanged: (value) {
                                     ref
                                         .read(gradeNotifierProvider.notifier)
@@ -172,6 +173,7 @@ class SubjectDetailScreen extends ConsumerWidget {
                               border: Border.all(color: AppTheme.border),
                             ),
                             child: _VariableComponentInputCard(
+                              subject: subject,
                               component: component,
                               onChanged: (value) {
                                 ref
@@ -211,6 +213,7 @@ class SubjectDetailScreen extends ConsumerWidget {
                       ],
                       const SizedBox(height: 28),
                       _EvaluationRatioBar(
+                        subject: subject,
                         periodicRatio: periodic.ratio,
                         components: subject.variableComponents,
                       ),
@@ -353,11 +356,13 @@ class _PeriodicTestField extends StatefulWidget {
     required this.label,
     required this.initialValue,
     required this.onChanged,
+    this.maxScore = 100,
   });
 
   final String label;
   final double? initialValue;
   final ValueChanged<double?> onChanged;
+  final int maxScore;
 
   @override
   State<_PeriodicTestField> createState() => _PeriodicTestFieldState();
@@ -369,16 +374,18 @@ class _PeriodicTestFieldState extends State<_PeriodicTestField> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(
-      text: widget.initialValue?.toStringAsFixed(0) ?? '',
-    );
+    // userScoreは0-100で保存されているので、正規化前の値に変換
+    final denormalized = (widget.initialValue ?? 0) * (widget.maxScore / 100.0);
+    _controller = TextEditingController(text: denormalized.toStringAsFixed(0));
   }
 
   @override
   void didUpdateWidget(covariant _PeriodicTestField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.initialValue != widget.initialValue) {
-      _controller.text = widget.initialValue?.toStringAsFixed(0) ?? '';
+      final denormalized =
+          (widget.initialValue ?? 0) * (widget.maxScore / 100.0);
+      _controller.text = denormalized.toStringAsFixed(0);
     }
   }
 
@@ -395,10 +402,20 @@ class _PeriodicTestFieldState extends State<_PeriodicTestField> {
       enableInteractiveSelection: false,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       textAlign: TextAlign.center,
-      decoration: InputDecoration(labelText: widget.label, suffixText: '点'),
+      decoration: InputDecoration(
+        labelText: widget.label,
+        suffixText: '/${widget.maxScore}',
+      ),
       onChanged: (value) {
         final parsed = double.tryParse(value);
-        widget.onChanged(parsed?.clamp(0.0, 100.0));
+        if (parsed == null) {
+          widget.onChanged(null);
+          return;
+        }
+        // 正規化前の値をクランプ、その後0-100に正規化
+        final clamped = parsed.clamp(0.0, widget.maxScore.toDouble());
+        final normalized = (clamped / widget.maxScore) * 100.0;
+        widget.onChanged(normalized);
       },
     );
   }
@@ -406,10 +423,12 @@ class _PeriodicTestFieldState extends State<_PeriodicTestField> {
 
 class _VariableComponentInputCard extends StatefulWidget {
   const _VariableComponentInputCard({
+    required this.subject,
     required this.component,
     required this.onChanged,
   });
 
+  final SubjectModel subject;
   final Evaluation component;
   final ValueChanged<double?> onChanged;
 
@@ -446,7 +465,10 @@ class _VariableComponentInputCardState
   void initState() {
     super.initState();
     _scoreFocusNode.addListener(_onScoreFocusChanged);
-    _controller.text = widget.component.userScore?.toStringAsFixed(0) ?? '';
+    // userScoreは0-100で保存されているので、正規化前の値に変換
+    final denormalized =
+        (widget.component.userScore ?? 0) * (widget.component.maxScore / 100.0);
+    _controller.text = denormalized.toStringAsFixed(0);
   }
 
   @override
@@ -454,7 +476,10 @@ class _VariableComponentInputCardState
     super.didUpdateWidget(oldWidget);
     if (oldWidget.component.userScore != widget.component.userScore) {
       if (_scoreFocusNode.hasFocus) return;
-      _controller.text = widget.component.userScore?.toStringAsFixed(0) ?? '';
+      final denormalized =
+          (widget.component.userScore ?? 0) *
+          (widget.component.maxScore / 100.0);
+      _controller.text = denormalized.toStringAsFixed(0);
       _moveCursorToEnd();
     }
   }
@@ -470,7 +495,13 @@ class _VariableComponentInputCardState
 
   @override
   Widget build(BuildContext context) {
-    final sliderValue = (widget.component.userScore ?? 0).clamp(0.0, 100.0);
+    // ユーザースコアを正規化前の値に変換（display用）
+    final denormalizedScore =
+        (widget.component.userScore ?? 0) * (widget.component.maxScore / 100.0);
+    final sliderValue = denormalizedScore.clamp(
+      0.0,
+      widget.component.maxScore.toDouble(),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -480,7 +511,7 @@ class _VariableComponentInputCardState
           children: [
             Expanded(
               child: Text(
-                widget.component.name,
+                '${widget.component.name} (${widget.subject.getWeightPercentage(widget.component).toStringAsFixed(1)}%)',
                 style: const TextStyle(
                   color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w700,
@@ -509,7 +540,7 @@ class _VariableComponentInputCardState
                 ),
                 decoration: InputDecoration(
                   labelText: '点数',
-                  suffixText: '点',
+                  suffixText: '/${widget.component.maxScore}',
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 10,
                     horizontal: 10,
@@ -530,8 +561,14 @@ class _VariableComponentInputCardState
                   final parsed = double.tryParse(value);
                   if (parsed == null) return;
 
-                  final clamped = parsed.clamp(0.0, 100.0);
-                  widget.onChanged(clamped);
+                  // 正規化前の値をクランプ、その後0-100に正規化
+                  final clamped = parsed.clamp(
+                    0.0,
+                    widget.component.maxScore.toDouble(),
+                  );
+                  final normalized =
+                      (clamped / widget.component.maxScore) * 100.0;
+                  widget.onChanged(normalized);
                   setState(() {});
                 },
               ),
@@ -540,13 +577,17 @@ class _VariableComponentInputCardState
             Expanded(
               child: _ComponentSliderBar(
                 value: sliderValue,
+                maxValue: widget.component.maxScore.toDouble(),
                 onPreviewChanged: (value) {
                   if (_scoreFocusNode.hasFocus) return;
                   _controller.text = value.toStringAsFixed(0);
                   _moveCursorToEnd();
                 },
                 onChangeEnd: (value) {
-                  widget.onChanged(value);
+                  // スライダーから得た正規化前の値を0-100に正規化
+                  final normalized =
+                      (value / widget.component.maxScore) * 100.0;
+                  widget.onChanged(normalized);
                 },
               ),
             ),
@@ -559,10 +600,12 @@ class _VariableComponentInputCardState
 
 class _EvaluationRatioBar extends StatelessWidget {
   const _EvaluationRatioBar({
+    required this.subject,
     required this.periodicRatio,
     required this.components,
   });
 
+  final SubjectModel subject;
   final int periodicRatio;
   final List<Evaluation> components;
 
@@ -570,7 +613,7 @@ class _EvaluationRatioBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
     final segments = _segments();
-    final total = segments.fold<int>(0, (sum, s) => sum + s.ratio);
+    final totalRatioSum = subject.totalRatioSum;
 
     return Container(
       width: double.infinity,
@@ -608,8 +651,12 @@ class _EvaluationRatioBar extends StatelessWidget {
             runSpacing: 8,
             children: segments
                 .where((segment) => segment.ratio > 0)
-                .map(
-                  (segment) => Row(
+                .map((segment) {
+                  // 計算された割合を表示: (ratio / totalRatioSum) * 100
+                  final weightPercentage = totalRatioSum > 0
+                      ? (segment.ratio / totalRatioSum) * 100.0
+                      : 0.0;
+                  return Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
@@ -622,22 +669,25 @@ class _EvaluationRatioBar extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        '${segment.label} (${segment.ratio}%)',
+                        '${segment.label} (${weightPercentage.toStringAsFixed(1)}%)',
                         style: const TextStyle(
                           color: AppTheme.textSecondary,
                           fontSize: 12,
                         ),
                       ),
                     ],
-                  ),
-                )
+                  );
+                })
                 .toList(growable: false),
           ),
-          if (total != 100) ...[
+          if (totalRatioSum > 0) ...[
             const SizedBox(height: 8),
             Text(
-              '合計: $total% (100%でない場合は入力比率を見直してください)',
-              style: const TextStyle(color: AppTheme.neonOrange, fontSize: 11),
+              'ratio合計: $totalRatioSum (100でない場合は自動的に正規化されます)',
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
+                fontSize: 11,
+              ),
             ),
           ],
         ],
@@ -661,7 +711,7 @@ class _EvaluationRatioBar extends StatelessWidget {
       segments.add(
         _RatioSegment(
           label: '定期試験',
-          ratio: periodicRatio.clamp(0, 100),
+          ratio: periodicRatio < 0 ? 0 : periodicRatio,
           color: palette.first,
         ),
       );
@@ -669,7 +719,7 @@ class _EvaluationRatioBar extends StatelessWidget {
 
     for (var i = 0; i < components.length; i++) {
       final component = components[i];
-      final ratio = component.ratio.clamp(0, 100);
+      final ratio = component.ratio < 0 ? 0 : component.ratio;
       segments.add(
         _RatioSegment(
           label: component.name,
@@ -768,11 +818,13 @@ class _ComponentSliderBar extends StatefulWidget {
     required this.value,
     required this.onPreviewChanged,
     required this.onChangeEnd,
+    this.maxValue = 100.0,
   });
 
   final double value;
   final ValueChanged<double> onPreviewChanged;
   final ValueChanged<double> onChangeEnd;
+  final double maxValue; // スライダーの最大値（正規化前）
 
   @override
   State<_ComponentSliderBar> createState() => _ComponentSliderBarState();
@@ -797,7 +849,7 @@ class _ComponentSliderBarState extends State<_ComponentSliderBar> {
 
   void _handleDrag(double localX, double maxWidth) {
     final ratio = (localX / maxWidth).clamp(0.0, 1.0);
-    final newValue = (ratio * 100).clamp(0.0, 100.0);
+    final newValue = (ratio * widget.maxValue).clamp(0.0, widget.maxValue);
     setState(() {
       _dragValue = newValue;
     });

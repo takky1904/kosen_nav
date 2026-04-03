@@ -66,6 +66,64 @@ class SubjectModel {
   double get testWeight => periodicTests.ratio / 100.0;
   double get regularWeight => 1.0 - testWeight;
 
+  /// 全評価項目の合計満点を計算（定期試験 + 全ての可変コンポーネント）
+  int get totalMaxScore {
+    int total = periodicTests.maxScore;
+    for (final component in variableComponents) {
+      total += component.maxScore;
+    }
+    return total;
+  }
+
+  /// 全評価項目（定期試験 + 可変コンポーネント）のratioの合計
+  int get totalRatioSum {
+    int total = periodicTests.ratio;
+    for (final component in variableComponents) {
+      total += component.ratio;
+    }
+    return total;
+  }
+
+  /// 指定された評価項目の重みを計算（%）
+  /// 公式: (ratio / totalRatioSum) * 100
+  double getWeightPercentage(Evaluation evaluation) {
+    final sum = totalRatioSum;
+    if (sum == 0) return 0.0;
+    return (evaluation.ratio / sum) * 100.0;
+  }
+
+  /// 定期試験の重みを計算（%）
+  double getPeriodicTestWeightPercentage() {
+    final sum = totalRatioSum;
+    if (sum == 0) return 0.0;
+    return (periodicTests.ratio / sum) * 100.0;
+  }
+
+  /// ユーザーが入力した総得点（正規化前）
+  double? get totalUserScore {
+    double? testScore;
+    final validTestScores = periodicTests.scores.whereType<double>().toList();
+    if (validTestScores.isNotEmpty) {
+      testScore =
+          validTestScores.reduce((a, b) => a + b) / validTestScores.length;
+      testScore = testScore * (periodicTests.maxScore / 100.0); // 正規化前の実得点に戻す
+    }
+
+    double totalScore = testScore ?? 0;
+    for (final component in variableComponents) {
+      final score = component.userScore;
+      if (score != null) {
+        final maxScore = component.maxScore;
+        totalScore += score * (maxScore / 100.0); // 正規化前の実得点に戻す
+      }
+    }
+
+    return (testScore != null ||
+            variableComponents.any((c) => c.userScore != null))
+        ? totalScore
+        : null;
+  }
+
   const SubjectModel({
     required this.id,
     required this.name,
@@ -137,11 +195,13 @@ class SubjectModel {
   SubjectModel addVariableComponent({
     required String name,
     required int ratio,
+    int maxScore = 100,
   }) {
     final component = Evaluation(
       id: const Uuid().v4(),
       name: name,
       ratio: ratio.clamp(0, 100),
+      maxScore: maxScore,
     );
     final updated = List<Evaluation>.from(variableComponents)..add(component);
     return copyWith(variableComponents: updated);

@@ -4,13 +4,13 @@
 		{
 			"label": "adb-reverse-8080-all",
 			"type": "shell",
-			"command": "$devices = (adb devices | Select-String '\\sdevice$' | ForEach-Object { ($_ -split '\\s+')[0] }); if (-not $devices) { throw 'No adb device connected.' }; foreach ($d in $devices) { adb -s $d reverse tcp:8080 tcp:8080 }; adb reverse --list",
+			"command": "$devices = (adb devices | Select-String '\\tdevice$' | ForEach-Object { ($_ -split '\\t')[0].Trim() } | Where-Object { $_ -and ($_ -notmatch '_adb-tls-connect\\._tcp') }); if (-not $devices) { throw 'No adb device connected.' }; foreach ($d in $devices) { adb -s \"$d\" reverse tcp:8080 tcp:8080; adb -s \"$d\" reverse --list }",
 			"problemMatcher": []
 		},
 		{
 			"label": "adb-reverse-remove-8080-all",
 			"type": "shell",
-			"command": "$devices = (adb devices | Select-String '\\sdevice$' | ForEach-Object { ($_ -split '\\s+')[0] }); if (-not $devices) { throw 'No adb device connected.' }; foreach ($d in $devices) { adb -s $d reverse --remove tcp:8080 }",
+			"command": "$devices = (adb devices | Select-String '\\tdevice$' | ForEach-Object { ($_ -split '\\t')[0].Trim() } | Where-Object { $_ -and ($_ -notmatch '_adb-tls-connect\\._tcp') }); if (-not $devices) { throw 'No adb device connected.' }; foreach ($d in $devices) { $rules = adb -s \"$d\" reverse --list; if ($rules -match 'tcp:8080\\s+tcp:8080') { adb -s \"$d\" reverse --remove tcp:8080 } }",
 			"problemMatcher": []
 		}
 	]
