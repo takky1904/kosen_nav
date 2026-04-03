@@ -41,6 +41,7 @@ class SubjectDetailScreen extends ConsumerWidget {
             final periodic = subject.periodicTests
                 .copyWith(count: _fixedPeriodicCount)
                 .normalized();
+            final hasPeriodicTests = periodic.ratio > 0;
             final stageRank = score != null
                 ? GradeCalculator.calcAbsoluteRank(score)
                 : null;
@@ -103,37 +104,41 @@ class SubjectDetailScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 24),
 
-                      Text(
-                        '定期試験 (${periodic.ratio}%)',
-                        style: tt.headlineMedium,
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: List.generate(_fixedPeriodicCount, (index) {
-                          final scoreAt = periodic.scores[index];
-                          return Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                right: index == _fixedPeriodicCount - 1 ? 0 : 8,
+                      if (hasPeriodicTests) ...[
+                        Text(
+                          '定期試験 (${periodic.ratio}%)',
+                          style: tt.headlineMedium,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: List.generate(_fixedPeriodicCount, (index) {
+                            final scoreAt = periodic.scores[index];
+                            return Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  right: index == _fixedPeriodicCount - 1
+                                      ? 0
+                                      : 8,
+                                ),
+                                child: _PeriodicTestField(
+                                  label: '第${index + 1}回',
+                                  initialValue: scoreAt,
+                                  onChanged: (value) {
+                                    ref
+                                        .read(gradeNotifierProvider.notifier)
+                                        .updatePeriodicTestScore(
+                                          subject.id,
+                                          index,
+                                          value,
+                                        );
+                                  },
+                                ),
                               ),
-                              child: _PeriodicTestField(
-                                label: '第${index + 1}回',
-                                initialValue: scoreAt,
-                                onChanged: (value) {
-                                  ref
-                                      .read(gradeNotifierProvider.notifier)
-                                      .updatePeriodicTestScore(
-                                        subject.id,
-                                        index,
-                                        value,
-                                      );
-                                },
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                      const SizedBox(height: 24),
+                            );
+                          }),
+                        ),
+                        const SizedBox(height: 24),
+                      ],
 
                       Text('平常点・その他', style: tt.headlineMedium),
                       const SizedBox(height: 10),

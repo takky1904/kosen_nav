@@ -8,6 +8,7 @@ import '../../data/network/syllabus_api_client.dart';
 import '../../data/sync/sync_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/models/user.dart';
+import '../../features/grades/application/grade_controller.dart';
 import '../../shared/widgets.dart';
 import 'profile_controller.dart';
 import 'profile_master_models.dart';
@@ -515,6 +516,7 @@ class _ProfileEditScreenState extends ConsumerState<_ProfileEditScreen> {
         if (!mounted) return;
 
         await _courseRepository.replaceCoursesFromSyllabus(subjects);
+        ref.invalidate(gradeNotifierProvider);
         unawaited(
           _syncService.pushLocalChanges().catchError((error, _) {
             debugPrint('[Syllabus Verify] background sync failed: $error');

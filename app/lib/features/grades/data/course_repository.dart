@@ -9,6 +9,12 @@ import '../domain/evaluation.dart';
 import '../domain/subject_model.dart';
 
 class CourseRepository {
+  CourseRepository._internal();
+
+  static final CourseRepository _instance = CourseRepository._internal();
+
+  factory CourseRepository() => _instance;
+
   final StreamController<List<SubjectModel>> _coursesController =
       StreamController<List<SubjectModel>>.broadcast();
 
