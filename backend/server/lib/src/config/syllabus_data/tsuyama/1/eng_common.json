@@ -13,12 +13,14 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70
+          "ratio": 70,
+          "maxScore": 100
         },
         {
           "id": "normal",
           "name": "平常点",
-          "ratio": 30
+          "ratio": 30,
+          "maxScore": 100
         }
       ]
     },
@@ -32,17 +34,20 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 60
+          "ratio": 60,
+          "maxScore": 100
         },
         {
           "id": "quiz",
           "name": "小テスト",
-          "ratio": 30
+          "ratio": 30,
+          "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 10
+          "ratio": 10,
+          "maxScore": 100
         }
       ]
     },
@@ -56,17 +61,20 @@
         {
           "id": "attitude",
           "name": "態度",
-          "ratio": 40
+          "ratio": 40,
+          "maxScore": 100
         },
         {
           "id": "skill",
           "name": "技能",
-          "ratio": 30
+          "ratio": 30,
+          "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30
+          "ratio": 30,
+          "maxScore": 100
         }
       ]
     }

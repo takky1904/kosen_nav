@@ -13,17 +13,20 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 80
+          "ratio": 80,
+          "maxScore": 100
         },
         {
           "id": "quiz",
           "name": "小テスト",
-          "ratio": 10
+          "ratio": 10,
+          "maxScore": 100
         },
         {
-          "id":"effort",
-          "name":"取り組み",
-          "ratio":10
+          "id": "effort",
+          "name": "取り組み",
+          "ratio": 10,
+          "maxScore": 100
         }
       ]
     },
@@ -37,22 +40,26 @@
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30
+          "ratio": 30,
+          "maxScore": 100
         },
         {
           "id": "presentation",
           "name": "発表",
-          "ratio": 20
+          "ratio": 20,
+          "maxScore": 100
         },
         {
           "id": "reflection",
           "name": "振り返り",
-          "ratio": 30
+          "ratio": 30,
+          "maxScore": 100
         },
         {
-          "id":"effort",
-          "name":"取り組み",
-          "ratio":20
+          "id": "effort",
+          "name": "取り組み",
+          "ratio": 20,
+          "maxScore": 100
         }
       ]
     },
@@ -66,22 +73,26 @@
         {
           "id": "normal",
           "name": "平常点",
-          "ratio": 25
+          "ratio": 25,
+          "maxScore": 100
         },
         {
           "id": "skill",
           "name": "実技テスト",
-          "ratio": 35
+          "ratio": 35,
+          "maxScore": 100
         },
         {
           "id": "song_quiz",
           "name": "歌の小テスト",
-          "ratio": 20
+          "ratio": 20,
+          "maxScore": 100
         },
         {
           "id": "codename_quiz",
           "name": "コードネームの小テスト",
-          "ratio": 20
+          "ratio": 20,
+          "maxScore": 100
         }
       ]
     }
