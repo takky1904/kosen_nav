@@ -161,7 +161,31 @@
         }
 
       ]
+    },
+
+    {
+      "subjectId": "nagano_2_common_network",
+      "name": "ネットワーク基礎",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "原 貴之,富岡 雅弘",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 60,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 40,
+          "maxScore": 100
+        }
+
+      ]
     }
+
   ]
 }
 
