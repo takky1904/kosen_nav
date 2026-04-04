@@ -1,34 +1,86 @@
 {
   "kosenId": "sasebo",
   "kosenName": "佐世保工業高等専門学校",
-  "aliases": ["佐世保高専","佐世保","させぼ"],
+  "aliases": [
+    "佐世保高専",
+    "佐世保",
+    "させぼ"
+  ],
   "version": "1.0",
   "grades": {
     "1": [
-      {"id": "eng_common","displayName": "工学科"}
+      {
+        "id": "eng_common_1",
+        "displayName": "工学科"
+      }
     ],
     "2": [
-      {"id": "mech_robo","displayName": "機械ロボティクス(MR)系"},
-      {"id": "info_elec","displayName": "情報エレクトロニクス(IE)系"},
-      {"id": "civil_design","displayName": "都市デザイン(CE)系"}
+      {
+        "id": "mech_robo_2",
+        "displayName": "機械ロボティクス(MR)系"
+      },
+      {
+        "id": "info_elec_2",
+        "displayName": "情報エレクトロニクス(IE)系"
+      },
+      {
+        "id": "civil_design_2",
+        "displayName": "都市デザイン(CE)系"
+      }
     ],
     "3": [
-      {"id": "mech_robo","displayName": "機械ロボティクス(MR)系"},
-      {"id": "info_elec_info","displayName": "情報エレクトロニクス(IE)系（情報コース）"},
-      {"id": "info_elec_elec","displayName": "情報エレクトロニクス(IE)系（電気コース）"},
-      {"id": "civil_design","displayName": "都市デザイン(CE)系"}
+      {
+        "id": "mech_robo_3",
+        "displayName": "機械ロボティクス(MR)系"
+      },
+      {
+        "id": "info_elec_info_3",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）"
+      },
+      {
+        "id": "info_elec_elec_3",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）"
+      },
+      {
+        "id": "civil_design_3",
+        "displayName": "都市デザイン(CE)系"
+      }
     ],
     "4": [
-      {"id": "mech_robo","displayName": "機械ロボティクス(MR)系"},
-      {"id": "info_elec_info","displayName": "情報エレクトロニクス(IE)系（情報コース）"},
-      {"id": "info_elec_elec","displayName": "情報エレクトロニクス(IE)系（電気コース）"},
-      {"id": "civil_design","displayName": "都市デザイン(CE)系"}
+      {
+        "id": "mech_robo_4",
+        "displayName": "機械ロボティクス(MR)系"
+      },
+      {
+        "id": "info_elec_info_4",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）"
+      },
+      {
+        "id": "info_elec_elec_4",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）"
+      },
+      {
+        "id": "civil_design_4",
+        "displayName": "都市デザイン(CE)系"
+      }
     ],
     "5": [
-      {"id": "mech_robo","displayName": "機械ロボティクス(MR)系"},
-      {"id": "info_elec_info","displayName": "情報エレクトロニクス(IE)系（情報コース）"},
-      {"id": "info_elec_elec","displayName": "情報エレクトロニクス(IE)系（電気コース）"},
-      {"id": "civil_design","displayName": "都市デザイン(CE)系"}
+      {
+        "id": "mech_robo_5",
+        "displayName": "機械ロボティクス(MR)系"
+      },
+      {
+        "id": "info_elec_info_5",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）"
+      },
+      {
+        "id": "info_elec_elec_5",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）"
+      },
+      {
+        "id": "civil_design_5",
+        "displayName": "都市デザイン(CE)系"
+      }
     ]
   }
 }

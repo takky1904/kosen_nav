@@ -1,0 +1,167 @@
+{
+  "version": "1.0",
+  "grade": "3",
+  "courseId": "info_elec_elec_3",
+  "subjects": [
+    {
+      "subjectId": "nagano_3_common_public",
+      "name": "公共",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "川合 大輔",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "中間・期末試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "note",
+          "name": "ノート提出",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_common_linear",
+      "name": "線形代数Ⅱ",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "濱口 直樹,林本 厚志,西信 洋和,鈴木 英正",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_common_integrationA",
+      "name": "微分積分ⅡA",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "小林 茂樹,西信 洋和,鈴木 英正",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio":80,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+
+    {
+      "subjectId": "nagano_3_common_integrationB",
+      "name": "微分積分ⅡB",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "平戸 良弘,鈴木 英正,佐久間 敏幸",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio":80,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+
+    {
+      "subjectId": "nagano_2_common_statistics",
+      "name": "確率統計Ⅰ",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "林本 厚志,濱口 直樹,西信 洋和",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_physics",
+      "name": "物理Ⅱ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "柳沼 晋",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 60,
+          "maxScore": 100
+        },
+        {
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 10,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 30,
+          "maxScore": 100
+        }
+
+      ]
+    },
+
+
+    {
+      "subjectId": "nagano_2_common_pe",
+      "name": "保健体育Ⅲ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "児玉 英樹,篠原 克修,金田 華実,田中 洋典,井浦 徹",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "skill",
+          "name": "技能",
+          "ratio": 60,
+          "maxScore": 100
+        }
+
+      ]
+    }
+  ]
+}
+

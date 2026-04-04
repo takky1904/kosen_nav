@@ -1,0 +1,364 @@
+{
+  "version": "1.0",
+  "grade": "1",
+  "courseId": "eng_common_1",
+  "subjects": [
+    {
+      "subjectId": "nagano_1_common_zukudase",
+      "name": "zukudaseゼミ",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "リベラルアーツ教育院 教員",
+      "evaluations": [
+        {
+          "id": "presentation",
+          "name": "発表",
+          "ratio": 10,
+          "maxScore": 100
+        },
+        {
+          "id": "portfolio",
+          "name": "ポートフォリオ",
+          "ratio": 90,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_JapaneseA",
+      "name": "基礎国語ⅠA",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "菊池 礼",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80,
+          "maxScore": 100
+        },
+        {
+          "id": "others",
+          "name": "その他",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_geography",
+      "name": "地理総合",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "久保田 和男",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "others",
+          "name": "その他",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_global",
+      "name": "グローバルエンジニア基礎演習Ⅰ(後修正)",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "高桑 潤",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_english",
+      "name": "総合英語Ⅰ",
+      "isElective": false,
+      "credits": 4,
+      "teacher": "小宮山 真美子,赤瀬 正樹",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "others",
+          "name": "その他",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_pe",
+      "name": "保健体育Ⅰ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "児玉 英樹,井浦 徹,金田 華実",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "skill",
+          "name": "技能",
+          "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "expression",
+          "name": "思考・表現",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_wellness",
+      "name": "ウェルネス・アウトドア",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "篠原 克修,金田 華実,井浦 徹,児玉 英樹",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "skill",
+          "name": "技能",
+          "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 40,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_art",
+      "name": "芸術",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "服部 秀子,上村 まり子",
+      "evaluations": [
+        {
+          "id": "skill",
+          "name": "実技",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_mathA",
+      "name": "基礎数学A",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "轟 龍一",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_mathB",
+      "name": "基礎数学B",
+      "isElective": false,
+      "credits": 4,
+      "teacher": "林本 厚志,平戸 良弘,鈴木 英正",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_basic_science_lab",
+      "name": "ベーシックサイエンス・ラボ",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "板屋 智之,大西 浩次,柳沼 晋,滝沢 善洋,奥村 紀浩,越智 一成",
+      "evaluations": [
+        {
+          "id": "phys_exam",
+          "name": "物理：レポート",
+          "ratio": 50,
+          "maxScore": 100
+        },
+        {
+          "id": "chem_report",
+          "name": "化学：レポ",
+          "ratio": 50,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_chemistry",
+      "name": "化学Ⅰ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "滝沢 善洋",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_physics",
+      "name": "物理Ⅰ(1)",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "大西 浩次",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 55,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 15,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_common_JapaneseB",
+      "name": "基礎国語ⅠB",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "原田 修,小池 博明",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_special_crafts_eng",
+      "name": "ものづくり基礎工学",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "各系担当教員",
+      "evaluations": [
+        {
+          "id": "assignment_IE",
+          "name": "IE系課題",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment_MR",
+          "name": "MR系課題",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment_CE",
+          "name": "CE系課題",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_special_info_literacy",
+      "name": "情報リテラシー",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "相馬 顕子,岡田 学,佐久間 敏幸",
+      "evaluations": [
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_1_special_info_process",
+      "name": "情報処理入門",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "相馬 顕子,岡田 学,佐久間 敏幸",
+      "evaluations": [
+        {
+          "id": "report",
+          "name": "レポート・小テスト",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    }
+  ]
+}

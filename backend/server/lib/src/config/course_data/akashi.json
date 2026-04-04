@@ -1,38 +1,86 @@
 {
   "kosenId": "akashi",
   "kosenName": "明石工業高等専門学校",
-  "aliases": ["明石高専","明石","あかし"],
+  "aliases": [
+    "明石高専",
+    "明石",
+    "あかし"
+  ],
   "version": "1.1",
   "grades": {
     "1": [
-      {"id": "meca","displayName": "機械工学科"},
-      {"id": "elec","displayName": "電気工学科"},
-      {"id": "civil_system","displayName": "都市システム工学科"},
-      {"id": "arch","displayName": "建築学科"}
+      {
+        "id": "eng_common_1",
+        "displayName": "工学科"
+      }
     ],
     "2": [
-      {"id": "meca","displayName": "機械工学科"},
-      {"id": "elec","displayName": "電気工学科"},
-      {"id": "civil_system","displayName": "都市システム工学科"},
-      {"id": "arch","displayName": "建築学科"}
+      {
+        "id": "mech_robo_2",
+        "displayName": "機械ロボティクス(MR)系"
+      },
+      {
+        "id": "info_elec_2",
+        "displayName": "情報エレクトロニクス(IE)系"
+      },
+      {
+        "id": "civil_design_2",
+        "displayName": "都市デザイン(CE)系"
+      }
     ],
     "3": [
-      {"id": "meca","displayName": "機械工学科"},
-      {"id": "elec","displayName": "電気工学科"},
-      {"id": "civil_system","displayName": "都市システム工学科"},
-      {"id": "arch","displayName": "建築学科"}
+      {
+        "id": "mech_robo_3",
+        "displayName": "機械ロボティクス(MR)系"
+      },
+      {
+        "id": "info_elec_info_3",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）"
+      },
+      {
+        "id": "info_elec_elec_3",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）"
+      },
+      {
+        "id": "civil_design_3",
+        "displayName": "都市デザイン(CE)系"
+      }
     ],
     "4": [
-      {"id": "meca","displayName": "機械工学科"},
-      {"id": "elec","displayName": "電気工学科"},
-      {"id": "civil_system","displayName": "都市システム工学科"},
-      {"id": "arch","displayName": "建築学科"}
+      {
+        "id": "mech_robo_4",
+        "displayName": "機械ロボティクス(MR)系"
+      },
+      {
+        "id": "info_elec_info_4",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）"
+      },
+      {
+        "id": "info_elec_elec_4",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）"
+      },
+      {
+        "id": "civil_design_4",
+        "displayName": "都市デザイン(CE)系"
+      }
     ],
     "5": [
-      {"id": "meca","displayName": "機械工学科"},
-      {"id": "elec","displayName": "電気工学科"},
-      {"id": "civil_system","displayName": "都市システム工学科"},
-      {"id": "arch","displayName": "建築学科"}
+      {
+        "id": "mech_robo_5",
+        "displayName": "機械ロボティクス(MR)系"
+      },
+      {
+        "id": "info_elec_info_5",
+        "displayName": "情報エレクトロニクス(IE)系（情報コース）"
+      },
+      {
+        "id": "info_elec_elec_5",
+        "displayName": "情報エレクトロニクス(IE)系（電気コース）"
+      },
+      {
+        "id": "civil_design_5",
+        "displayName": "都市デザイン(CE)系"
+      }
     ]
   }
 }

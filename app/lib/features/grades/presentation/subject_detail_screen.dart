@@ -141,53 +141,36 @@ class SubjectDetailScreen extends ConsumerWidget {
                         const SizedBox(height: 24),
                       ],
 
-                      Text('平常点・その他', style: tt.headlineMedium),
-                      const SizedBox(height: 10),
-
-                      if (subject.variableComponents.isEmpty)
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: AppTheme.bgCard,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: AppTheme.border),
-                          ),
-                          child: const Text(
-                            '評価項目がありません。シラバスマスタを確認してください。',
-                            style: TextStyle(
-                              color: AppTheme.textSecondary,
-                              fontSize: 13,
+                      if (subject.variableComponents.isNotEmpty) ...[
+                        Text('平常点・その他', style: tt.headlineMedium),
+                        const SizedBox(height: 10),
+                        ...subject.variableComponents.map(
+                          (component) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(12, 8, 12, 14),
+                              decoration: BoxDecoration(
+                                color: AppTheme.bgCard,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: AppTheme.border),
+                              ),
+                              child: _VariableComponentInputCard(
+                                subject: subject,
+                                component: component,
+                                onChanged: (value) {
+                                  ref
+                                      .read(gradeNotifierProvider.notifier)
+                                      .updateVariableComponentScore(
+                                        subject.id,
+                                        component.id,
+                                        value,
+                                      );
+                                },
+                              ),
                             ),
                           ),
                         ),
-
-                      ...subject.variableComponents.map(
-                        (component) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(12, 8, 12, 14),
-                            decoration: BoxDecoration(
-                              color: AppTheme.bgCard,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AppTheme.border),
-                            ),
-                            child: _VariableComponentInputCard(
-                              subject: subject,
-                              component: component,
-                              onChanged: (value) {
-                                ref
-                                    .read(gradeNotifierProvider.notifier)
-                                    .updateVariableComponentScore(
-                                      subject.id,
-                                      component.id,
-                                      value,
-                                    );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
+                      ],
 
                       const SizedBox(height: 20),
                       if (isAtRisk || (score != null && score < 75)) ...[

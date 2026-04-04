@@ -1,0 +1,262 @@
+{
+  "version": "1.1",
+  "grade": "2",
+  "courseId": "civil_design_2",
+  "subjects": [
+    {
+      "subjectId": "nagano_2_common_Japanese",
+      "name": "基礎国語Ⅱ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "小池 博明",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_history",
+      "name": "歴史総合",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "二星 潤",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_integration",
+      "name": "微分積分Ⅰ",
+      "isElective": false,
+      "credits": 4,
+      "teacher": "濱口 直樹,小原 大樹,西信 洋和",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_liner",
+      "name": "線形代数Ⅰ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "新開 和幸",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_chemistry",
+      "name": "化学Ⅱ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "板屋 智之",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_physics",
+      "name": "物理Ⅰ(2)(後修正)",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "越智 一成,奥村 紀浩",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_global",
+      "name": "グローバルエンジニア基礎演習Ⅱ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "平戸 良弘,林本 厚志,濱口 直樹,西信 洋和,ケント,小原 大樹",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 25,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 50,
+          "maxScore": 100
+        },
+        {
+          "id": "participation",
+          "name": "出席",
+          "ratio": 25,
+          "maxScore": 100
+        },
+        {
+          "id": "practice",
+          "name": "演習(数学)",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_grammar",
+      "name": "コミュニカティブ・グラマーⅠ",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "高桑 潤",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_pe",
+      "name": "保健体育Ⅰ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "金田 華実,井浦 徹",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "skill",
+          "name": "技能",
+          "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "expression",
+          "name": "思考・表現",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_english",
+      "name": "総合英語Ⅱ(後修正)",
+      "isElective": false,
+      "credits": 4,
+      "teacher": "冨永 和元,金子 史彦",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "skill",
+          "name": "技能",
+          "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "expression",
+          "name": "思考・表現",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_2_common_wellness",
+      "name": "保健体育Ⅱ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "金田 華実,井浦 徹,児玉 英樹",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "skill",
+          "name": "技能",
+          "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "expression",
+          "name": "思考・表現",
+          "ratio": 40,
+          "maxScore": 100
+        }
+      ]
+    }
+  ]
+}
