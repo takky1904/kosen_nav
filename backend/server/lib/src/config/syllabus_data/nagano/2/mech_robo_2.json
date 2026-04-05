@@ -7,6 +7,7 @@
       "subjectId": "nagano_2_common_Japanese",
       "name": "基礎国語Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "小池 博明",
       "evaluations": [
@@ -28,6 +29,7 @@
       "subjectId": "nagano_2_common_history",
       "name": "歴史総合",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "二星 潤",
       "evaluations": [
@@ -49,6 +51,7 @@
       "subjectId": "nagano_2_common_integration",
       "name": "微分積分Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 4,
       "teacher": "濱口 直樹,小原 大樹,西信 洋和",
       "evaluations": [
@@ -70,6 +73,7 @@
       "subjectId": "nagano_2_common_liner",
       "name": "線形代数Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "新開 和幸",
       "evaluations": [
@@ -91,6 +95,7 @@
       "subjectId": "nagano_2_common_chemistry",
       "name": "化学Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "板屋 智之",
       "evaluations": [
@@ -112,6 +117,7 @@
       "subjectId": "nagano_2_common_physics",
       "name": "物理Ⅰ(2)(後修正)",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "越智 一成,奥村 紀浩",
       "evaluations": [
@@ -133,6 +139,7 @@
       "subjectId": "nagano_2_common_global",
       "name": "グローバルエンジニア基礎演習Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "平戸 良弘,林本 厚志,濱口 直樹,西信 洋和,ケント,小原 大樹",
       "evaluations": [
@@ -166,6 +173,7 @@
       "subjectId": "nagano_2_common_grammar",
       "name": "コミュニカティブ・グラマーⅠ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "高桑 潤",
       "evaluations": [
@@ -181,6 +189,7 @@
       "subjectId": "nagano_2_common_english",
       "name": "総合英語Ⅱ(後修正)",
       "isElective": false,
+      "term": "通年",
       "credits": 4,
       "teacher": "冨永 和元,金子 史彦",
       "evaluations": [
@@ -208,6 +217,7 @@
       "subjectId": "nagano_2_common_pe",
       "name": "保健体育Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "金田 華実,井浦 徹,児玉 英樹",
       "evaluations": [
@@ -235,6 +245,7 @@
       "subjectId": "nagano_2_common_ED",
       "name": "エンジニアリングデザイン入門",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "CE系教員",
       "evaluations": [
@@ -262,6 +273,7 @@
       "subjectId": "nagano_2_common_info_process",
       "name": "情報処理入門",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "相馬 顕子,鈴木 宏,萱津 理佳",
       "evaluations": [
@@ -277,6 +289,7 @@
       "subjectId": "nagano_2_special_Craft_training",
       "name": "工作実習",
       "isElective": false,
+      "term": "通年",
       "credits": 4,
       "teacher": "MR系教員",
       "evaluations": [
@@ -298,6 +311,7 @@
       "subjectId": "nagano_2_special_mech_crafts",
       "name": "機械工作学Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "山岸 郷志",
       "evaluations": [
@@ -319,6 +333,7 @@
       "subjectId": "nagano_2_special_mech_drafting",
       "name": "機械設計製図Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "相馬 顕子,鈴木 宏,萱津 理佳",
       "evaluations": [

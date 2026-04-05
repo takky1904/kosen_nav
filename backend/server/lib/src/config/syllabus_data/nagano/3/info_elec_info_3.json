@@ -7,6 +7,7 @@
       "subjectId": "nagano_3_common_public",
       "name": "公共",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "川合 大輔",
       "evaluations": [
@@ -28,6 +29,7 @@
       "subjectId": "nagano_3_common_linear",
       "name": "線形代数Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "濱口 直樹,林本 厚志,西信 洋和,鈴木 英正",
       "evaluations": [
@@ -49,6 +51,7 @@
       "subjectId": "nagano_3_common_integrationA",
       "name": "微分積分ⅡA",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "小林 茂樹,西信 洋和,鈴木 英正",
       "evaluations": [
@@ -70,6 +73,7 @@
       "subjectId": "nagano_3_common_integrationB",
       "name": "微分積分ⅡB",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "平戸 良弘,鈴木 英正,佐久間 敏幸",
       "evaluations": [
@@ -91,6 +95,7 @@
       "subjectId": "nagano_3_common_statistics",
       "name": "確率統計Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "林本 厚志,濱口 直樹,西信 洋和",
       "evaluations": [
@@ -112,6 +117,7 @@
       "subjectId": "nagano_3_common_physics",
       "name": "物理Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "柳沼 晋",
       "evaluations": [
@@ -139,6 +145,7 @@
       "subjectId": "nagano_3_common_pe",
       "name": "保健体育Ⅲ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "児玉 英樹,篠原 克修,金田 華実,田中 洋典,井浦 徹",
       "evaluations": [
@@ -160,6 +167,7 @@
       "subjectId": "nagano_3_common_network",
       "name": "ネットワーク基礎",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "原 貴之,富岡 雅弘",
       "evaluations": [
@@ -181,6 +189,7 @@
       "subjectId": "nagano_3_common_Japanese",
       "name": "応用国語",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "菊地 礼",
       "evaluations": [
@@ -202,6 +211,7 @@
       "subjectId": "nagano_3_common_Japanese",
       "name": "応用国語",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "菊地 礼",
       "evaluations": [
@@ -223,6 +233,7 @@
       "subjectId": "nagano_3_common_english",
       "name": "総合英語Ⅲ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "駒井 健吾,赤瀬 正樹",
       "evaluations": [
@@ -244,6 +255,7 @@
       "subjectId": "nagano_3_info_logic_circuit2",
       "name": "論理回路Ⅱ",
       "isElective": false,
+      "term": "前期",
       "credits": 2,
       "teacher": "柳沼 晋",
       "evaluations": [
@@ -265,6 +277,7 @@
       "subjectId": "nagano_3_info_electromagnetics1",
       "name": "電磁気学Ⅰ",
       "isElective": false,
+      "term": "前期",
       "credits": 2,
       "teacher": "赤瀬 正樹",
       "evaluations": [
@@ -286,6 +299,7 @@
       "subjectId": "nagano_3_info_microcomputer",
       "name": "マイクロコンピュータ",
       "isElective": false,
+      "term": "前期",
       "credits": 2,
       "teacher": "原 貴之",
       "evaluations": [
@@ -307,6 +321,7 @@
       "subjectId": "nagano_3_info_experiment1",
       "name": "情報エレクトロニクス実験Ⅰ（情報コース）",
       "isElective": false,
+      "term": "前期",
       "credits": 4,
       "teacher": "橋井 雅巳,康漸 義彦,大木 健一,澤 孝歓",
       "evaluations": [
@@ -328,6 +343,7 @@
       "subjectId": "nagano_3_info_measurement",
       "name": "電気電子計測",
       "isElective": true,
+      "term": "後期",
       "credits": 2,
       "teacher": "渡辺 誉一",
       "evaluations": [
@@ -349,6 +365,7 @@
       "subjectId": "nagano_3_info_physics",
       "name": "電子物理工学",
       "isElective": true,
+      "term": "後期",
       "credits": 1,
       "teacher": "秋田 正弘",
       "evaluations": [
@@ -370,6 +387,7 @@
       "subjectId": "nagano_3_info_circuit2",
       "name": "電気回路Ⅱ",
       "isElective": false,
+      "term": "後期",
       "credits": 2,
       "teacher": "橋井 雅巳",
       "evaluations": [
@@ -391,6 +409,7 @@
       "subjectId": "nagano_3_info_algorithm",
       "name": "アルゴリズムとデータ構造",
       "isElective": false,
+      "term": "後期",
       "credits": 2,
       "teacher": "伊藤 祥一",
       "evaluations": [
@@ -412,6 +431,7 @@
       "subjectId": "nagano_3_info_internet",
       "name": "インターネット理論",
       "isElective": true,
+      "term": "後期",
       "credits": 1,
       "teacher": "田久 修",
       "evaluations": [
@@ -433,6 +453,7 @@
       "subjectId": "nagano_3_info_media",
       "name": "メディア信号処理",
       "isElective": true,
+      "term": "後期",
       "credits": 1,
       "teacher": "原田 俊",
       "evaluations": [
@@ -454,6 +475,7 @@
       "subjectId": "nagano_3_info_security",
       "name": "情報セキュリティ",
       "isElective": true,
+      "term": "後期",
       "credits": 1,
       "teacher": "藤澤 孝歓",
       "evaluations": [
@@ -475,6 +497,7 @@
       "subjectId": "nagano_3_info_oop",
       "name": "オブジェクト指向",
       "isElective": false,
+      "term": "後期",
       "credits": 1,
       "teacher": "伊藤 祥一",
       "evaluations": [
@@ -496,6 +519,7 @@
       "subjectId": "nagano_3_info_computation",
       "name": "計算モデル",
       "isElective": true,
+      "term": "後期",
       "credits": 1,
       "teacher": "伊藤 祥一",
       "evaluations": [
@@ -517,6 +541,7 @@
       "subjectId": "nagano_3_info_experiment2",
       "name": "情報エレクトロニクス実験Ⅱ（情報コース）",
       "isElective": false,
+      "term": "後期",
       "credits": 4,
       "teacher": "橋井 雅巳,康漸 義彦,大木 健一,澤 孝歓",
       "evaluations": [
