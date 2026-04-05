@@ -7,7 +7,7 @@
       "subjectId": "nagano_3_common_public",
       "name": "公共",
       "isElective": false,
-      "term": "通年",
+      "term": "前期",
       "credits": 1,
       "teacher": "川合 大輔",
       "evaluations": [
@@ -29,7 +29,7 @@
       "subjectId": "nagano_3_common_linear",
       "name": "線形代数Ⅱ",
       "isElective": false,
-      "term": "通年",
+      "term": "前期",
       "credits": 1,
       "teacher": "濱口 直樹,林本 厚志,西信 洋和,鈴木 英正",
       "evaluations": [
@@ -73,7 +73,7 @@
       "subjectId": "nagano_3_common_integrationB",
       "name": "微分積分ⅡB",
       "isElective": false,
-      "term": "通年",
+      "term": "後期",
       "credits": 1,
       "teacher": "平戸 良弘,鈴木 英正,佐久間 敏幸",
       "evaluations": [
@@ -95,7 +95,7 @@
       "subjectId": "nagano_3_common_statistics",
       "name": "確率統計Ⅰ",
       "isElective": false,
-      "term": "通年",
+      "term": "後期",
       "credits": 1,
       "teacher": "林本 厚志,濱口 直樹,西信 洋和",
       "evaluations": [
