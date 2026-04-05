@@ -4,11 +4,416 @@
   "courseId": "civil_design_4",
   "subjects": [
     {
-      "subjectId": "nagano_2_info_mathA",
-      "name": "基礎数学A",
+      "subjectId": "nagano_4_special_ethics",
+      "name": "倫理学",
       "isElective": false,
+      "term": "後期",
       "credits": 2,
-      "teacher": "轟 龍一",
+      "teacher": "川合 大輔",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_expressing_opinions",
+      "name": "Expressing Opinions",
+      "isElective": false,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "クレイトン,ケント",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 20,
+          "maxScore": 100
+        },
+        {
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 20,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "presentation",
+          "name": "プレゼンテーション",
+          "ratio": 10,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_sports1",
+      "name": "スポーツⅠ",
+      "isElective": false,
+      "term": "後期",
+      "credits": 1,
+      "teacher": "児玉 英樹,金田 華実,井浦 徹",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "skill",
+          "name": "知識・技能",
+          "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "expression",
+          "name": "思考・判断・表現",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_nagano_literature",
+      "name": "長野・信濃と文学（長野学）",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "小池 博明",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 60,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 40,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_nagano_asia",
+      "name": "アジアの中の長野（長野学）",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "久保田 和男",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "others",
+          "name": "その他",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_nagano_zouzan",
+      "name": "象山学（長野学）",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "二星 潤",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_nagano_thought",
+      "name": "長野の思想（長野学）",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "川合 大輔",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "note",
+          "name": "ノート提出",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_nagano_art",
+      "name": "信濃の美術（長野学）",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "裵 湖珠",
+      "evaluations": [
+        {
+          "id": "presentation",
+          "name": "発表",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_nagano_outdoor",
+      "name": "アウトドア実習（長野学）",
+      "isElective": true,
+      "term": "前期",
+      "credits": 1,
+      "teacher": "金田 華実,井浦 徹,田中 洋典,児玉 英樹",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_toyo_history",
+      "name": "東洋史",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "久保田 和男",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_social_philosophy",
+      "name": "社会哲学",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "川合 大輔",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "note",
+          "name": "ノート提出",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_japanese_history",
+      "name": "日本社会史",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "二星 潤",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_law",
+      "name": "法学",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "山本 啓介",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_international_economics",
+      "name": "国際経済学",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "中島 琢郎",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_nagano_winter_sports",
+      "name": "ウィンタースポーツ（長野学）",
+      "isElective": true,
+      "term": "後期",
+      "credits": 1,
+      "teacher": "金田 華実,井浦 徹,田中 洋典,児玉 英樹",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "skill",
+          "name": "知識・技能",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_math_advanced",
+      "name": "数学特論",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "西信 洋和",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 50,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 50,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_chinese",
+      "name": "中国語",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "張 淑華",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "筆記試験",
+          "ratio": 60,
+          "maxScore": 100
+        },
+        {
+          "id": "exam_conversation",
+          "name": "口述試験",
+          "ratio": 20,
+          "maxScore": 100
+        },
+        {
+          "id": "effort",
+          "name": "取り組み",
+          "ratio": 10,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 10,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_special_hangul",
+      "name": "ハングル",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "裵 湖珠",
       "evaluations": [
         {
           "id": "exam",
@@ -25,49 +430,855 @@
       ]
     },
     {
-      "subjectId": "nagano_2_info_prog",
-      "name": "プログラミング演習",
-      "isElective": false,
+      "subjectId": "nagano_4_special_practical_english",
+      "name": "実践英語",
+      "isElective": true,
+      "term": "後期",
       "credits": 2,
-      "teacher": "信州 太郎",
+      "teacher": "クレイトン,ケント",
       "evaluations": [
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 60,
+          "ratio": 20,
           "maxScore": 100
         },
         {
           "id": "quiz",
           "name": "小テスト",
-          "ratio": 30,
+          "ratio": 20,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "presentation",
+          "name": "プレゼンテーション",
           "ratio": 10,
           "maxScore": 100
         }
       ]
     },
     {
-      "subjectId": "nagano_2_info_pe",
-      "name": "体育",
+      "subjectId": "nagano_4_civil_practical_japanese_ce",
+      "name": "実践国語（CE）",
       "isElective": false,
-      "credits": 1,
-      "teacher": "信州 次郎",
+      "term": "後期",
+      "credits": 2,
+      "teacher": "小池 博明",
       "evaluations": [
         {
-          "id": "attitude",
-          "name": "態度",
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 25,
+          "maxScore": 100
+        },
+        {
+          "id": "mail",
+          "name": "メール",
+          "ratio": 10,
+          "maxScore": 100
+        },
+        {
+          "id": "essay",
+          "name": "小論文",
           "ratio": 40,
           "maxScore": 100
         },
         {
-          "id": "skill",
-          "name": "技能",
+          "id": "presentation",
+          "name": "プレゼンテーション",
+          "ratio": 25,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_vector_analysis",
+      "name": "ベクトル解析",
+      "isElective": false,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "鈴木 英正,佐久間 敏幸,小林 茂樹",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_engineering_design_practice",
+      "name": "エンジニアリングデザイン実践",
+      "isElective": false,
+      "term": "通年",
+      "credits": 4,
+      "teacher": "春日 貴志,堀口 勝三,宮下 大輔,中山 英俊,芦田 和毅,百瀬 成空,滝澤 秀人",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
           "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_data_science_intro",
+      "name": "データサイエンス入門",
+      "isElective": false,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "力丸 彩奈",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_complex_analysis",
+      "name": "複素関数論",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "鈴木 英正",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_english_presentation_basic",
+      "name": "英語プレゼンテーション基礎",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "ケント",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_server_construction_practice",
+      "name": "サーバ構築演習",
+      "isElective": true,
+      "term": "前期",
+      "credits": 1,
+      "teacher": "藤澤 義範",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_robotics_intro",
+      "name": "ロボット工学概論",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "浅沼 和志,堀口 勝三",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_aerospace_intro",
+      "name": "航空工学概論",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "戸谷 順信,堀口 勝三",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_numerical_computation_intro",
+      "name": "数値計算論概論",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "戸谷 順信,堀口 勝三",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_environmental_ecology_intro",
+      "name": "環境生態学概論",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "浅野 憲哉",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_environmental_urban_intro",
+      "name": "環境都市工学概論",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "松下 英次",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_environmental_disaster_prevention_intro",
+      "name": "環境防災学概論",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "ジン タンタテゥン,浅野 憲哉",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_information_engineering_intro",
+      "name": "情報工学概論",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "楡井 雅巳,大矢 健一,藤澤 義範,伊藤 祥一,芦田 和毅,藤田 悠,力丸 彩奈,原 貴之,富岡 雅弘,藤澤 孝敏,萩原 隆義",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_natural_energy_intro",
+      "name": "自然エネルギー概論",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "姜 天水",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_electrical_engineering_intro",
+      "name": "電気工学概論",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "柄澤 孝一",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_digital_circuit_intro",
+      "name": "ディジタル回路概論",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "姜 天水",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_ce_science_labo_ce",
+      "name": "サイエンスラボ（CE）",
+      "isElective": false,
+      "term": "前期",
+      "credits": 1,
+      "teacher": "柳沼 晋,滝沢 善洋",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_ce_applied_physics1_ce",
+      "name": "応用物理Ⅰ（CE）",
+      "isElective": false,
+      "term": "前期",
+      "credits": 1,
+      "teacher": "奥村 紀浩",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_probability_statistics2_required",
+      "name": "確率統計Ⅱ",
+      "isElective": false,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "小原 大樹",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_ce_applied_physics2_ce",
+      "name": "応用物理Ⅱ（CE）",
+      "isElective": false,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "奥村 紀浩",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_practical_training_a",
+      "name": "実務訓練A",
+      "isElective": true,
+      "term": "前期",
+      "credits": 1,
+      "teacher": "姜 天水,藤田 悠,堀口 勝三,花岡 大生,遠藤 典男,渡辺 誠一",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_practical_training_b",
+      "name": "実務訓練B",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "姜 天水,藤田 悠,堀口 勝三,花岡 大生,遠藤 典男,渡辺 誠一",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_fourier_analysis",
+      "name": "フーリエ解析",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "平戸 良弘,西信 洋和",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_common_probability_statistics2_elective",
+      "name": "確率統計Ⅱ",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "濱口 直樹",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_arch_design1",
+      "name": "建築設計製図Ⅰ",
+      "isElective": true,
+      "term": "後期",
+      "credits": 1,
+      "teacher": "西川 嘉雄,滝澤 秀人,小嶋 健二",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_arch_history",
+      "name": "建築史",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "滝澤 秀人,西川 嘉雄",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_arch_planning",
+      "name": "建築計画",
+      "isElective": true,
+      "term": "前期",
+      "credits": 2,
+      "teacher": "滝澤 秀人,西川 嘉雄",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_urban_design_exp3",
+      "name": "都市デザイン実験実習Ⅲ",
+      "isElective": false,
+      "term": "前期・後期",
+      "credits": 4,
+      "teacher": "遠藤 典男,松下 英次,酒井 芙月,大原 涼平,ジン タンタテゥン",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_hydraulics2",
+      "name": "水理学Ⅱ",
+      "isElective": true,
+      "term": "前期・後期",
+      "credits": 2,
+      "teacher": "酒井 芙月",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_soil_mechanics2",
+      "name": "土質工学Ⅱ",
+      "isElective": true,
+      "term": "前期・後期",
+      "credits": 2,
+      "teacher": "松下 英次",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_planning_mathematics",
+      "name": "計画数理学",
+      "isElective": true,
+      "term": "前期・後期",
+      "credits": 2,
+      "teacher": "柳澤 吉保,轟 直希",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_concrete_structure2",
+      "name": "コンクリート構造学Ⅱ",
+      "isElective": true,
+      "term": "前期",
+      "credits": 1,
+      "teacher": "遠藤 典男,大原 涼平",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_urban_design_drawing2",
+      "name": "都市デザイン設計製図Ⅱ",
+      "isElective": true,
+      "term": "前期・後期",
+      "credits": 2,
+      "teacher": "遠藤 典男",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_construction_env_sanitation1",
+      "name": "建設環境衛生学Ⅰ",
+      "isElective": true,
+      "term": "後期",
+      "credits": 1,
+      "teacher": "浅野 憲哉",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_structural_mechanics3",
+      "name": "構造力学Ⅲ",
+      "isElective": true,
+      "term": "前期",
+      "credits": 1,
+      "teacher": "奥山 雄介",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_4_civil_construction_special",
+      "name": "施工特論",
+      "isElective": true,
+      "term": "後期",
+      "credits": 2,
+      "teacher": "西川 嘉雄,山崎 光夫,松下 英次",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
           "maxScore": 100
         },
         {
