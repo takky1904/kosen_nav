@@ -173,7 +173,7 @@
       "subjectId": "nagano_2_common_grammar",
       "name": "コミュニカティブ・グラマーⅠ",
       "isElective": false,
-      "term": "通年",
+      "term": "前期",
       "credits": 1,
       "teacher": "高桑 潤",
       "evaluations": [
@@ -245,7 +245,7 @@
       "subjectId": "nagano_2_common_ED",
       "name": "エンジニアリングデザイン入門",
       "isElective": false,
-      "term": "通年",
+      "term": "後期",
       "credits": 1,
       "teacher": "CE系教員",
       "evaluations": [
@@ -273,7 +273,7 @@
       "subjectId": "nagano_2_common_info_process",
       "name": "情報処理入門",
       "isElective": false,
-      "term": "通年",
+      "term": "前期",
       "credits": 1,
       "teacher": "相馬 顕子,鈴木 宏,萱津 理佳",
       "evaluations": [
@@ -289,7 +289,7 @@
       "subjectId": "nagano_2_special_measure",
       "name": "測量学基礎",
       "isElective": false,
-      "term": "通年",
+      "term": "前期",
       "credits": 2,
       "teacher": "轟 直希",
       "evaluations": [
@@ -333,7 +333,7 @@
       "subjectId": "nagano_2_special_biology",
       "name": "地球・生命科学",
       "isElective": false,
-      "term": "通年",
+      "term": "後期",
       "credits": 2,
       "teacher": "浅野 憲哉",
       "evaluations": [
@@ -355,7 +355,7 @@
       "subjectId": "nagano_2_special_struct_dynamics",
       "name": "構造力学Ⅰ",
       "isElective": false,
-      "term": "通年",
+      "term": "後期",
       "credits": 1,
       "teacher": "奥山 雄介",
       "evaluations": [
@@ -371,7 +371,7 @@
       "subjectId": "nagano_2_special_measure_apply",
       "name": "測量学応用",
       "isElective": false,
-      "term": "通年",
+      "term": "後期",
       "credits": 1,
       "teacher": "轟 直希",
       "evaluations": [
