@@ -177,7 +177,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_common_english",
       "name": "総合英語Ⅱ(後修正)",
@@ -232,7 +231,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_common_ED",
       "name": "エンジニアリングデザイン入門",
@@ -260,7 +258,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_common_info_process",
       "name": "情報処理入門",
@@ -276,7 +273,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_special_Craft_training",
       "name": "工作実習",
@@ -296,10 +292,8 @@
           "ratio": 40,
           "maxScore": 100
         }
-        
       ]
     },
-
     {
       "subjectId": "nagano_2_special_mech_crafts",
       "name": "機械工作学Ⅰ",
@@ -321,7 +315,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_special_mech_drafting",
       "name": "機械設計製図Ⅰ",
@@ -339,4 +332,3 @@
     }
   ]
 }
-

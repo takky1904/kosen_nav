@@ -55,7 +55,7 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio":80,
+          "ratio": 80,
           "maxScore": 100
         },
         {
@@ -66,7 +66,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_common_integrationB",
       "name": "微分積分ⅡB",
@@ -77,7 +76,7 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio":80,
+          "ratio": 80,
           "maxScore": 100
         },
         {
@@ -88,9 +87,8 @@
         }
       ]
     },
-
     {
-      "subjectId": "nagano_2_common_statistics",
+      "subjectId": "nagano_3_common_statistics",
       "name": "確率統計Ⅰ",
       "isElective": false,
       "credits": 1,
@@ -111,7 +109,7 @@
       ]
     },
     {
-      "subjectId": "nagano_2_common_physics",
+      "subjectId": "nagano_3_common_physics",
       "name": "物理Ⅱ",
       "isElective": false,
       "credits": 2,
@@ -135,13 +133,10 @@
           "ratio": 30,
           "maxScore": 100
         }
-
       ]
     },
-
-
     {
-      "subjectId": "nagano_2_common_pe",
+      "subjectId": "nagano_3_common_pe",
       "name": "保健体育Ⅲ",
       "isElective": false,
       "credits": 2,
@@ -159,12 +154,10 @@
           "ratio": 60,
           "maxScore": 100
         }
-
       ]
     },
-
     {
-      "subjectId": "nagano_2_common_network",
+      "subjectId": "nagano_3_common_network",
       "name": "ネットワーク基礎",
       "isElective": false,
       "credits": 1,
@@ -182,9 +175,350 @@
           "ratio": 40,
           "maxScore": 100
         }
-
+      ]
+    },
+    {
+      "subjectId": "nagano_3_common_english",
+      "name": "総合英語Ⅲ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "小宮山 真美子",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80,
+          "maxScore": 100
+        },
+        {
+          "id": "quiz",
+          "name": "単語テスト",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_common_Japanese",
+      "name": "応用国語",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "松林 徹",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_logic_circuit2",
+      "name": "論理回路Ⅱ",
+      "isElective": false,
+      "credits": 1,
+      "teacher": "姜 天水",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 80,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_electromagnetics1",
+      "name": "電磁気学Ⅰ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "春日 貴志",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_microcomputer",
+      "name": "マイクロコンピュータ(後修正)",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "田中 賢",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_experiment1_info",
+      "name": "情報エレクトロニクス実験Ⅱ（情報コース）",
+      "isElective": false,
+      "credits": 4,
+      "teacher": "楡井 雅巳,藤澤 義範,大矢 健一,藤田 悠,藤澤 孝敏",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 20,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "deadline",
+          "name": "レポート提出期限",
+          "ratio": 10,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_measurement",
+      "name": "電気電子計測",
+      "isElective": true,
+      "credits": 2,
+      "teacher": "渡辺 誠一",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 10,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 20,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_physics",
+      "name": "電子物性工学",
+      "isElective": true,
+      "credits": 1,
+      "teacher": "秋田 正弘",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 60,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 40,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_circuit2",
+      "name": "電気回路Ⅱ",
+      "isElective": false,
+      "credits": 2,
+      "teacher": "楡井 雅巳",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    
+    {
+      "subjectId": "nagano_3_elec_algorithm",
+      "name": "アルゴリズムとデータ構造",
+      "isElective": true,
+      "credits": 2,
+      "teacher": "伊藤 祥一",
+      "evaluations": [
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_internet",
+      "name": "インターネット理論（後修正）",
+      "isElective": true,
+      "credits": 1,
+      "teacher": "田久 修",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_media",
+      "name": "メディア情報処理",
+      "isElective": true,
+      "credits": 1,
+      "teacher": "藤田 悠",
+      "evaluations": [
+        {
+          "id": "quiz",
+          "name": "小テスト・課題",
+          "ratio": 100,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_security",
+      "name": "情報セキュリティ(後修正)",
+      "isElective": true,
+      "credits": 1,
+      "teacher": "藤澤 孝敏",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_oop",
+      "name": "オブジェクト指向",
+      "isElective": true,
+      "credits": 1,
+      "teacher": "藤田 悠",
+      "evaluations": [
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 50,
+          "maxScore": 100
+        },
+        {
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 50,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_computation",
+      "name": "計算モデル",
+      "isElective": true,
+      "credits": 1,
+      "teacher": "藤澤 孝歓",
+      "evaluations": [
+        {
+          "id": "exam",
+          "name": "定期試験",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 30,
+          "maxScore": 100
+        }
+      ]
+    },
+    {
+      "subjectId": "nagano_3_elec_experiment2",
+      "name": "情報エレクトロニクス実験Ⅱ（電気コース）",
+      "isElective": false,
+      "credits": 4,
+      "teacher": "柄澤 孝一,秋山 正弘,百瀬 成空,姜 天水,吉原 一成",
+      "evaluations": [
+        {
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 20,
+          "maxScore": 100
+        },
+        {
+          "id": "report",
+          "name": "レポート",
+          "ratio": 70,
+          "maxScore": 100
+        },
+        {
+          "id": "deadline",
+          "name": "レポート提出期限",
+          "ratio": 10,
+          "maxScore": 100
+        }
       ]
     }
   ]
 }
-

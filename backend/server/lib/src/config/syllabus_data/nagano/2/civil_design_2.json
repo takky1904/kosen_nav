@@ -177,7 +177,6 @@
         }
       ]
     },
-    
     {
       "subjectId": "nagano_2_common_english",
       "name": "総合英語Ⅱ(後修正)",
@@ -232,7 +231,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_common_ED",
       "name": "エンジニアリングデザイン入門",
@@ -260,7 +258,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_common_info_process",
       "name": "情報処理入門",
@@ -276,7 +273,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_special_measure",
       "name": "測量学基礎",
@@ -298,7 +294,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_special_civil_design",
       "name": "都市デザイン実験実習Ⅰ",
@@ -320,7 +315,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_special_biology",
       "name": "地球・生命科学",
@@ -342,7 +336,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_special_struct_dynamics",
       "name": "構造力学Ⅰ",
@@ -358,7 +351,6 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_2_special_measure_apply",
       "name": "測量学応用",
@@ -380,7 +372,5 @@
         }
       ]
     }
-
   ]
 }
-
