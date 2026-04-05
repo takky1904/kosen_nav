@@ -7,6 +7,7 @@
       "subjectId": "nagano_3_common_public",
       "name": "公共",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "川合 大輔",
       "evaluations": [
@@ -28,6 +29,7 @@
       "subjectId": "nagano_3_common_linear",
       "name": "線形代数Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "濱口 直樹,林本 厚志,西信 洋和,鈴木 英正",
       "evaluations": [
@@ -49,6 +51,7 @@
       "subjectId": "nagano_3_common_integrationA",
       "name": "微分積分ⅡA",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "小林 茂樹,西信 洋和,鈴木 英正",
       "evaluations": [
@@ -70,6 +73,7 @@
       "subjectId": "nagano_3_common_integrationB",
       "name": "微分積分ⅡB",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "平戸 良弘,鈴木 英正,佐久間 敏幸",
       "evaluations": [
@@ -91,6 +95,7 @@
       "subjectId": "nagano_3_common_statistics",
       "name": "確率統計Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "林本 厚志,濱口 直樹,西信 洋和",
       "evaluations": [
@@ -112,6 +117,7 @@
       "subjectId": "nagano_3_common_physics",
       "name": "物理Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "柳沼 晋",
       "evaluations": [
@@ -139,6 +145,7 @@
       "subjectId": "nagano_3_common_pe",
       "name": "保健体育Ⅲ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "児玉 英樹,篠原 克修,金田 華実,田中 洋典,井浦 徹",
       "evaluations": [
@@ -160,6 +167,7 @@
       "subjectId": "nagano_3_common_network",
       "name": "ネットワーク基礎",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "原 貴之,富岡 雅弘",
       "evaluations": [
@@ -177,11 +185,11 @@
         }
       ]
     },
-
-     {
+    {
       "subjectId": "nagano_3_special_Japanese",
       "name": "応用国語",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "松林 徹",
       "evaluations": [
@@ -199,11 +207,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_grammar",
       "name": "コミュニカティブ・グラマーⅡ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "松林 徹",
       "evaluations": [
@@ -221,11 +229,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_english",
       "name": "総合英語Ⅲ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "南部 匡彦,赤瀬 正樹",
       "evaluations": [
@@ -243,11 +251,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_schema",
       "name": "機構学",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "堀口 勝三",
       "evaluations": [
@@ -265,11 +273,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_industry",
       "name": "工業力学",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "堀口 勝三",
       "evaluations": [
@@ -287,11 +295,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_robot",
       "name": "ロボット制作実習",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "MR系教員",
       "evaluations": [
@@ -309,11 +317,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_control",
       "name": "制御基礎実習",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "中島 隆行,中山 英俊",
       "evaluations": [
@@ -329,6 +337,7 @@
       "subjectId": "nagano_3_special_measure",
       "name": "計測工学",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "岡田 学",
       "evaluations": [
@@ -346,11 +355,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_mech_design",
       "name": "機械設計製図Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "山田 大将,岡本 謙",
       "evaluations": [
@@ -368,11 +377,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_material",
       "name": "材料工学",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "網谷 健児",
       "evaluations": [
@@ -390,11 +399,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_material_dynamics",
       "name": "材料力学",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "北山 光也",
       "evaluations": [
@@ -416,6 +425,7 @@
       "subjectId": "nagano_3_special_robot_making",
       "name": "ロボット制作実習",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "MR系教員",
       "evaluations": [
@@ -437,6 +447,7 @@
       "subjectId": "nagano_3_special_control_practice",
       "name": "制御基礎実習",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "中島 隆行,中山 英俊",
       "evaluations": [

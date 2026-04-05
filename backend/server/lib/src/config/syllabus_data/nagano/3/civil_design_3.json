@@ -7,6 +7,7 @@
       "subjectId": "nagano_3_common_public",
       "name": "公共",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "川合 大輔",
       "evaluations": [
@@ -28,6 +29,7 @@
       "subjectId": "nagano_3_common_linear",
       "name": "線形代数Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "濱口 直樹,林本 厚志,西信 洋和,鈴木 英正",
       "evaluations": [
@@ -49,6 +51,7 @@
       "subjectId": "nagano_3_common_integrationA",
       "name": "微分積分ⅡA",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "小林 茂樹,西信 洋和,鈴木 英正",
       "evaluations": [
@@ -70,6 +73,7 @@
       "subjectId": "nagano_3_common_integrationB",
       "name": "微分積分ⅡB",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "平戸 良弘,鈴木 英正,佐久間 敏幸",
       "evaluations": [
@@ -91,6 +95,7 @@
       "subjectId": "nagano_3_common_statistics",
       "name": "確率統計Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "林本 厚志,濱口 直樹,西信 洋和",
       "evaluations": [
@@ -112,6 +117,7 @@
       "subjectId": "nagano_3_common_physics",
       "name": "物理Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "柳沼 晋",
       "evaluations": [
@@ -139,6 +145,7 @@
       "subjectId": "nagano_3_common_pe",
       "name": "保健体育Ⅲ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "児玉 英樹,篠原 克修,金田 華実,田中 洋典,井浦 徹",
       "evaluations": [
@@ -160,6 +167,7 @@
       "subjectId": "nagano_3_common_network",
       "name": "ネットワーク基礎",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "原 貴之,富岡 雅弘",
       "evaluations": [
@@ -181,6 +189,7 @@
       "subjectId": "nagano_3_special_grammer",
       "name": "コミュニカティブ・グラマーⅡ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "赤瀬 正樹",
       "evaluations": [
@@ -202,6 +211,7 @@
       "subjectId": "nagano_3_special_Japanese",
       "name": "応用国語",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "松林 徹",
       "evaluations": [
@@ -223,6 +233,7 @@
       "subjectId": "nagano_3_special_english",
       "name": "総合英語Ⅲ（後修正）",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "富永 和元",
       "evaluations": [
@@ -240,11 +251,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_measure_apply",
       "name": "測量学応用",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "松下 英次",
       "evaluations": [
@@ -262,11 +273,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_concrete",
       "name": "コンクリート構造学Ⅰ(後修正)",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "大原 涼平",
       "evaluations": [
@@ -284,11 +295,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_hydraulics",
       "name": "水理学Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "豊田 政史,酒井 美月",
       "evaluations": [
@@ -306,11 +317,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_soil",
       "name": "土質工学Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "松下 英次",
       "evaluations": [
@@ -328,11 +339,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_material",
       "name": "材料学",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "松下 英次",
       "evaluations": [
@@ -344,11 +355,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_civil_design",
       "name": "都市デザイン実験実習Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "轟 直希,ジン タンダテゥン,栁澤 吉保",
       "evaluations": [
@@ -366,11 +377,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_civil_blueprint",
       "name": "都市デザイン設計製図Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "西川 嘉雄",
       "evaluations": [
@@ -394,11 +405,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_struct_dynamic",
       "name": "構造力学Ⅱ",
       "isElective": false,
+      "term": "通年",
       "credits": 2,
       "teacher": "奥山 雄介",
       "evaluations": [
@@ -410,11 +421,11 @@
         }
       ]
     },
-
     {
       "subjectId": "nagano_3_special_building",
       "name": "建築設計製図Ⅰ",
       "isElective": false,
+      "term": "通年",
       "credits": 1,
       "teacher": "滝澤 秀人,西川 嘉雄",
       "evaluations": [
