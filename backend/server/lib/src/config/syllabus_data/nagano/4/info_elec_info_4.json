@@ -508,13 +508,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -572,15 +572,21 @@
       "teacher": "春日 貴志,堀口 勝三,宮下 大輔,中山 英俊,芦田 和毅,百瀬 成空,滝澤 秀人",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 60,
+          "maxScore": 100
+        },
+        {
+          "id": "presentation",
+          "name": "発表会",
+          "ratio": 20,
           "maxScore": 100
         },
         {
           "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "name": "報告書",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -600,8 +606,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "assignment",
+          "name": "課題",
           "ratio": 30,
           "maxScore": 100
         }
@@ -618,13 +624,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -638,15 +644,21 @@
       "teacher": "ケント",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "presentation",
+          "name": "プレゼンテーション",
+          "ratio": 40,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "writing",
+          "name": "ライティング",
+          "ratio": 50,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 10,
           "maxScore": 100
         }
       ]
@@ -662,13 +674,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 40,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 60,
           "maxScore": 100
         }
       ]
@@ -704,15 +716,9 @@
       "teacher": "戸谷 順信,堀口 勝三",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -726,15 +732,15 @@
       "teacher": "戸谷 順信,堀口 勝三",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "practice",
+          "name": "演習",
+          "ratio": 50,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 50,
           "maxScore": 100
         }
       ]
@@ -750,13 +756,7 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -798,8 +798,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "presentation",
+          "name": "プレゼンテーション",
           "ratio": 30,
           "maxScore": 100
         }
@@ -814,15 +814,9 @@
       "teacher": "楡井 雅巳,大矢 健一,藤澤 義範,伊藤 祥一,芦田 和毅,藤田 悠,力丸 彩奈,原 貴之,富岡 雅弘,藤澤 孝敏,萩原 隆義",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -926,13 +920,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -946,15 +940,21 @@
       "teacher": "姜 天水,藤田 悠,堀口 勝三,花岡 大生,遠藤 典男,渡辺 誠一",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "document",
+          "name": "実習証明書",
+          "ratio": 60,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
           "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "doucument2",
+          "name": "報告会資料",
+          "ratio": 10,
           "maxScore": 100
         }
       ]
@@ -968,15 +968,21 @@
       "teacher": "姜 天水,藤田 悠,堀口 勝三,花岡 大生,遠藤 典男,渡辺 誠一",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "document",
+          "name": "実習証明書",
+          "ratio": 60,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
           "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "doucument2",
+          "name": "報告会資料",
+          "ratio": 10,
           "maxScore": 100
         }
       ]
@@ -992,12 +998,12 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "normal",
+          "name": "平常点",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1014,13 +1020,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
