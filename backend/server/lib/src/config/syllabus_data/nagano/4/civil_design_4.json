@@ -528,15 +528,21 @@
       "teacher": "春日 貴志,堀口 勝三,宮下 大輔,中山 英俊,芦田 和毅,百瀬 成空,滝澤 秀人",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "attitude",
+          "name": "態度",
+          "ratio": 60,
+          "maxScore": 100
+        },
+        {
+          "id": "presentation",
+          "name": "発表会",
+          "ratio": 20,
           "maxScore": 100
         },
         {
           "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "name": "報告書",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -556,8 +562,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "assignment",
+          "name": "課題",
           "ratio": 30,
           "maxScore": 100
         }
@@ -574,13 +580,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -594,15 +600,21 @@
       "teacher": "ケント",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "presentation",
+          "name": "プレゼンテーション",
+          "ratio": 40,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "writing",
+          "name": "ライティング",
+          "ratio": 50,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "課題",
+          "ratio":10,
           "maxScore": 100
         }
       ]
@@ -618,13 +630,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 40,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 60,
           "maxScore": 100
         }
       ]
@@ -660,15 +672,9 @@
       "teacher": "戸谷 順信,堀口 勝三",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -682,15 +688,15 @@
       "teacher": "戸谷 順信,堀口 勝三",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "practice",
+          "name": "演習",
+          "ratio": 50,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 50,
           "maxScore": 100
         }
       ]
@@ -706,20 +712,14 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
     },
     {
       "subjectId": "nagano_4_common_environmental_urban_intro",
-      "name": "環境都市工学概論",
+      "name": "環境都市工学概論(後修正)",
       "isElective": true,
       "term": "後期",
       "credits": 2,
@@ -745,7 +745,7 @@
       "isElective": true,
       "term": "前期",
       "credits": 2,
-      "teacher": "ジン タンタテゥン,浅野 憲哉",
+      "teacher": "ジン タンダテゥン,浅野 憲哉",
       "evaluations": [
         {
           "id": "exam",
@@ -754,8 +754,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "presentation",
+          "name": "プレゼンテーション",
           "ratio": 30,
           "maxScore": 100
         }
@@ -770,15 +770,9 @@
       "teacher": "楡井 雅巳,大矢 健一,藤澤 義範,伊藤 祥一,芦田 和毅,藤田 悠,力丸 彩奈,原 貴之,富岡 雅弘,藤澤 孝敏,萩原 隆義",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -829,7 +823,7 @@
     },
     {
       "subjectId": "nagano_4_common_digital_circuit_intro",
-      "name": "ディジタル回路概論",
+      "name": "ディジタル回路概論（後修正）",
       "isElective": true,
       "term": "後期",
       "credits": 2,
@@ -858,22 +852,16 @@
       "teacher": "柳沼 晋,滝沢 善洋",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
     },
     {
       "subjectId": "nagano_4_ce_applied_physics1_ce",
-      "name": "応用物理Ⅰ（CE）",
+      "name": "応用物理Ⅰ（CE）（後修正）",
       "isElective": false,
       "term": "前期",
       "credits": 1,
@@ -904,20 +892,20 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
     },
     {
       "subjectId": "nagano_4_ce_applied_physics2_ce",
-      "name": "応用物理Ⅱ（CE）",
+      "name": "応用物理Ⅱ（CE）（後修正）",
       "isElective": false,
       "term": "後期",
       "credits": 2,
@@ -937,6 +925,8 @@
         }
       ]
     },
+
+    
     {
       "subjectId": "nagano_4_common_practical_training_a",
       "name": "実務訓練A",
@@ -946,15 +936,21 @@
       "teacher": "姜 天水,藤田 悠,堀口 勝三,花岡 大生,遠藤 典男,渡辺 誠一",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "document",
+          "name": "実習証明書",
+          "ratio": 60,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
           "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "doucument2",
+          "name": "報告会資料",
+          "ratio": 10,
           "maxScore": 100
         }
       ]
@@ -968,15 +964,21 @@
       "teacher": "姜 天水,藤田 悠,堀口 勝三,花岡 大生,遠藤 典男,渡辺 誠一",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "document",
+          "name": "実習証明書",
+          "ratio": 60,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
           "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "doucument2",
+          "name": "報告会資料",
+          "ratio": 10,
           "maxScore": 100
         }
       ]
@@ -992,12 +994,12 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "normal",
+          "name": "平常点",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1014,13 +1016,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "normal",
+          "name": "平常点",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -1034,15 +1036,21 @@
       "teacher": "西川 嘉雄,滝澤 秀人,小嶋 健二",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "draft",
+          "name": "図面",
+          "ratio": 60,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "model",
+          "name": "模型",
           "ratio": 30,
+          "maxScore": 100
+        },
+        {
+          "id": "presentation",
+          "name": "プレゼンテーション",
+          "ratio": 10,
           "maxScore": 100
         }
       ]
@@ -1062,8 +1070,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "reflectoin_quiz",
+          "name": "復習問題",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1084,8 +1092,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "reflectoin_quiz",
+          "name": "復習問題",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1095,20 +1103,14 @@
       "subjectId": "nagano_4_civil_urban_design_exp3",
       "name": "都市デザイン実験実習Ⅲ",
       "isElective": false,
-      "term": "前期・後期",
+      "term": "通年",
       "credits": 4,
       "teacher": "遠藤 典男,松下 英次,酒井 芙月,大原 涼平,ジン タンタテゥン",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -1146,13 +1148,19 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 60,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "assignment",
+          "name": "授業課題",
+          "ratio": 20,
+          "maxScore": 100
+        },
+        {
+          "id": "soil_assignment",
+          "name": "土壌汚染・廃棄物課題",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -1172,8 +1180,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "quiz",
+          "name": "小テスト",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1190,13 +1198,7 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -1210,15 +1212,9 @@
       "teacher": "遠藤 典男",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -1234,13 +1230,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "portfolio",
+          "name": "ポートフォリオ",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -1256,13 +1252,7 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
