@@ -1035,20 +1035,20 @@
       "subjectId": "nagano_4_elec_info_exp3_info",
       "name": "情報エレクトロニクス実験Ⅲ（情報コース）",
       "isElective": false,
-      "term": "前期・後期",
+      "term": "通年",
       "credits": 4,
       "teacher": "大矢 健一,藤澤 孝敏,原 貴之",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "presentation",
+          "name": "発表",
+          "ratio": 25,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 75,
           "maxScore": 100
         }
       ]
@@ -1090,8 +1090,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "practice",
+          "name": "演習問題",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1101,7 +1101,7 @@
       "subjectId": "nagano_4_elec_circuit",
       "name": "電子回路",
       "isElective": true,
-      "term": "前期・後期",
+      "term": "通年",
       "credits": 4,
       "teacher": "柄澤 孝一",
       "evaluations": [
@@ -1152,13 +1152,19 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 20,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 40,
           "maxScore": 100
         }
       ]
@@ -1174,13 +1180,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 60,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 40,
           "maxScore": 100
         }
       ]
@@ -1194,22 +1200,28 @@
       "teacher": "百瀬 成空",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
+          "id": "assignment",
+          "name": "提出課題",
           "ratio": 70,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "deadline",
+          "name": "期限内作成",
+          "ratio": 10,
+          "maxScore": 100
+        },
+        {
+          "id": "reflection",
+          "name": "実験報告",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
     },
     {
       "subjectId": "nagano_4_elec_power_electronics",
-      "name": "パワーエレクトロニクス",
+      "name": "パワーエレクトロニクス（後修正）",
       "isElective": true,
       "term": "後期",
       "credits": 2,
@@ -1240,13 +1252,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -1262,20 +1274,20 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "assignment",
+          "name": "演習課題",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
     },
     {
       "subjectId": "nagano_4_elec_simulation",
-      "name": "シミュレーション",
+      "name": "シミュレーション(後修正)",
       "isElective": true,
       "term": "前期",
       "credits": 2,
@@ -1306,13 +1318,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 60,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 40,
           "maxScore": 100
         }
       ]
@@ -1328,13 +1340,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 42,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 58,
           "maxScore": 100
         }
       ]
@@ -1350,13 +1362,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 60,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 40,
           "maxScore": 100
         }
       ]
@@ -1365,19 +1377,25 @@
       "subjectId": "nagano_4_elec_embedded_programming",
       "name": "組込みプログラミング",
       "isElective": true,
-      "term": "前期・後期",
+      "term": "通年",
       "credits": 4,
       "teacher": "藤澤 義範",
       "evaluations": [
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 30,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "practice",
+          "name": "総合演習",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "小テスト・課題",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1387,29 +1405,23 @@
       "subjectId": "nagano_4_elec_network_programming",
       "name": "ネットワークプログラミング",
       "isElective": true,
-      "term": "前期・後期",
+      "term": "通年",
       "credits": 4,
       "teacher": "アサノ デービッド",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
     },
     {
       "subjectId": "nagano_4_elec_compiler",
-      "name": "コンパイラ",
+      "name": "コンパイラ(後修正)",
       "isElective": true,
-      "term": "前期・後期",
+      "term": "通年",
       "credits": 4,
       "teacher": "藤澤 孝敏",
       "evaluations": [

@@ -1199,11 +1199,11 @@
     },
     {
       "subjectId": "nagano_4_elec_power_electronics",
-      "name": "パワーエレクトロニクス",
+      "name": "パワーエレクトロニクス（後修正）",
       "isElective": true,
       "term": "後期",
       "credits": 2,
-      "teacher": "渡辺 誠一（後修正）",
+      "teacher": "渡辺 誠一",
       "evaluations": [
         {
           "id": "exam",
