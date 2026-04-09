@@ -1040,15 +1040,9 @@
       "teacher": "花岡 大生,岡本 謙",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -1057,20 +1051,14 @@
       "subjectId": "nagano_4_mr_engineering_exp",
       "name": "工学実験",
       "isElective": false,
-      "term": "前期・後期",
+      "term": "通年",
       "credits": 4,
       "teacher": "山田 大将,田中 秀登,網谷 健児,岡田 学,宮下 大輔,北山 光也,花岡 大生,相馬 顕子,堀口 勝三",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
-          "maxScore": 100
-        },
-        {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 100,
           "maxScore": 100
         }
       ]
@@ -1086,13 +1074,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 80,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -1107,14 +1095,14 @@
       "evaluations": [
         {
           "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "name": "前期末試験",
+          "ratio": 80,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -1129,8 +1117,8 @@
       "evaluations": [
         {
           "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "name": "前期末試験",
+          "ratio": 80,
           "maxScore": 100
         },
         {
@@ -1156,8 +1144,8 @@
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "assignment",
+          "name": "課題",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1174,13 +1162,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 40,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
@@ -1194,14 +1182,20 @@
       "teacher": "山岸 郷志",
       "evaluations": [
         {
-          "id": "exam",
-          "name": "定期試験",
-          "ratio": 70,
+          "id": "check",
+          "name": "理解度の確認",
+          "ratio": 30,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
+          "id": "exam",
+          "name": "期末試験",
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "assignment",
+          "name": "提出課題",
           "ratio": 30,
           "maxScore": 100
         }
@@ -1218,13 +1212,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 60,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 40,
           "maxScore": 100
         }
       ]
@@ -1240,13 +1234,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 60,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 40,
           "maxScore": 100
         }
       ]
@@ -1262,13 +1256,19 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 40,
+          "maxScore": 100
+        },
+        {
+          "id": "quiz",
+          "name": "小テスト",
+          "ratio": 20,
           "maxScore": 100
         },
         {
           "id": "report",
           "name": "レポート",
-          "ratio": 30,
+          "ratio": 40,
           "maxScore": 100
         }
       ]
@@ -1284,13 +1284,13 @@
         {
           "id": "exam",
           "name": "定期試験",
-          "ratio": 70,
+          "ratio": 40,
           "maxScore": 100
         },
         {
-          "id": "report",
-          "name": "レポート",
-          "ratio": 30,
+          "id": "assignment",
+          "name": "課題",
+          "ratio": 20,
           "maxScore": 100
         }
       ]
